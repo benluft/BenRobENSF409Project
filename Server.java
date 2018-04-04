@@ -47,11 +47,6 @@ class Server
 		}
 	}
 	
-	public void decodeMessage()
-	{
-		
-	}
-	
 	/**
 	 * Attempts to connect a client to the server, and give them 
 	 * object to write to the server and read from it
@@ -81,7 +76,7 @@ class Server
 		while(true)
 		{
 			connectSocket();
-			Runnable worker = new Worker();
+			Runnable worker = new Worker(writer, reader);
 			pool.execute(worker);
 		}
 	}

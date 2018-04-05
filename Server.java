@@ -76,7 +76,7 @@ class Server
 		while(true)
 		{
 			connectSocket();
-			Runnable worker = new Worker(writer, reader);
+			Runnable worker = new DecodeMessage(writer, reader);
 			pool.execute(worker);
 		}
 	}

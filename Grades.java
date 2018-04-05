@@ -1,6 +1,6 @@
 package sharedData;
 
-class Grades extends Message
+class Grades extends SocketMessage
 {
 
 	/**
@@ -14,9 +14,9 @@ class Grades extends Message
 		messageType = gradesMessage;
 	}
 	
-	public Grades(int messageID, boolean isQuerry) 
+	public Grades(boolean isQuerry, int ID) 
 	{
-		super(messageID, isQuerry);
+		super(isQuerry, ID);
 		setMessageType();
 		// TODO Auto-generated constructor stub
 	}

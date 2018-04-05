@@ -1,6 +1,6 @@
 package sharedData;
 
-class Email extends Message
+public class Email extends SocketMessage
 {
 
 	/**
@@ -10,7 +10,7 @@ class Email extends Message
 	
 	public Email(int messageID, boolean isQuerry) 
 	{
-		super(messageID, isQuerry);
+		super(isQuerry, messageID);
 		setMessageType();
 		// TODO Auto-generated constructor stub
 	}

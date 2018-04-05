@@ -1,6 +1,6 @@
 package sharedData;
 
-class Enrolment extends Message
+public class Enrolment extends SocketMessage
 {
 
 	/**
@@ -8,11 +8,25 @@ class Enrolment extends Message
 	 */
 	private static final long serialVersionUID = 7098152461325695995L;
 	
-	public Enrolment(int messageID, boolean isQuerry) 
+	private int studentID;
+	private int courseID;
+	
+	
+	public int getStudentID() {
+		return studentID;
+	}
+
+	public int getCourseID() {
+		return courseID;
+	}
+
+	public Enrolment(boolean isQuerry, int ID, int studentID, int courseID) 
 	{
-		super(messageID, isQuerry);
+		super(isQuerry, ID);
 		setMessageType();
-		// TODO Auto-generated constructor stub
+		
+		this.courseID = courseID;
+		this.studentID = studentID;
 	}
 	
 	@Override

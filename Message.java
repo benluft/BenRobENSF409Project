@@ -2,7 +2,7 @@ package sharedData;
 
 import java.io.Serializable;
 
-public class Message implements Serializable, MessageNameConstants
+public class SocketMessage implements Serializable, MessageNameConstants
 {
 
 	/**
@@ -14,12 +14,12 @@ public class Message implements Serializable, MessageNameConstants
 	
 	boolean isQuerry;
 	
-	int messageId;
+	int ID;
 	
-	public Message(int messageId, boolean isQuerry)
+	public SocketMessage(boolean isQuerry, int ID)
 	{
-		this.messageId = messageId;
 		this.isQuerry = isQuerry;
+		this.ID = ID;
 	}
 
 	public String getMessageType() {
@@ -37,13 +37,10 @@ public class Message implements Serializable, MessageNameConstants
 	public void setQuerry(boolean isQuerry) {
 		this.isQuerry = isQuerry;
 	}
-
-	public int getMessageId() {
-		return messageId;
-	}
-
-	public void setMessageId(int messageId) {
-		this.messageId = messageId;
+	
+	public int getID()
+	{
+		return ID;
 	}
 	
 }

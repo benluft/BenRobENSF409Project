@@ -1,6 +1,6 @@
 package sharedData;
 
-class Submission extends Message
+class Submission extends SocketMessage
 {
 
 	/**
@@ -8,9 +8,9 @@ class Submission extends Message
 	 */
 	private static final long serialVersionUID = 5925131203286336978L;
 	
-	public Submission(int messageID, boolean isQuerry) 
+	public Submission(boolean isQuerry, int ID) 
 	{
-		super(messageID, isQuerry);
+		super(isQuerry, ID);
 		setMessageType();
 		// TODO Auto-generated constructor stub
 	}

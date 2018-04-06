@@ -56,7 +56,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		}
 		super.appendSqlCommand("?)");
 		
-		super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
+		
 		
 		try 
 		{
@@ -70,11 +70,18 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		
 	}
 	
+	private void duplicateProtection()
+	{
+		super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
+	}
+	
 	private void writeAssignment(SocketMessage message)
 	{
 		Assignment assign = (Assignment) message;
 		
 		PreparedStatement statement = createSQLCommand(6);
+		
+		super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
 		
 		try 
 		{
@@ -108,6 +115,8 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		
 		PreparedStatement statement = createSQLCommand(4);
 		
+		super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
+		
 		try 
 		{
 			statement.setInt(1, 0);
@@ -130,19 +139,37 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		System.out.println("Got to Enrol");
 		Enrolment enrol = (Enrolment) message;
 		
-		PreparedStatement statement = createSQLCommand(2);
-		
-		try {
-			statement.setInt(1, enrol.getID());
-			statement.setInt(2, enrol.getStudentID());
-			statement.setInt(3, enrol.getCourseID());
-			
-			statement.execute();
-			super.resetSqlCommand();
-		}
-		catch(SQLException e)
+		if(enrol.getID() == 0)
 		{
-			e.printStackTrace();
+			PreparedStatement statement = createSQLCommand(3);
+			
+			try {
+				statement.setInt(1, enrol.getID());
+				statement.setInt(2, enrol.getStudentID());
+				statement.setInt(3, enrol.getCourseID());
+				
+				statement.execute();
+				super.resetSqlCommand();
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			String deleteSQL = "DELETE FROM " + enrolMessage + " WHERE course_id=" + enrol.getCourseID() +
+					" AND student_id=" + enrol.getStudentID();
+			
+			try {
+				PreparedStatement statement = (PreparedStatement) super.getJdbc_connection().prepareStatement(deleteSQL);
+				
+				statement.execute();
+			} 
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	

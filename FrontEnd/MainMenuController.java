@@ -60,9 +60,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
     theView.addCourseAddListener( new CourseAddListener());
     theView.addClassTableListener(new CourseTableListener());
     
-    theView.addSearchSudentListener(new StudentSearchListener());
-    theView.addStudentTableListener(new StudentTableListener());
-    theView.addClearSearchSudentListener(new StudentClearListener());
+
   }
 
   // add listener classes
@@ -198,10 +196,15 @@ class CourseAddListener implements ActionListener
 				if(currentEnrolment.getStudentID() == currentStudent.getID())
 				{
 					theView.setStudentTableElement("Enrolled", i, 3);
+				    
 					break;
 				}
 			}
 		}
+		
+		theView.addSearchSudentListener(new StudentSearchListener());
+	    theView.addStudentTableListener(new StudentTableListener());
+	    theView.addClearSearchSudentListener(new StudentClearListener());
 	}
 	
 	private void addNewestCourse()
@@ -283,15 +286,37 @@ class CourseAddListener implements ActionListener
 	        			firstName + " " + lastName  + " is now " + enr);
 	        	if(enr.equals("Enrolled"))
 	        	{
-	        		System.out.println(studentID);
-	        		coms.write(new Enrolment(false,0,studentID,currentCourseID));
+	        		if(!doesEnrolledExist(studentID))
+	        		{
+	        			coms.write(new Enrolment(false,0,studentID,currentCourseID));
+	        		}
 	        	}
 	        	else
 	        	{
-	        		//coms.write(new Enrolment(false, 0, studentID, courseID));
+	        		if(doesEnrolledExist(studentID))
+	        		{
+	        			coms.write(new Enrolment(false,-1,studentID,currentCourseID));
+	        		}
 	        	}
 	        }
 	    }
 	}
+    
+    private boolean doesEnrolledExist(int studentID)
+    {
+    	Vector<Enrolment> enrolled = getEnrolledStudents(currentCourseID);
+    	
+    	for(int i = 0; i < enrolled.size(); i++)
+    	{
+    		if(enrolled.get(i).getStudentID() == studentID)
+    		{
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    
+    
 
 }

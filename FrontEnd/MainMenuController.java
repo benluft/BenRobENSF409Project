@@ -50,7 +50,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
     this.coms = coms;
     this.professor = professor;
     
-    fillTable();
+    fillCourseTable();
     
     // add listeners...
     theView.addCourseClearListener( new CourseClearListener());
@@ -93,13 +93,15 @@ class CourseAddListener implements ActionListener
     	}
     	else {// add course number and prof name here
     		coms.write(new Course(false, 0, professor.getID(), newCourseName, false));
-    		theView.
-    		fillTable();
+    		
+    		addNewestCourse();
     	}
 
     	theView.clearNewCourseField();
     
-    }catch(Exception e){
+    }
+    catch(Exception e)
+    {
       System.out.println("issue with Search Type listener.");
     }
   }
@@ -175,16 +177,29 @@ class SearchTypeListener implements ActionListener
 	    }
 	}
 	
-	private void fillTable()
+	private void fillCourseTable()
 	{
-		coms.write(new Course(true, 0, professor.getID(), null, false));
-		Vector<Course> coursesInDB = (Vector<Course>)coms.read();
+		Vector<Course> coursesInDB = getAllCourses();
 		
 		for(int i = 0; i < coursesInDB.size(); i++)
 		{
 			Course currentCourse = coursesInDB.get(i);
 			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ professor.getLastname());
 		}
+	}
+	
+	private void addNewestCourse()
+	{
+		Vector<Course> coursesInDB = getAllCourses();
+		
+		Course newCourse = coursesInDB.get(coursesInDB.size()-1);
+		theView.addCourseTableRow(newCourse.getID(), newCourse.getName(), "Dr. " +professor.getLastname());
+	}
+	
+	private Vector<Course> getAllCourses()
+	{
+		coms.write(new Course(true, 0, professor.getID(), null, false));
+		return (Vector<Course>)coms.read();
 	}
 
 }

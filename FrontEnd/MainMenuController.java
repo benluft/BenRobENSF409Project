@@ -93,7 +93,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
 						|| year < 2018 || year > 2023) {
 		        	JOptionPane.showMessageDialog(null,
 		        		    "Invalid Due Date");
-		        	theView.clearDueDateBoxes();
+		        	//theView.clearDueDateBoxes();
 				}
 				else {// due date is valid
 					dueDate = month + "/" + day + "/" + year;

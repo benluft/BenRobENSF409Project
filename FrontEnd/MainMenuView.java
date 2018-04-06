@@ -1,5 +1,3 @@
-package frontEnd;
-
 import java.awt.BorderLayout;
 
 import java.awt.EventQueue;
@@ -52,14 +50,15 @@ public class MainMenuView extends JFrame {
 	private JButton btnAddCourse;
 	private JButton btnCourseClear;
 	private JScrollPane coursePane;
+	//student
 	private JTable studentTable;
 	private JTextField searchStudenttextField;
 	private JLabel lblStudents;
 	private JLabel lblSearchStudents;
 	private JLabel lblSearchStudentUsing;
 	private JComboBox searchStudentComboBox;
-	private JButton btnSearch;
-	private JButton btnClear;
+	private JButton btnSearchStudent;
+	private JButton btnStudentClear;
 
 	/**
 	 * Create the frame.
@@ -74,7 +73,6 @@ public class MainMenuView extends JFrame {
 		createMenuTabs();
 		setVisible(true);
 	}
-	
 	private void createMenuTabs() {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
@@ -103,7 +101,7 @@ public class MainMenuView extends JFrame {
 		//setProfEditability();
 
 	}
-
+	//courses
 	private void createCoursesPan() {
 		jpnCourses = new JPanel();
 		tabbedPane.addTab("Courses", null, jpnCourses, null);
@@ -129,6 +127,10 @@ public class MainMenuView extends JFrame {
 		lblCourses.setBounds(10, 35, 790, 59);
 		jpnCourses.add(lblCourses);
 		
+	}
+	public void clearCoursesTable() {
+		DefaultTableModel model = (DefaultTableModel) coursesTable.getModel();
+		model.setRowCount(0);
 	}
 	public void createProfCourseTable() {
         DefaultTableModel model = new DefaultTableModel();
@@ -207,7 +209,13 @@ public class MainMenuView extends JFrame {
 	public Object getCourseTableElement(int r, int c) {
 		return coursesTable.getValueAt(r, c); 
 	}
-
+	private JComboBox createActivityBox() {
+		  String[] activeBoxStrings = {"Active", "Not Active"};
+		  JComboBox activeBox = new JComboBox(activeBoxStrings);
+		  return activeBox;
+	}
+	
+	//students
 	private void createStudentsPan() {
 		jpnStudents = new JPanel();
 		tabbedPane.addTab("Students", null, jpnStudents, null);
@@ -250,15 +258,15 @@ public class MainMenuView extends JFrame {
 		jpnStudents.add(searchStudenttextField);
 		searchStudenttextField.setColumns(10);
 		
-		btnSearch = new JButton("Search");
-		btnSearch.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnSearch.setBounds(232, 594, 134, 37);
-		jpnStudents.add(btnSearch);
+		btnSearchStudent = new JButton("Search");
+		btnSearchStudent.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnSearchStudent.setBounds(232, 594, 134, 37);
+		jpnStudents.add(btnSearchStudent);
 		
-		btnClear = new JButton("Clear");
-		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnClear.setBounds(433, 594, 134, 37);
-		jpnStudents.add(btnClear);
+		btnStudentClear = new JButton("Clear");
+		btnStudentClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnStudentClear.setBounds(433, 594, 134, 37);
+		jpnStudents.add(btnStudentClear);
 		
 	}
 	public void addStudentTableRow(String first, String last, int id) {
@@ -281,16 +289,23 @@ public class MainMenuView extends JFrame {
 		//test
 		addStudentTableRow("Rob", "Dunn", 12345);
 	}
+	public void searchSudentAddListener(ActionListener l) {
+		btnSearchStudent.addActionListener(l);
+	}
+	public void clearSearchSudentAddListener(ActionListener l) {
+		btnSearchStudent.addActionListener(l);
+	}
+	public void clearStudentsTable() {
+		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+		model.setRowCount(0);
+	}
 	private JComboBox createEnrollmentBox() {
 		  String[] boxStrings = {"Enrolled", "Not Enrolled"};
 		  JComboBox box = new JComboBox(boxStrings);
 		  return box;
 	}
-	private JComboBox createActivityBox() {
-		  String[] activeBoxStrings = {"Active", "Not Active"};
-		  JComboBox activeBox = new JComboBox(activeBoxStrings);
-		  return activeBox;
-	}
+	
+	//assignment
 	private void createAssignmentsPan() {
 		jpnAsg = new JPanel();
 		tabbedPane.addTab("Assignments", null, jpnAsg, null);

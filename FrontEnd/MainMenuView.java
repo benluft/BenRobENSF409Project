@@ -1,5 +1,3 @@
-package frontEnd;
-
 import java.awt.BorderLayout;
 
 import java.awt.EventQueue;
@@ -292,13 +290,11 @@ public class MainMenuView extends JFrame {
 	            return column == 3;
 	        }
 		};
-		//test
-		addStudentTableRow("Rob", "Dunn", 12345);
 	}
-	public void searchSudentAddListener(ActionListener l) {
+	public void addSearchSudentListener(ActionListener l) {
 		btnSearchStudent.addActionListener(l);
 	}
-	public void clearSearchSudentAddListener(ActionListener l) {
+	public void addClearSearchSudentListener(ActionListener l) {
 		btnStudentClear.addActionListener(l);
 	}
 	public void addStudentTableListener(TableModelListener l) {

@@ -48,7 +48,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		super.resetSqlCommand();
 	}
 	
-	private PreparedStatement createSQLCommand(int sizeCommand)
+	private PreparedStatement createSQLCommand(int sizeCommand, boolean avoidDuplicates)
 	{
 		for(int i = 1; i < sizeCommand; i++)
 		{
@@ -56,6 +56,10 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		}
 		super.appendSqlCommand("?)");
 		
+		if(avoidDuplicates == true)
+		{
+			super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
+		}
 		
 		
 		try 
@@ -79,9 +83,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 	{
 		Assignment assign = (Assignment) message;
 		
-		PreparedStatement statement = createSQLCommand(6);
-		
-		super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
+		PreparedStatement statement = createSQLCommand(6, true);
 		
 		try 
 		{
@@ -113,9 +115,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 	{
 		Course course = (Course) message;
 		
-		PreparedStatement statement = createSQLCommand(4);
-		
-		super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
+		PreparedStatement statement = createSQLCommand(4,true);
 		
 		try 
 		{
@@ -141,7 +141,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		
 		if(enrol.getID() == 0)
 		{
-			PreparedStatement statement = createSQLCommand(3);
+			PreparedStatement statement = createSQLCommand(3,false);
 			
 			try {
 				statement.setInt(1, enrol.getID());

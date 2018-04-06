@@ -7,14 +7,21 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import sharedData.Assignment;
 import sharedData.Course;
 import sharedData.Enrolment;
+import sharedData.FileMessage;
 import sharedData.User;
 import sharedData.Course;
 
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -60,12 +67,6 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
     theView.addCourseAddListener( new CourseAddListener());
     theView.addClassTableListener(new CourseTableListener());
 
-    theView.addSearchSudentListener(new StudentSearchListener());
-    theView.addClearSearchSudentListener(new StudentClearListener());
-    theView.addStudentTableListener(new StudentTableListener());
-    theView.addUploadListener(new AsgUploadListener());
-    theView.addAssignmentsTableListener(new AsgTableListener());
-
   }
 
   // add listener classes
@@ -99,9 +100,34 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
 		        	JOptionPane.showMessageDialog(null,
 		        		    "due date = " + dueDate);
 		        	theView.clearDueDateBoxes();
-		        	byte[] fileContents = theView.getAsgFile();
+		        	File selectedFile = theView.getAsgFile();
 		        	
-		        	//do something with file
+		        	long length = selectedFile.length(); 
+		    		byte[] content = new byte[(int) length]; 
+		    		// Converting Long to Int 
+		    		try {  
+		    			FileInputStream fis = new FileInputStream(selectedFile);  
+		    			BufferedInputStream bos = new BufferedInputStream(fis);  
+		    			bos.read(content, 0, (int)length); 
+	    			} catch (FileNotFoundException e) {
+	    				e.printStackTrace(); 
+	    			} catch(IOException e){  
+	    				e.printStackTrace(); 
+	    			}
+		        	
+					FileMessage fileMessage = new FileMessage(false, 0, content);
+					
+					Assignment assign = new Assignment(false, -1, currentCourseID, selectedFile.getName(), 
+							false, dueDate);
+					
+					try{
+						coms.write(assign);
+						coms.writer.flush();
+						coms.write(fileMessage);
+						} 
+					catch(IOException e){
+						e.printStackTrace();
+					}
 				}
 
 			
@@ -112,6 +138,8 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
 			}catch(Exception e){
 			  System.out.println("issue with Search Type listener.");
 			}
+			
+			addNewestAssignment();
 		}
 	}
 	
@@ -121,11 +149,20 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
 	        int row = e.getFirstRow();
 	        int column = e.getColumn();
 	        String asgName = (String)theView.getAsgTableEl(row, 0);
+	        String dueDate = (String)theView.getAsgTableEl(row, 1);
 	        
 	        if(column == 2) {// active or not active
 	        	String activity = (String)theView.getAsgTableEl(row, column);
 	        	JOptionPane.showMessageDialog(null,
 	        			asgName  + " is now " + activity);
+	        	if(activity.equals("Active"))
+	        	{
+	        		coms.write(new Assignment(false,0,currentCourseID,asgName,true,dueDate));
+	        	}
+	        	else
+	        	{
+	        		coms.write(new Assignment(false,0,currentCourseID,asgName,false,dueDate));
+	        	}
 	        }
 	    }
 	}
@@ -210,9 +247,17 @@ class CourseAddListener implements ActionListener
 	        		
 	        		currentCourseID = courseID;
 	        		
-	        		//theView.clearStudentsTable();
+	        		theView.clearStudentsTable();
 	        		
 	        		fillStudentTable(Integer.parseInt((String)theView.getCourseTableElement(row, 0)));
+	        		
+	        		fillAssignTable();
+	        		
+	        	    theView.addSearchSudentListener(new StudentSearchListener());
+	        	    theView.addClearSearchSudentListener(new StudentClearListener());
+	        	    theView.addStudentTableListener(new StudentTableListener());
+	        	    theView.addUploadListener(new AsgUploadListener());
+	        	    theView.addAssignmentsTableListener(new AsgTableListener());
 	        		
 	        	}
 	        }
@@ -229,7 +274,20 @@ class CourseAddListener implements ActionListener
 		for(int i = 0; i < coursesInDB.size(); i++)
 		{
 			Course currentCourse = coursesInDB.get(i);
-			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ professor.getLastname());
+			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ professor.getLastname(),
+					currentCourse.isActive());
+		}
+	}
+	
+	private void fillAssignTable()
+	{
+		Vector<Assignment> assignmentsInDB = getAllAssignments();
+		
+		for(int i = 0; i < assignmentsInDB.size(); i++)
+		{
+			Assignment currentAssignment = assignmentsInDB.get(i);
+			theView.addAsgTableRow(currentAssignment.getTitle(), currentAssignment.getDueDate(),
+					currentAssignment.isActive());
 		}
 	}
 	
@@ -268,14 +326,36 @@ class CourseAddListener implements ActionListener
 	{
 		Vector<Course> coursesInDB = getAllCourses();
 		
-		Course newCourse = coursesInDB.get(coursesInDB.size()-1);
-		theView.addCourseTableRow(newCourse.getID(), newCourse.getName(), "Dr. " +professor.getLastname());
+		Course newCourse = null;
+		
+		newCourse = coursesInDB.get(coursesInDB.size()-1);
+		theView.addCourseTableRow(newCourse.getID(), newCourse.getName(), "Dr. " +professor.getLastname(),
+				newCourse.isActive());
 	}
+	
+	private void addNewestAssignment()
+	{
+		Vector<Assignment> assignmentsInDB = getAllAssignments();
+		
+		Assignment newAssignment = null;
+		
+		newAssignment = assignmentsInDB.get(assignmentsInDB.size()-1);
+
+		theView.addAsgTableRow(newAssignment.getTitle(), newAssignment.getDueDate(),
+				newAssignment.isActive());
+	}
+	
 	
 	private Vector<Course> getAllCourses()
 	{
 		coms.write(new Course(true, 0, professor.getID(), null, false));
 		return (Vector<Course>)coms.read();
+	}
+	
+	private Vector<Assignment> getAllAssignments()
+	{
+		coms.write(new Assignment(true, 0,currentCourseID, null, false, null));
+		return (Vector<Assignment>)coms.read();
 	}
 	
 	private Vector<Enrolment> getEnrolledStudents()
@@ -301,9 +381,9 @@ class CourseAddListener implements ActionListener
 	    {
 	    	theView.clearStudentSearchBox();
 	    	
-	    	//theView.clearStudentsTable();
+	    	theView.clearStudentsTable();
 	    	
-	    	//fillStudentTable(currentCourseID);
+	    	fillStudentTable(currentCourseID);
 	    
 	    }catch(Exception e){
 	      System.out.println("issue with clear search box listener.");
@@ -366,8 +446,8 @@ class CourseAddListener implements ActionListener
 	        
 	        if(column == 3) {// enrolled or not enrolled
 	        	String enr = (String)theView.getStudentTableElement(row, column);
-	        	JOptionPane.showMessageDialog(null,
-	        			firstName + " " + lastName  + " is now " + enr);
+//	        	JOptionPane.showMessageDialog(null,
+//	        			firstName + " " + lastName  + " is now " + enr);
 	        	if(enr.equals("Enrolled"))
 	        	{
 	        		if(!doesEnrolledExist(studentID))

@@ -76,16 +76,19 @@ class DecodeMessage implements Runnable, MessageNameConstants
 			DBWriter writer = new DBWriter(assignmentMessage.toLowerCase(), message);
 			
 			SocketMessage messageFile;
-			try 
-			{
-				messageFile = (SocketMessage) reader.readObject();
-				PDFWriter pdfWriter = new PDFWriter(messageFile);
-			} 
-			catch (ClassNotFoundException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			
+			if(assign.getID() == -1)
+			{
+				try 
+				{
+					messageFile = (SocketMessage) reader.readObject();
+					PDFWriter pdfWriter = new PDFWriter(messageFile);
+				} 
+				catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}	
 		}
 		
 		if(message.getMessageType().equals(courseMessage))
@@ -144,7 +147,7 @@ class DecodeMessage implements Runnable, MessageNameConstants
 	
 	private void readAssignmentTable(Assignment assign)
 	{
-		DBReader reader = new DBReader(assignmentMessage, "course_id", assign.getCourseID(), "title", assign.getTitle());
+		DBReader reader = new DBReader(assignmentMessage, "course_id", assign.getCourseID());
 		
 		ResultSet rs = reader.getReadResults();
 		
@@ -226,10 +229,6 @@ class DecodeMessage implements Runnable, MessageNameConstants
 		
 	}
 	
-	private void writeAssignmentTable(Assignment assign)
-	{
-		
-	}
 	
 	private void checkLogin()
 	{

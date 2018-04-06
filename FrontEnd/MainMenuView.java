@@ -220,9 +220,17 @@ public class MainMenuView extends JFrame {
 	public String getNewCourseName() {
 		return textCourseName.getText();
 	}
-	public void addCourseTableRow(int num, String name, String prof) {
+	public void addCourseTableRow(int num, String name, String prof, boolean active) {
 		DefaultTableModel model = (DefaultTableModel) coursesTable.getModel();
-		model.addRow(new Object[]{Integer.toString(num), name, prof, "Not Active", "false"});
+		if(active)
+		{
+			model.addRow(new Object[]{Integer.toString(num), name, prof, "Active", "false"});
+		}
+		else
+		{
+			model.addRow(new Object[]{Integer.toString(num), name, prof, "Not Active", "false"});
+		}
+			
 	}
 	public void setCourseTableElement(Object val, int r, int c) {
 		coursesTable.setValueAt(val, r, c);
@@ -310,7 +318,7 @@ public class MainMenuView extends JFrame {
 	            return column == 3;
 	        }
 		};
-		addFakeStudents();//for testing
+		//addFakeStudents();//for testing
 	}
 	public void addSearchSudentListener(ActionListener l) {
 		btnSearchStudent.addActionListener(l);
@@ -397,7 +405,7 @@ public class MainMenuView extends JFrame {
 		monthTxt = new JTextField(2);
 		monthTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		monthTxt.setBounds(345, 508, 55, 44);
-		monthTxt.setDocument(new TextFieldLimit(2));
+		//monthTxt.setDocument(new TextFieldLimit(2));
 		jpnAsg.add(monthTxt);
 		monthTxt.setColumns(10);
 		
@@ -405,14 +413,14 @@ public class MainMenuView extends JFrame {
 		dayTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		dayTxt.setColumns(10);
 		dayTxt.setBounds(410, 508, 55, 44);
-		dayTxt.setDocument(new TextFieldLimit(2));
+		//dayTxt.setDocument(new TextFieldLimit(2));
 		jpnAsg.add(dayTxt);
 		
 		yearTxt = new JTextField(4);
 		yearTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		yearTxt.setColumns(10);
 		yearTxt.setBounds(475, 508, 91, 44);
-		yearTxt.setDocument(new TextFieldLimit(4));
+		//yearTxt.setDocument(new TextFieldLimit(4));
 		jpnAsg.add(yearTxt);
 		contentPane.setLayout(gl_contentPane);
 		
@@ -429,7 +437,7 @@ public class MainMenuView extends JFrame {
 	            return column == 2;
 	        }
 		};
-		addAsgTableRow("Flying 1", "Tomorrow");
+		//addAsgTableRow("Flying 1", "Tomorrow");
 	}
 	public String getMonth() {
 		return monthTxt.getText();
@@ -458,29 +466,26 @@ public class MainMenuView extends JFrame {
 	public Object getAsgTableEl(int r, int c) {
 		return asgTable.getValueAt(r, c); 
 	}
-	public void addAsgTableRow(String name, String date) {
+	public void addAsgTableRow(String name, String date, boolean activity) {
 		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
-		model.addRow(new Object[]{name, date, "Not Active"});
+		if(activity == true)
+		{
+			model.addRow(new Object[]{name, date, "Active"});
+		}
+		else
+		{
+			model.addRow(new Object[]{name, date, "Not Active"});
+		}
 	}
-	public byte[] getAsgFile() {
+	
+	//BEN CHANGES
+	public File getAsgFile() {
 		JFileChooser fileBrowser = new JFileChooser();
 		File selectedFile = null;
 		if(fileBrowser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			selectedFile = fileBrowser.getSelectedFile();  
 		}
-		long length = selectedFile.length(); 
-		byte[] content = new byte[(int) length]; 
-		// Converting Long to Int 
-		try {  
-			FileInputStream fis = new FileInputStream(selectedFile);  
-			BufferedInputStream bos = new BufferedInputStream(fis);  
-			bos.read(content, 0, (int)length); 
-			} catch (FileNotFoundException e) {
-				e.printStackTrace(); 
-			} catch(IOException e){  
-				e.printStackTrace(); 
-			}
-		return content;
+		return selectedFile;
 	}
 	
 	//dropBox

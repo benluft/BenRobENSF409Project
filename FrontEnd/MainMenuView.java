@@ -1,3 +1,5 @@
+package frontEnd;
+
 import java.awt.BorderLayout;
 
 import java.awt.EventQueue;
@@ -72,6 +74,7 @@ public class MainMenuView extends JFrame {
 		createMenuTabs();
 		setVisible(true);
 	}
+	
 	private void createMenuTabs() {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
@@ -100,7 +103,7 @@ public class MainMenuView extends JFrame {
 		//setProfEditability();
 
 	}
-	//courses
+
 	private void createCoursesPan() {
 		jpnCourses = new JPanel();
 		tabbedPane.addTab("Courses", null, jpnCourses, null);
@@ -126,14 +129,6 @@ public class MainMenuView extends JFrame {
 		lblCourses.setBounds(10, 35, 790, 59);
 		jpnCourses.add(lblCourses);
 		
-	}
-	public void clearCoursesTable() {
-		DefaultTableModel model = (DefaultTableModel) coursesTable.getModel();
-		model.setRowCount(0);
-	}
-	public void clearStudentsTable() {
-		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
-		model.setRowCount(0);
 	}
 	public void createProfCourseTable() {
         DefaultTableModel model = new DefaultTableModel();
@@ -212,7 +207,7 @@ public class MainMenuView extends JFrame {
 	public Object getCourseTableElement(int r, int c) {
 		return coursesTable.getValueAt(r, c); 
 	}
-	//students
+
 	private void createStudentsPan() {
 		jpnStudents = new JPanel();
 		tabbedPane.addTab("Students", null, jpnStudents, null);

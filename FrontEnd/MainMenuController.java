@@ -1,3 +1,5 @@
+package frontEnd;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -5,11 +7,16 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import sharedData.Course;
+import sharedData.User;
+import sharedData.Course;
+
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 /**
  * Controls the view and model of the program.  Sets action listeners for all buttons on the GUI and 
@@ -25,6 +32,9 @@ public class MainMenuController {
  */
 private MainMenuView theView;
 
+private SocketCommunicator coms;
+
+private User professor;
 
 
   /**
@@ -33,10 +43,15 @@ private MainMenuView theView;
  * @param v the GUI of the program
  * @param m the database of the program
  */
-public MainMenuController (MainMenuView v)
+public MainMenuController (MainMenuView v, SocketCommunicator coms, User professor)
   {
+	
     theView = v;
-
+    this.coms = coms;
+    this.professor = professor;
+    
+    fillTable();
+    
     // add listeners...
     theView.addCourseClearListener( new CourseClearListener());
     theView.addCourseAddListener( new CourseAddListener());
@@ -77,7 +92,9 @@ class CourseAddListener implements ActionListener
         		    "Blank names are invalid");
     	}
     	else {// add course number and prof name here
-    		theView.addCourseTableRow(101, newCourseName, "Dr. Dab");
+    		coms.write(new Course(false, 0, professor.getID(), newCourseName, false));
+    		theView.
+    		fillTable();
     	}
 
     	theView.clearNewCourseField();
@@ -117,11 +134,22 @@ class SearchTypeListener implements ActionListener
 	        int row = e.getFirstRow();
 	        int column = e.getColumn();
 	        String courseName = (String)theView.getCourseTableElement(row, 1);
+	        int courseID = Integer.parseInt((String)theView.getCourseTableElement(row, 0));
 	        
 	        if(column == 3) {// active or not active
 	        	String activity = (String)theView.getCourseTableElement(row, column);
 	        	JOptionPane.showMessageDialog(null,
 	        			courseName  + " is now " + activity);
+	        	if(activity.equals("Active"))
+	        	{
+	        		coms.write(new Course(false,courseID,professor.getID(),courseName,true));
+	        	}
+	        	else
+	        	{
+	        		coms.write(new Course(false,courseID,professor.getID(),courseName,false));
+	        	}
+	        	
+	        	
 	        }
 	        else if(column == 4) {// true = view and set others to false, false = stop viewing
 	        	int numRows = 2;
@@ -146,4 +174,17 @@ class SearchTypeListener implements ActionListener
 	        }
 	    }
 	}
+	
+	private void fillTable()
+	{
+		coms.write(new Course(true, 0, professor.getID(), null, false));
+		Vector<Course> coursesInDB = (Vector<Course>)coms.read();
+		
+		for(int i = 0; i < coursesInDB.size(); i++)
+		{
+			Course currentCourse = coursesInDB.get(i);
+			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ professor.getLastname());
+		}
+	}
+
 }

@@ -1,40 +1,58 @@
+package frontEnd;
+
+import java.util.Vector;
+
 import javax.swing.JOptionPane;
 
+import sharedData.User;
+
 public class LoginWindow {
-	private String userName;
+	private int userName;
 	private String password;
 	private boolean loginCorrect;
-
 	
-	public LoginWindow() {
-		userName = password = null;
+	public LoginWindow(SocketCommunicator coms) {
+		userName = 0;
+		password = null;
 		loginCorrect = false;
+		Vector<User> user = null;
+		
 		while(!loginCorrect) {
-			loginCorrect = getUserInput();
+			coms.write(getUserInput());
+			user = (Vector<User>)coms.read();
+			if(user.get(0).getIsQuerry() == true)
+			{
+				loginCorrect = true;
+			}
 		}
-		runMainMenu();
+		runMainMenu(coms, user.get(0));
 	}
 	
-	private boolean getUserInput() {
-		userName = JOptionPane.showInputDialog("Enter Username: ");
+	private User getUserInput() {
+		userName = Integer.parseInt(JOptionPane.showInputDialog("Enter Username: "));
+		
 		password = JOptionPane.showInputDialog("Enter Password: ");
-		return testUserInput();
+		
+		return new User(true, userName, password, null, null, null, null);
 		
 	}
-	private boolean testUserInput() {
-		// communicate with socket
-		if(userName.equals("Rob") && password.equals("bunny")) {
-			return true;
-		}
-		JOptionPane.showMessageDialog(null,
-			    "Please try entering your information again",
-			    "Wrong Username or Password",
-			    JOptionPane.ERROR_MESSAGE);	
-		return false;
-	}
-	private void runMainMenu() {
+//	private boolean testUserInput() {
+//		
+//		
+//		if(userName.equals("Rob") && password.equals("bunny")) {
+//			return true;
+//		}
+//		JOptionPane.showMessageDialog(null,
+//			    "Please try entering your information again",
+//			    "Wrong Username or Password",
+//			    JOptionPane.ERROR_MESSAGE);	
+//		return false;
+//	}
+	
+	private void runMainMenu(SocketCommunicator coms, User user) {
 		MainMenuView theView = new MainMenuView();
-		MainMenuController theController = new MainMenuController (theView );
+		//while(true) {}
+		MainMenuController theController = new MainMenuController (theView, coms, user);
 	}
 
 }

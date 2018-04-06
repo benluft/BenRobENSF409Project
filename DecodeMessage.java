@@ -92,9 +92,6 @@ class DecodeMessage implements Runnable, MessageNameConstants
 		{
 			System.out.println("Message to write is a course Message");
 			DBWriter writer = new DBWriter(courseMessage.toLowerCase(), message);
-			
-			readCourseTable((Course) message);
-			
 		}
 		
 		

@@ -94,6 +94,11 @@ class DecodeMessage implements Runnable, MessageNameConstants
 			DBWriter writer = new DBWriter(courseMessage.toLowerCase(), message);
 		}
 		
+		if(message.getMessageType().equals(enrolMessage))
+		{
+			DBWriter writer = new DBWriter(enrolMessage.toLowerCase(), message);
+		}
+		
 		
 	}
 	

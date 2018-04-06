@@ -106,29 +106,6 @@ class CourseAddListener implements ActionListener
     }
   }
 }
-class SearchTypeListener implements ActionListener
-  {
-    @Override
-    public void actionPerformed (ActionEvent arg0)
-    {
-      try
-      {
-        JComboBox cb = (JComboBox)arg0.getSource();
-        String searchType = (String)cb.getSelectedItem();
-        switch (searchType){
-          case "Client Type": System.out.println("Client Type Selected");
-              break;
-          case "I.D. Number": System.out.println("I.D. Number Selected");
-              break;
-          case "Last Name": System.out.println("Last name selected");
-              break;
-          default: System.out.println("Error selecting search type");
-        }
-      }catch(Exception e){
-        System.out.println("issue with Search Type listener.");
-      }
-    }
-  }
 
 	public class CourseTableListener implements TableModelListener {
 	
@@ -154,7 +131,7 @@ class SearchTypeListener implements ActionListener
 	        	
 	        }
 	        else if(column == 4) {// true = view and set others to false, false = stop viewing
-	        	int numRows = 2;
+	        	int numRows = theView.getCourseTableNumRows();
 	        	boolean val = (boolean)theView.getCourseTableElement(row, column);
 	        	if(val == true) {
 		        	for(int i = 0; i < numRows; i++) {
@@ -200,6 +177,60 @@ class SearchTypeListener implements ActionListener
 	{
 		coms.write(new Course(true, 0, professor.getID(), null, false));
 		return (Vector<Course>)coms.read();
+	}
+
+
+	    //for students tab
+ 	class StudentClearListener implements ActionListener
+	{
+	  @Override
+	  public void actionPerformed (ActionEvent arg0)
+	  {
+	    try
+	    {
+	    	theView.clearStudentSearchBox();
+	    
+	    }catch(Exception e){
+	      System.out.println("issue with clear search box listener.");
+	    }
+	  }
+	}
+    class StudentSearchListener implements ActionListener
+	{
+	  @Override
+	  public void actionPerformed (ActionEvent arg0)
+	  {
+	    try
+	    {
+	    	String searchType = theView.getStudentSearchType();
+	    	String searchKey = theView.getStudentSearchBox();
+	        switch (searchType){
+	          case "Last Name": System.out.println("Client Type Selected " + searchKey);
+	              break;
+	          case "I.D. Number": System.out.println("I.D. Number Selected " + searchKey);
+	              break;
+	          default: System.out.println("Error selecting search type");
+	        }
+	    	
+	    }catch(Exception e){
+	      System.out.println("issue with Search Type listener.");
+	    }
+	  }
+	}
+    class StudentTableListener implements TableModelListener {
+	
+	    public void tableChanged(TableModelEvent e) {
+	        int row = e.getFirstRow();
+	        int column = e.getColumn();
+	        String firstName = (String)theView.getStudentTableElement(row, 0);
+	        String lastName = (String)theView.getStudentTableElement(row, 1);
+	        
+	        if(column == 3) {// enrolled or not enrolled
+	        	String enr = (String)theView.getStudentTableElement(row, column);
+	        	JOptionPane.showMessageDialog(null,
+	        			firstName + " " + lastName  + " is now " + enr);
+	        }
+	    }
 	}
 
 }

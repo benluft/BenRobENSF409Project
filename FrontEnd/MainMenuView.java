@@ -103,6 +103,7 @@ public class MainMenuView extends JFrame {
 		//setProfEditability();
 
 	}
+	
 	//courses
 	private void createCoursesPan() {
 		jpnCourses = new JPanel();
@@ -216,6 +217,9 @@ public class MainMenuView extends JFrame {
 		  JComboBox activeBox = new JComboBox(activeBoxStrings);
 		  return activeBox;
 	}
+	public int getCourseTableNumRows() {
+		return coursesTable.getRowCount();
+	}
 	
 	//students
 	private void createStudentsPan() {
@@ -295,7 +299,10 @@ public class MainMenuView extends JFrame {
 		btnSearchStudent.addActionListener(l);
 	}
 	public void clearSearchSudentAddListener(ActionListener l) {
-		btnSearchStudent.addActionListener(l);
+		btnStudentClear.addActionListener(l);
+	}
+	public void addStudentTableListener(TableModelListener l) {
+		studentTable.getModel().addTableModelListener(l);
 	}
 	public void clearStudentsTable() {
 		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
@@ -306,6 +313,21 @@ public class MainMenuView extends JFrame {
 		  JComboBox box = new JComboBox(boxStrings);
 		  return box;
 	}
+	public void clearStudentSearchBox() {
+		searchStudenttextField.setText("");
+	}
+	public String getStudentSearchBox() {
+		return searchStudenttextField.getText();
+	}
+	public String getStudentSearchType() {
+		return (String)searchStudentComboBox.getSelectedItem();
+	}
+	public Object getStudentTableElement(int r, int c) {
+		return studentTable.getValueAt(r, c); 
+	}
+	public void setStudentTableElement(Object val, int r, int c) {
+		studentTable.setValueAt(val, r, c);
+	}
 	
 	//assignment
 	private void createAssignmentsPan() {
@@ -314,6 +336,8 @@ public class MainMenuView extends JFrame {
 		jpnAsg.setLayout(null);
 		
 	}
+	
+	//dropBox
 	private void createDropBoxPan() {
 		jpnDropBox = new JPanel();
 		tabbedPane.addTab("Drop Box", null, jpnDropBox, null);

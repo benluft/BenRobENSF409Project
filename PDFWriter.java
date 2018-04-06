@@ -26,7 +26,7 @@ class PDFWriter implements MessageNameConstants
 		
 		try 
 		{
-			if(rs.next())
+			while(rs.next())
 			{
 				pdfPath = rs.getString(4);
 			}
@@ -43,10 +43,10 @@ class PDFWriter implements MessageNameConstants
 	
 	private void downloadFile(byte[] contents)
 	{
-		File newFile = new File(pdfPath + fileBytes.getFileExtension());
+		File newFile = new File(pdfPath);
 		
 		try{
-			if(! newFile.exists())
+			if(!newFile.exists())
 			{
 				newFile.createNewFile();
 			}
@@ -54,7 +54,7 @@ class PDFWriter implements MessageNameConstants
 			FileOutputStream writer = new FileOutputStream(newFile);
 			BufferedOutputStream bos = new BufferedOutputStream(writer);
 			
-			bos.write(content);
+			bos.write(contents);
 			bos.close();
 		} 
 		catch(IOException e){

@@ -8,6 +8,7 @@ import javax.mail.Message;
 import com.mysql.jdbc.PreparedStatement;
 
 import sharedData.Assignment;
+import sharedData.Course;
 import sharedData.MessageNameConstants;
 import sharedData.SocketMessage;
 
@@ -15,8 +16,6 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 {
 	
 	private int tableColsPerMessage;
-
-	private Object[] colsToWrite;
 	
 	DBWriter(String tableName, SocketMessage message) {
 		super(tableName);
@@ -49,11 +48,13 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 	
 	private PreparedStatement createSQLCommand(int sizeCommand)
 	{
-		for(int i = 1; i < tableColsPerMessage; i++)
+		for(int i = 1; i < sizeCommand; i++)
 		{
 			super.appendSqlCommand("?,");
 		}
 		super.appendSqlCommand("?)");
+		
+		super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
 		
 		try 
 		{
@@ -75,14 +76,18 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		
 		try 
 		{
+			statement.setInt(1, 0);
 			statement.setInt(2, assign.getCourseID());
 			statement.setString(3, assign.getTitle());
 			statement.setString(4, assignmentPath + assign.getTitle());
 			statement.setBoolean(5, assign.isActive());
 			statement.setString(6, assign.getDueDate());
+			statement.setBoolean(7, assign.isActive());
 			
 			statement.execute();
+			super.resetSqlCommand();
 		} 
+		
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -97,7 +102,26 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 	
 	private void writeCourse(SocketMessage message)
 	{
+		Course course = (Course) message;
 		
+		PreparedStatement statement = createSQLCommand(4);
+		
+		
+		try 
+		{
+			statement.setInt(1, 0);
+			statement.setInt(2, course.getProfID());
+			statement.setString(3, course.getName());
+			statement.setBoolean(4, course.isActive());
+			statement.setBoolean(5, course.isActive());
+			
+			statement.execute();
+			super.resetSqlCommand();
+		} 
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void writeEnrol(SocketMessage message)

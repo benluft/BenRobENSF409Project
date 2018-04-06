@@ -9,14 +9,13 @@ public class FileMessage extends SocketMessage
 	private static final long serialVersionUID = -1479413585259609557L;
 	
 	private byte[] fileData;
-	private String fileExtension;
+
 	
-	public FileMessage(boolean isQuerry,int ID, byte[] fileData, String fileExtension) 
+	public FileMessage(boolean isQuerry,int ID, byte[] fileData) 
 	{
 		super(isQuerry, ID);
 		setMessageType();
 		this.fileData = fileData;
-		this.fileExtension = fileExtension;
 	}
 
 	@Override
@@ -29,8 +28,5 @@ public class FileMessage extends SocketMessage
 		return fileData;
 	}
 
-	public String getFileExtension() {
-		return fileExtension;
-	}
 
 }

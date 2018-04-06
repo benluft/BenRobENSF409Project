@@ -27,5 +27,10 @@ class WriterWorker extends Worker
 	{
 		return sqlCommand;
 	}
+	
+	public void resetSqlCommand()
+	{
+		sqlCommand = "INSERT INTO " + tableName + " VALUES (";
+	}
 
 }

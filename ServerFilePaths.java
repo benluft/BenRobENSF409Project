@@ -2,5 +2,5 @@ package backEnd;
 
 interface ServerFilePaths 
 {
-	static final String assignmentPath = "C:\\ENSF409Assignments";
+	static final String assignmentPath = "C:\\Users\\Ben\\workspace\\Lab9\\Assignments\\";
 }

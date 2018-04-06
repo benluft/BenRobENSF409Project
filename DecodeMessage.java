@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
-import com.mysql.jdbc.util.ReadAheadInputStream;
-
 import sharedData.*;
 
 class DecodeMessage implements Runnable, MessageNameConstants
@@ -28,15 +26,20 @@ class DecodeMessage implements Runnable, MessageNameConstants
 	@Override
 	public void run() {
 		
+		toSend = new Vector<SocketMessage>();
+		
 		checkLogin();
 		
 		while(true)
 		{
+			System.out.println("Waiting for new message");
+			toSend = new Vector<SocketMessage>();
 			try 
 			{
 				SocketMessage message = (SocketMessage) reader.readObject();
 				if(message.getIsQuerry())
 				{
+					System.out.println("This message is a query");
 					pickReadWorker(message);
 					writer.writeObject(toSend);
 					
@@ -58,20 +61,19 @@ class DecodeMessage implements Runnable, MessageNameConstants
 	
 	private void pickWriteWorker(SocketMessage message)
 	{
-		if(message.getMessageType() == emailMessage)
+		System.out.println("Got in write worker");
+		if(message.getMessageType().equals(emailMessage))
 		{
 			Email mail = (Email) message;
 			
 			writeEmail(mail);
 		}
 		
-		if(message.getMessageType() == assignmentMessage)
+		if(message.getMessageType().equals(assignmentMessage))
 		{
 			Assignment assign = (Assignment) message;
 			
-			readAssignmentTable(assign);
-			
-			writeAssignmentTable(assign);
+			DBWriter writer = new DBWriter(assignmentMessage.toLowerCase(), message);
 			
 			SocketMessage messageFile;
 			try 
@@ -86,35 +88,52 @@ class DecodeMessage implements Runnable, MessageNameConstants
 			
 		}
 		
+		if(message.getMessageType().equals(courseMessage))
+		{
+			System.out.println("Message to write is a course Message");
+			DBWriter writer = new DBWriter(courseMessage.toLowerCase(), message);
+			
+			readCourseTable((Course) message);
+			
+		}
+		
 		
 	}
 	
 	private void pickReadWorker(SocketMessage message)
 	{
-		
-		if(message.getMessageType() == courseMessage)
+		System.out.println("Message has got to pickReadWorker");
+		if(message.getMessageType().equals(courseMessage))
 		{
+			System.out.println("Message received is a Course");
+			
 			Course course = (Course) message; 
 			
 			readCourseTable(course);
 		}
 		
-		if(message.getMessageType() == userMessage)
+		if(message.getMessageType().equals(userMessage))
 		{
+			System.out.println("Message received is a user");
+			
 			User user = (User) message;
 			
 			readUserTable(user);
 		}
 		
-		if(message.getMessageType() == enrolMessage)
+		if(message.getMessageType().equals(enrolMessage))
 		{
+			System.out.println("Message received is an enrol");
+			
 			Enrolment enrol = (Enrolment) message;
 			
 			readEnrolTable(enrol);
 		}
 		
-		if(message.getMessageType() == assignmentMessage)
+		if(message.getMessageType().equals(assignmentMessage))
 		{
+			System.out.println("Message received is an assignment");
+			
 			Assignment assign = (Assignment) message;
 			
 			readAssignmentTable(assign);
@@ -141,7 +160,7 @@ class DecodeMessage implements Runnable, MessageNameConstants
 	
 	private void readEnrolTable(Enrolment enrol) {
 
-		DBReader dbReader = new DBReader(courseMessage.toLowerCase(), "course_id", enrol.getCourseID());
+		DBReader dbReader = new DBReader(enrolMessage.toLowerCase(), "course_id", enrol.getCourseID());
 		
 		ResultSet rs = dbReader.getReadResults();
 		
@@ -220,6 +239,7 @@ class DecodeMessage implements Runnable, MessageNameConstants
 			try {
 				message = (SocketMessage) reader.readObject();
 				loggedIn = attemptLogin((User) message);
+				writer.writeObject(toSend);
 			} 
 			catch (ClassNotFoundException | IOException e) {
 				// TODO Auto-generated catch block
@@ -239,13 +259,13 @@ class DecodeMessage implements Runnable, MessageNameConstants
 		{
 			if(rs.next())
 			{
-				toSend.add(new User(false, rs.getInt(1), rs.getString(2), rs.getString(3),
+				toSend.add(new User(true, rs.getInt(1), rs.getString(2), rs.getString(3),
 						rs.getString(4), rs.getString(5), rs.getString(6)));
 				return true;
 			}
 			else
 			{
-				toSend.add(new User(true, 0, null, null, null, null, null));
+				toSend.add(new User(false, 0, null, null, null, null, null));
 			}
 		} 
 		catch (SQLException e) {

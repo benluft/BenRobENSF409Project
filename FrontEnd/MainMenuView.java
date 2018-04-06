@@ -25,6 +25,7 @@ import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
 
 
 public class MainMenuView extends JFrame {
@@ -49,6 +50,14 @@ public class MainMenuView extends JFrame {
 	private JButton btnAddCourse;
 	private JButton btnCourseClear;
 	private JScrollPane coursePane;
+	private JTable studentTable;
+	private JTextField searchStudenttextField;
+	private JLabel lblStudents;
+	private JLabel lblSearchStudents;
+	private JLabel lblSearchStudentUsing;
+	private JComboBox searchStudentComboBox;
+	private JButton btnSearch;
+	private JButton btnClear;
 
 	/**
 	 * Create the frame.
@@ -97,14 +106,9 @@ public class MainMenuView extends JFrame {
 		jpnCourses = new JPanel();
 		tabbedPane.addTab("Courses", null, jpnCourses, null);
 		jpnCourses.setLayout(null);
-		
-		String[] courseColumns = {"Course Number", "Course Name", "Proffesor", "Activity", "Viewing (click to change)"};
-		Object[][] coursesTest = {
-				{"400", "ENEL", "Dr. Dennis Onen", "Active", false},
-				{"319", "CPSC", "Dr. Manzera", "Not Active", false},
-		};
+
 		//TODO: call from prof view constructor in super style
-		createProfTable();
+		createProfCourseTable();
 
 		
 		TableColumn activityColumn = coursesTable.getColumnModel().getColumn(3);
@@ -114,17 +118,17 @@ public class MainMenuView extends JFrame {
 		viewingColumn.setCellEditor(new DefaultCellEditor(new JCheckBox()));
 
 		coursePane = new JScrollPane(coursesTable);
-		coursePane.setBounds(10, 157, 790, 186);
+		coursePane.setBounds(10, 127, 790, 294);
 		jpnCourses.add(coursePane);
 		
 		lblCourses = new JLabel("Courses");
 		lblCourses.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCourses.setFont(new Font("Tahoma", Font.PLAIN, 39));
-		lblCourses.setBounds(80, 52, 606, 59);
+		lblCourses.setBounds(10, 35, 790, 59);
 		jpnCourses.add(lblCourses);
 		
 	}
-	public void createProfTable() {
+	public void createProfCourseTable() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Course Number");
         model.addColumn("Course Name");
@@ -139,7 +143,7 @@ public class MainMenuView extends JFrame {
 	        }
 		};
 	}
-	private void createStudentTable(Object[][] coursesTest, String[] courseColumns) {
+	private void createStudentCourseTable(Object[][] coursesTest, String[] courseColumns) {
 		coursesTable = new JTable(coursesTest, courseColumns) {
 	        @Override
 	        public boolean isCellEditable(int row, int column)
@@ -156,13 +160,13 @@ public class MainMenuView extends JFrame {
 		jpnCourses.add(lblNewCourse);
 		
 		lblCourseName = new JLabel("Course Name");
-		lblCourseName.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCourseName.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblCourseName.setBounds(129, 516, 157, 32);
 		jpnCourses.add(lblCourseName);
 		
 		textCourseName = new JTextField();
 		textCourseName.setColumns(10);
-		textCourseName.setBounds(129, 550, 568, 20);
+		textCourseName.setBounds(129, 550, 573, 32);
 		jpnCourses.add(textCourseName);
 		
 		btnAddCourse = new JButton("Add Course");
@@ -171,10 +175,6 @@ public class MainMenuView extends JFrame {
 		jpnCourses.add(btnAddCourse);
 		
 		btnCourseClear = new JButton("Clear");
-		btnCourseClear.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		btnCourseClear.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnCourseClear.setBounds(416, 614, 122, 32);
 		jpnCourses.add(btnCourseClear);
@@ -205,6 +205,90 @@ public class MainMenuView extends JFrame {
 	public Object getCourseTableElement(int r, int c) {
 		return coursesTable.getValueAt(r, c); 
 	}
+
+	private void createStudentsPan() {
+		jpnStudents = new JPanel();
+		tabbedPane.addTab("Students", null, jpnStudents, null);
+		jpnStudents.setLayout(null);
+		
+		createStudentListTableForProf();
+		
+		JScrollPane studentPane = new JScrollPane(studentTable);
+		studentPane.setBounds(10, 126, 790, 288);
+		jpnStudents.add(studentPane);
+		
+		TableColumn enrollmentColumnt = studentTable.getColumnModel().getColumn(3);
+		enrollmentColumnt.setCellEditor(new DefaultCellEditor(createEnrollmentBox()));
+		
+		lblStudents = new JLabel("Students");
+		lblStudents.setHorizontalAlignment(SwingConstants.CENTER);
+		lblStudents.setFont(new Font("Tahoma", Font.PLAIN, 39));
+		lblStudents.setBounds(10, 30, 790, 66);
+		jpnStudents.add(lblStudents);
+		
+		lblSearchStudents = new JLabel("Search Students");
+		lblSearchStudents.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSearchStudents.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		lblSearchStudents.setBounds(0, 452, 800, 37);
+		jpnStudents.add(lblSearchStudents);
+		
+		searchStudentComboBox = new JComboBox();
+		searchStudentComboBox.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		searchStudentComboBox.setModel(new DefaultComboBoxModel(new String[] {"Last Name", "I.D. Number"}));
+		searchStudentComboBox.setBounds(177, 525, 142, 37);
+		jpnStudents.add(searchStudentComboBox);
+		
+		lblSearchStudentUsing = new JLabel("Search Using: ");
+		lblSearchStudentUsing.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblSearchStudentUsing.setBounds(64, 525, 103, 37);
+		jpnStudents.add(lblSearchStudentUsing);
+		
+		searchStudenttextField = new JTextField();
+		searchStudenttextField.setBounds(329, 525, 442, 37);
+		jpnStudents.add(searchStudenttextField);
+		searchStudenttextField.setColumns(10);
+		
+		btnSearch = new JButton("Search");
+		btnSearch.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnSearch.setBounds(232, 594, 134, 37);
+		jpnStudents.add(btnSearch);
+		
+		btnClear = new JButton("Clear");
+		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnClear.setBounds(433, 594, 134, 37);
+		jpnStudents.add(btnClear);
+		
+	}
+	public void addStudentTableRow(String first, String last, int id) {
+		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+		model.addRow(new Object[]{first, last, Integer.toString(id), "Not Enrolled"});
+	}
+	public void createStudentListTableForProf() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("First Name");
+        model.addColumn("Last Name");
+        model.addColumn("I.D. Number");
+        model.addColumn("Enrollment");
+        studentTable = new JTable(model) {
+	        @Override
+	        public boolean isCellEditable(int row, int column)
+	        {
+	            return column == 3;
+	        }
+		};
+		//test
+		addStudentTableRow("Rob", "Dunn", 12345);
+	}
+	private JComboBox createEnrollmentBox() {
+		  String[] boxStrings = {"Enrolled", "Not Enrolled"};
+		  JComboBox box = new JComboBox(boxStrings);
+		  return box;
+	}
+	private JComboBox createActivityBox() {
+		  String[] activeBoxStrings = {"Active", "Not Active"};
+		  JComboBox activeBox = new JComboBox(activeBoxStrings);
+		  return activeBox;
+	}
 	private void createAssignmentsPan() {
 		jpnAsg = new JPanel();
 		tabbedPane.addTab("Assignments", null, jpnAsg, null);
@@ -223,12 +307,6 @@ public class MainMenuView extends JFrame {
 		jpnGrades.setLayout(null);
 		
 	}
-	private void createStudentsPan() {
-		jpnStudents = new JPanel();
-		tabbedPane.addTab("Students", null, jpnStudents, null);
-		jpnStudents.setLayout(null);
-		
-	}
 	private void createEmailPan() {
 		jpnEmail = new JPanel();
 		tabbedPane.addTab("Email", null, jpnEmail, null);
@@ -236,9 +314,5 @@ public class MainMenuView extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 		
 	}
-	private JComboBox createActivityBox() {
-		  String[] activeBoxStrings = {"Active", "Not Active"};
-		  JComboBox activeBox = new JComboBox(activeBoxStrings);
-		  return activeBox;
-	}
+
 }

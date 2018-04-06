@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.text.NumberFormatter;
 import javax.swing.DefaultCellEditor;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -22,8 +23,16 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.NumberFormat;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 
@@ -59,14 +68,15 @@ public class MainMenuView extends JFrame {
 	private JComboBox searchStudentComboBox;
 	private JButton btnSearchStudent;
 	private JButton btnStudentClear;
+	//assignments
 	private JLabel lblAssignnents;
-	private JTable table;
+	private JTable asgTable;
 	private JButton btnUploadAssignment;
 	private JLabel lblAddAssignment;
-	private JLabel lblDueDatemmddyyyy;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JLabel lblDueDate;
+	private JTextField monthTxt;
+	private JTextField dayTxt;
+	private JTextField yearTxt;
 
 	/**
 	 * Create the frame.
@@ -347,7 +357,6 @@ public class MainMenuView extends JFrame {
 		return studentTable.getRowCount();
 	}
 
-	
 	//assignment
 	private void createAssignmentsPan() {
 		jpnAsg = new JPanel();
@@ -360,9 +369,12 @@ public class MainMenuView extends JFrame {
 		lblAssignnents.setBounds(10, 38, 790, 66);
 		jpnAsg.add(lblAssignnents);
 		
-		table = new JTable();
-		table.setBounds(10, 131, 790, 260);
-		jpnAsg.add(table);
+		createAsgTable();
+		JScrollPane asgScrollPane = new JScrollPane(asgTable);
+		asgScrollPane.setBounds(10, 131, 790, 260);
+		jpnAsg.add(asgScrollPane);
+		TableColumn activityColumn = asgTable.getColumnModel().getColumn(2);
+		activityColumn.setCellEditor(new DefaultCellEditor(createActivityBox()));
 		
 		btnUploadAssignment = new JButton("Upload Assignment");
 		btnUploadAssignment.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -375,30 +387,98 @@ public class MainMenuView extends JFrame {
 		lblAddAssignment.setBounds(10, 425, 790, 44);
 		jpnAsg.add(lblAddAssignment);
 		
-		lblDueDatemmddyyyy = new JLabel("Due Date (MM/DD/YYYY): ");
-		lblDueDatemmddyyyy.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblDueDatemmddyyyy.setBounds(153, 508, 201, 50);
-		jpnAsg.add(lblDueDatemmddyyyy);
+		lblDueDate = new JLabel("Due Date (MM/DD/YYYY): ");
+		lblDueDate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblDueDate.setBounds(153, 508, 201, 50);
+		jpnAsg.add(lblDueDate);
+
+		monthTxt = new JTextField(2);
+		monthTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		monthTxt.setBounds(345, 508, 55, 44);
+		monthTxt.setDocument(new TextFieldLimit(2));
+		jpnAsg.add(monthTxt);
+		monthTxt.setColumns(10);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textField.setBounds(345, 508, 55, 44);
-		jpnAsg.add(textField);
-		textField.setColumns(10);
+		dayTxt = new JTextField(2);
+		dayTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		dayTxt.setColumns(10);
+		dayTxt.setBounds(410, 508, 55, 44);
+		dayTxt.setDocument(new TextFieldLimit(2));
+		jpnAsg.add(dayTxt);
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textField_1.setColumns(10);
-		textField_1.setBounds(410, 508, 55, 44);
-		jpnAsg.add(textField_1);
-		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textField_2.setColumns(10);
-		textField_2.setBounds(475, 508, 91, 44);
-		jpnAsg.add(textField_2);
+		yearTxt = new JTextField(4);
+		yearTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		yearTxt.setColumns(10);
+		yearTxt.setBounds(475, 508, 91, 44);
+		yearTxt.setDocument(new TextFieldLimit(4));
+		jpnAsg.add(yearTxt);
 		contentPane.setLayout(gl_contentPane);
 		
+	}
+	public void createAsgTable() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("File Name");
+        model.addColumn("Due Date");
+        model.addColumn("Activity");
+        asgTable = new JTable(model) {
+	        @Override
+	        public boolean isCellEditable(int row, int column)
+	        {
+	            return column == 2;
+	        }
+		};
+		addAsgTableRow("Flying 1", "Tomorrow");
+	}
+	public String getMonth() {
+		return monthTxt.getText();
+	}
+	public String getDay() {
+		return dayTxt.getText();
+	}
+	public String getYear() {
+		return yearTxt.getText();
+	}
+	public void addUploadListener(ActionListener l) {
+		btnUploadAssignment.addActionListener(l);
+	}
+	public void addAssignmentsTableListener(TableModelListener l) {
+		asgTable.getModel().addTableModelListener(l);
+	}
+	public void clearAssignmentsTable() {
+		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
+		model.setRowCount(0);
+	}
+	public void clearDueDateBoxes() {
+		yearTxt.setText("");
+		dayTxt.setText("");
+		monthTxt.setText("");
+	}
+	public Object getAsgTableEl(int r, int c) {
+		return asgTable.getValueAt(r, c); 
+	}
+	public void addAsgTableRow(String name, String date) {
+		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
+		model.addRow(new Object[]{name, date, "Not Active"});
+	}
+	public byte[] getAsgFile() {
+		JFileChooser fileBrowser = new JFileChooser();
+		File selectedFile = null;
+		if(fileBrowser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			selectedFile = fileBrowser.getSelectedFile();  
+		}
+		long length = selectedFile.length(); 
+		byte[] content = new byte[(int) length]; 
+		// Converting Long to Int 
+		try {  
+			FileInputStream fis = new FileInputStream(selectedFile);  
+			BufferedInputStream bos = new BufferedInputStream(fis);  
+			bos.read(content, 0, (int)length); 
+			} catch (FileNotFoundException e) {
+				e.printStackTrace(); 
+			} catch(IOException e){  
+				e.printStackTrace(); 
+			}
+		return content;
 	}
 	
 	//dropBox

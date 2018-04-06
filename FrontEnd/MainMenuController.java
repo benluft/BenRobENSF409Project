@@ -59,6 +59,11 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
     theView.addCourseClearListener( new CourseClearListener());
     theView.addCourseAddListener( new CourseAddListener());
     theView.addClassTableListener(new CourseTableListener());
+    theView.addSearchSudentListener(new StudentSearchListener());
+    theView.addClearSearchSudentListener(new StudentClearListener());
+    theView.addStudentTableListener(new StudentTableListener());
+    theView.addUploadListener(new AsgUploadListener());
+    theView.addAssignmentsTableListener(new AsgTableListener());
   }
 
   // add listener classes
@@ -68,6 +73,61 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
  * @author Ben Luft and Rob Dunn
  *
  */
+//for assignments tab
+	class AsgUploadListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed (ActionEvent arg0)
+		{
+			try
+			{
+				String dueDate;
+				int day = Integer.parseInt(theView.getDay());
+				int month = Integer.parseInt(theView.getMonth());
+				int year = Integer.parseInt(theView.getYear());
+				
+				if(day > 31 || day < 1 || month > 12 || month < 1
+						|| year < 2018 || year > 2023) {
+		        	JOptionPane.showMessageDialog(null,
+		        		    "Invalid Due Date");
+		        	theView.clearDueDateBoxes();
+				}
+				else {// due date is valid
+					dueDate = month + "/" + day + "/" + year;
+		        	JOptionPane.showMessageDialog(null,
+		        		    "due date = " + dueDate);
+		        	theView.clearDueDateBoxes();
+		        	byte[] fileContents = theView.getAsgFile();
+		        	
+		        	//do something with file
+				}
+
+			
+			}catch(NumberFormatException nf) {
+	        	JOptionPane.showMessageDialog(null,
+	        		    "Invalid Due Date");
+	        	theView.clearDueDateBoxes();
+			}catch(Exception e){
+			  System.out.println("issue with Search Type listener.");
+			}
+		}
+	}
+	
+    class AsgTableListener implements TableModelListener {
+    	
+	    public void tableChanged(TableModelEvent e) {
+	        int row = e.getFirstRow();
+	        int column = e.getColumn();
+	        String asgName = (String)theView.getAsgTableEl(row, 0);
+	        
+	        if(column == 2) {// active or not active
+	        	String activity = (String)theView.getAsgTableEl(row, column);
+	        	JOptionPane.showMessageDialog(null,
+	        			asgName  + " is now " + activity);
+	        }
+	    }
+	}
+
 class CourseClearListener implements ActionListener
 {
   @Override

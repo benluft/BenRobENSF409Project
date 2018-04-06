@@ -147,6 +147,12 @@ class CourseAddListener implements ActionListener
 	            		    "Now viewing " + courseName);
 	        		
 	        		currentCourseID = courseID;
+	        		
+	        		theView.addSearchSudentListener(new StudentSearchListener());
+	        		theView.addStudentTableListener(new StudentTableListener());
+	        		theView.addClearSearchSudentListener(new StudentClearListener());
+	        		
+	        		theView.clearStudentsTable();
 	        	}
 
 	        }

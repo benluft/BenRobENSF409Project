@@ -135,8 +135,7 @@ public class MainMenuView extends JFrame {
 		TableColumn activityColumn = coursesTable.getColumnModel().getColumn(3);
 		activityColumn.setCellEditor(new DefaultCellEditor(createActivityBox()));
 		TableColumn viewingColumn = coursesTable.getColumnModel().getColumn(4);
-		//viewingColumn.setCellRenderer(new RadioButtonRenderer());    
-		viewingColumn.setCellEditor(new DefaultCellEditor(new JCheckBox()));
+		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
 
 		coursePane = new JScrollPane(coursesTable);
 		coursePane.setBounds(10, 127, 790, 294);
@@ -224,11 +223,11 @@ public class MainMenuView extends JFrame {
 		DefaultTableModel model = (DefaultTableModel) coursesTable.getModel();
 		if(active)
 		{
-			model.addRow(new Object[]{Integer.toString(num), name, prof, "Active", "false"});
+			model.addRow(new Object[]{Integer.toString(num), name, prof, "Active", "False"});
 		}
 		else
 		{
-			model.addRow(new Object[]{Integer.toString(num), name, prof, "Not Active", "false"});
+			model.addRow(new Object[]{Integer.toString(num), name, prof, "Not Active", "False"});
 		}
 			
 	}
@@ -242,6 +241,11 @@ public class MainMenuView extends JFrame {
 		  String[] activeBoxStrings = {"Active", "Not Active"};
 		  JComboBox activeBox = new JComboBox(activeBoxStrings);
 		  return activeBox;
+	}
+	private JComboBox createTrueFalseBox() {
+		  String[] boxStrings = {"False", "True"};
+		  JComboBox box = new JComboBox(boxStrings);
+		  return box;
 	}
 	public int getCourseTableNumRows() {
 		return coursesTable.getRowCount();

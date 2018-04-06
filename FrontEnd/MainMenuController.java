@@ -93,7 +93,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
 						|| year < 2018 || year > 2023) {
 		        	JOptionPane.showMessageDialog(null,
 		        		    "Invalid Due Date");
-		        	//theView.clearDueDateBoxes();
+		        	theView.clearDueDateBoxes();
 				}
 				else {// due date is valid
 					dueDate = month + "/" + day + "/" + year;
@@ -219,8 +219,8 @@ class CourseAddListener implements ActionListener
 	        
 	        if(column == 3) {// active or not active
 	        	String activity = (String)theView.getCourseTableElement(row, column);
-	        	JOptionPane.showMessageDialog(null,
-	        			courseName  + " is now " + activity);
+//	        	JOptionPane.showMessageDialog(null,
+//	        			courseName  + " is now " + activity);
 	        	if(activity.equals("Active"))
 	        	{
 	        		coms.write(new Course(false,courseID,professor.getID(),courseName,true));
@@ -234,16 +234,16 @@ class CourseAddListener implements ActionListener
 	        }
 	        else if(column == 4) {// true = view and set others to false, false = stop viewing
 	        	int numRows = theView.getCourseTableNumRows();
-	        	boolean val = (boolean)theView.getCourseTableElement(row, column);
-	        	if(val == true) {
+	        	String val = (String)theView.getCourseTableElement(row, column);
+	        	if(val.equals("True")) {
 		        	for(int i = 0; i < numRows; i++) {
 		        		if(i != row) {// set other rows to false
-		        			theView.setCourseTableElement(false, i, column);
+		        			theView.setCourseTableElement("False", i, column);
 		        		}
 		        	}
 	        		
-	        		JOptionPane.showMessageDialog(null,
-	            		    "Now viewing " + courseName);
+//	        		JOptionPane.showMessageDialog(null,
+//	            		    "Now viewing " + courseName);
 	        		
 	        		currentCourseID = courseID;
 	        		
@@ -440,28 +440,31 @@ class CourseAddListener implements ActionListener
 	    public void tableChanged(TableModelEvent e) {
 	        int row = e.getFirstRow();
 	        int column = e.getColumn();
-	        String firstName = (String)theView.getStudentTableElement(row, 0);
-	        String lastName = (String)theView.getStudentTableElement(row, 1);
-	        int studentID = Integer.parseInt((String)theView.getStudentTableElement(row, 2));
-	        
-	        if(column == 3) {// enrolled or not enrolled
-	        	String enr = (String)theView.getStudentTableElement(row, column);
-//	        	JOptionPane.showMessageDialog(null,
-//	        			firstName + " " + lastName  + " is now " + enr);
-	        	if(enr.equals("Enrolled"))
-	        	{
-	        		if(!doesEnrolledExist(studentID))
-	        		{
-	        			coms.write(new Enrolment(false,0,studentID,currentCourseID));
-	        		}
-	        	}
-	        	else
-	        	{
-	        		if(doesEnrolledExist(studentID))
-	        		{
-	        			coms.write(new Enrolment(false,-1,studentID,currentCourseID));
-	        		}
-	        	}
+	        if(row < 0)
+	        {
+		        String firstName = (String)theView.getStudentTableElement(row, 0);
+		        String lastName = (String)theView.getStudentTableElement(row, 1);
+		        int studentID = Integer.parseInt((String)theView.getStudentTableElement(row, 2));
+		        
+		        if(column == 3) {// enrolled or not enrolled
+		        	String enr = (String)theView.getStudentTableElement(row, column);
+	//	        	JOptionPane.showMessageDialog(null,
+	//	        			firstName + " " + lastName  + " is now " + enr);
+		        	if(enr.equals("Enrolled"))
+		        	{
+		        		if(!doesEnrolledExist(studentID))
+		        		{
+		        			coms.write(new Enrolment(false,0,studentID,currentCourseID));
+		        		}
+		        	}
+		        	else
+		        	{
+		        		if(doesEnrolledExist(studentID))
+		        		{
+		        			coms.write(new Enrolment(false,-1,studentID,currentCourseID));
+		        		}
+		        	}
+		        }
 	        }
 	    }
 	}

@@ -59,11 +59,13 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
     theView.addCourseClearListener( new CourseClearListener());
     theView.addCourseAddListener( new CourseAddListener());
     theView.addClassTableListener(new CourseTableListener());
+
     theView.addSearchSudentListener(new StudentSearchListener());
     theView.addClearSearchSudentListener(new StudentClearListener());
     theView.addStudentTableListener(new StudentTableListener());
     theView.addUploadListener(new AsgUploadListener());
     theView.addAssignmentsTableListener(new AsgTableListener());
+
   }
 
   // add listener classes
@@ -208,13 +210,11 @@ class CourseAddListener implements ActionListener
 	        		
 	        		currentCourseID = courseID;
 	        		
-	        		theView.addSearchSudentListener(new StudentSearchListener());
-	        		theView.addStudentTableListener(new StudentTableListener());
-	        		theView.addClearSearchSudentListener(new StudentClearListener());
+	        		//theView.clearStudentsTable();
 	        		
-	        		theView.clearStudentsTable();
+	        		fillStudentTable(Integer.parseInt((String)theView.getCourseTableElement(row, 0)));
+	        		
 	        	}
-
 	        }
 	        else {
 	        	System.out.println("sooooo, there shouldnt be a table listener here...");
@@ -232,6 +232,37 @@ class CourseAddListener implements ActionListener
 			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ professor.getLastname());
 		}
 	}
+	
+	private void fillStudentTable(int courseID)
+	{
+		Vector<User> studentInDB = getAllStudents();
+		Vector<Enrolment> enrolledInCourse = getEnrolledStudents();
+		
+		User currentStudent;
+		Enrolment currentEnrolment;
+		
+		boolean isEnrolled;
+		
+		for(int i = 0; i < studentInDB.size(); i++)
+		{
+			currentStudent = studentInDB.get(i);
+			
+			theView.addStudentTableRow(currentStudent.getFirstname(), currentStudent.getLastname(), 
+					currentStudent.getID());
+			
+			for(int j = 0; j < enrolledInCourse.size(); j++)
+			{
+				currentEnrolment = enrolledInCourse.get(j);
+				if(currentEnrolment.getStudentID() == currentStudent.getID())
+				{
+					theView.setStudentTableElement("Enrolled", i, 3);
+				    
+					break;
+				}
+			}
+		}
+	}
+	
 	
 	private void addNewestCourse()
 	{
@@ -253,6 +284,11 @@ class CourseAddListener implements ActionListener
 		return (Vector<Enrolment>)coms.read();
 	}
 
+	private Vector<User> getAllStudents()
+	{
+		coms.write(new User(true,0,null,null,null,null,"S"));
+		return (Vector<User>)coms.read();
+	}
 	
 
 	    //for students tab
@@ -264,6 +300,10 @@ class CourseAddListener implements ActionListener
 	    try
 	    {
 	    	theView.clearStudentSearchBox();
+	    	
+	    	//theView.clearStudentsTable();
+	    	
+	    	//fillStudentTable(currentCourseID);
 	    
 	    }catch(Exception e){
 	      System.out.println("issue with clear search box listener.");
@@ -291,6 +331,7 @@ class CourseAddListener implements ActionListener
 	    	
 	    }catch(Exception e){
 	      System.out.println("issue with Search Type listener.");
+	      e.printStackTrace();
 	    }
 	  }
 	}

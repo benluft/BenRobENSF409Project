@@ -1,5 +1,3 @@
-package frontEnd;
-
 import java.awt.BorderLayout;
 
 import java.awt.EventQueue;
@@ -61,6 +59,14 @@ public class MainMenuView extends JFrame {
 	private JComboBox searchStudentComboBox;
 	private JButton btnSearchStudent;
 	private JButton btnStudentClear;
+	private JLabel lblAssignnents;
+	private JTable table;
+	private JButton btnUploadAssignment;
+	private JLabel lblAddAssignment;
+	private JLabel lblDueDatemmddyyyy;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
 
 	/**
 	 * Create the frame.
@@ -292,6 +298,7 @@ public class MainMenuView extends JFrame {
 	            return column == 3;
 	        }
 		};
+		addFakeStudents();//for testing
 	}
 	public void addSearchSudentListener(ActionListener l) {
 		btnSearchStudent.addActionListener(l);
@@ -305,6 +312,10 @@ public class MainMenuView extends JFrame {
 	public void clearStudentsTable() {
 		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
 		model.setRowCount(0);
+	}
+	public void removeStudentTableRow(int row) {
+		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+		model.removeRow(row);
 	}
 	private JComboBox createEnrollmentBox() {
 		  String[] boxStrings = {"Enrolled", "Not Enrolled"};
@@ -326,12 +337,67 @@ public class MainMenuView extends JFrame {
 	public void setStudentTableElement(Object val, int r, int c) {
 		studentTable.setValueAt(val, r, c);
 	}
+	public void addFakeStudents() {
+		addStudentTableRow("Ben", "Luft", 1);
+		addStudentTableRow("Rick", "Luft", 2);
+		addStudentTableRow("Randy", "Dunn", 123);
+		addStudentTableRow("Rob", "Dunn", 3);
+	}
+	public int getStudentTableNumRows() {
+		return studentTable.getRowCount();
+	}
+
 	
 	//assignment
 	private void createAssignmentsPan() {
 		jpnAsg = new JPanel();
 		tabbedPane.addTab("Assignments", null, jpnAsg, null);
 		jpnAsg.setLayout(null);
+		
+		lblAssignnents = new JLabel("Assignments");
+		lblAssignnents.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAssignnents.setFont(new Font("Tahoma", Font.PLAIN, 39));
+		lblAssignnents.setBounds(10, 38, 790, 66);
+		jpnAsg.add(lblAssignnents);
+		
+		table = new JTable();
+		table.setBounds(10, 131, 790, 260);
+		jpnAsg.add(table);
+		
+		btnUploadAssignment = new JButton("Upload Assignment");
+		btnUploadAssignment.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnUploadAssignment.setBounds(315, 596, 201, 50);
+		jpnAsg.add(btnUploadAssignment);
+		
+		lblAddAssignment = new JLabel("Add Assignment");
+		lblAddAssignment.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAddAssignment.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		lblAddAssignment.setBounds(10, 425, 790, 44);
+		jpnAsg.add(lblAddAssignment);
+		
+		lblDueDatemmddyyyy = new JLabel("Due Date (MM/DD/YYYY): ");
+		lblDueDatemmddyyyy.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblDueDatemmddyyyy.setBounds(153, 508, 201, 50);
+		jpnAsg.add(lblDueDatemmddyyyy);
+		
+		textField = new JTextField();
+		textField.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textField.setBounds(345, 508, 55, 44);
+		jpnAsg.add(textField);
+		textField.setColumns(10);
+		
+		textField_1 = new JTextField();
+		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textField_1.setColumns(10);
+		textField_1.setBounds(410, 508, 55, 44);
+		jpnAsg.add(textField_1);
+		
+		textField_2 = new JTextField();
+		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textField_2.setColumns(10);
+		textField_2.setBounds(475, 508, 91, 44);
+		jpnAsg.add(textField_2);
+		contentPane.setLayout(gl_contentPane);
 		
 	}
 	
@@ -352,7 +418,6 @@ public class MainMenuView extends JFrame {
 		jpnEmail = new JPanel();
 		tabbedPane.addTab("Email", null, jpnEmail, null);
 		jpnEmail.setLayout(null);
-		contentPane.setLayout(gl_contentPane);
 		
 	}
 

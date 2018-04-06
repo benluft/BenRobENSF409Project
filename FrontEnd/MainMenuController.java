@@ -8,7 +8,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import sharedData.Course;
-import sharedData.Enrolment;
 import sharedData.User;
 import sharedData.Course;
 
@@ -37,8 +36,6 @@ private SocketCommunicator coms;
 
 private User professor;
 
-private int currentCourseID;
-
 
   /**
    * Constructs the controller and adds action listeners for all editable components of the view
@@ -59,8 +56,6 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
     theView.addCourseClearListener( new CourseClearListener());
     theView.addCourseAddListener( new CourseAddListener());
     theView.addClassTableListener(new CourseTableListener());
-    
-
   }
 
   // add listener classes
@@ -147,13 +142,10 @@ class CourseAddListener implements ActionListener
 	        		
 	        		JOptionPane.showMessageDialog(null,
 	            		    "Now viewing " + courseName);
-	        		
-	        		currentCourseID = courseID;
-	        		
-	        		theView.clearStudentsTable();
-	        		
-	        		fillStudentTable(Integer.parseInt((String)theView.getCourseTableElement(row, 0)));
-	        		
+	        	}
+	        	else {
+	        		JOptionPane.showMessageDialog(null,
+	            		    "Not viewing " + courseName);
 	        	}
 	        }
 	        else {
@@ -173,40 +165,6 @@ class CourseAddListener implements ActionListener
 		}
 	}
 	
-	private void fillStudentTable(int courseID)
-	{
-		Vector<User> studentInDB = getAllStudents();
-		Vector<Enrolment> enrolledInCourse = getEnrolledStudents(courseID);
-		
-		User currentStudent;
-		Enrolment currentEnrolment;
-		
-		boolean isEnrolled;
-		
-		for(int i = 0; i < studentInDB.size(); i++)
-		{
-			currentStudent = studentInDB.get(i);
-			
-			theView.addStudentTableRow(currentStudent.getFirstname(), currentStudent.getLastname(), 
-					currentStudent.getID());
-			
-			for(int j = 0; j < enrolledInCourse.size(); j++)
-			{
-				currentEnrolment = enrolledInCourse.get(j);
-				if(currentEnrolment.getStudentID() == currentStudent.getID())
-				{
-					theView.setStudentTableElement("Enrolled", i, 3);
-				    
-					break;
-				}
-			}
-		}
-		
-		theView.addSearchSudentListener(new StudentSearchListener());
-	    theView.addStudentTableListener(new StudentTableListener());
-	    theView.addClearSearchSudentListener(new StudentClearListener());
-	}
-	
 	private void addNewestCourse()
 	{
 		Vector<Course> coursesInDB = getAllCourses();
@@ -221,18 +179,6 @@ class CourseAddListener implements ActionListener
 		return (Vector<Course>)coms.read();
 	}
 
-	private Vector<User> getAllStudents()
-	{
-		coms.write(new User(true, 0, null, null, null, null, "S"));
-		return (Vector<User>)coms.read();
-	}
-	
-	private Vector<Enrolment> getEnrolledStudents(int courseID)
-	{
-		coms.write(new Enrolment(true,0,0,courseID));
-		return (Vector<Enrolment>)coms.read();
-	}
-	
 
 	    //for students tab
  	class StudentClearListener implements ActionListener
@@ -259,9 +205,11 @@ class CourseAddListener implements ActionListener
 	    	String searchType = theView.getStudentSearchType();
 	    	String searchKey = theView.getStudentSearchBox();
 	        switch (searchType){
-	          case "Last Name": System.out.println("Client Type Selected " + searchKey);
+	          case "Last Name": 
+	        	  searchStudentsLastName(searchKey.toLowerCase());
 	              break;
-	          case "I.D. Number": System.out.println("I.D. Number Selected " + searchKey);
+	          case "I.D. Number": 
+	        	  searchStudentsID(searchKey);
 	              break;
 	          default: System.out.println("Error selecting search type");
 	        }
@@ -271,6 +219,26 @@ class CourseAddListener implements ActionListener
 	    }
 	  }
 	}
+    private void searchStudentsLastName(String key) {
+    	String lastFromTable;
+    	for(int i = theView.getStudentTableNumRows() - 1; i >= 0; i--) {
+    		lastFromTable = (String)theView.getStudentTableElement(i, 1);
+    		lastFromTable = lastFromTable.toLowerCase();
+    		if(!(lastFromTable.equals(key))){
+    			theView.removeStudentTableRow(i);
+    		}
+    	}
+    }
+    private void searchStudentsID(String key) {
+    	String idFromTable;
+    	for(int i = 0; i < theView.getStudentTableNumRows(); i++) {
+    		idFromTable = (String)theView.getStudentTableElement(i, 2);
+    		if(!idFromTable.equals(key)){
+    			theView.removeStudentTableRow(i);
+    		}
+    	}
+    }
+
     class StudentTableListener implements TableModelListener {
 	
 	    public void tableChanged(TableModelEvent e) {
@@ -278,45 +246,13 @@ class CourseAddListener implements ActionListener
 	        int column = e.getColumn();
 	        String firstName = (String)theView.getStudentTableElement(row, 0);
 	        String lastName = (String)theView.getStudentTableElement(row, 1);
-	        int studentID = Integer.parseInt((String)theView.getStudentTableElement(row, 2));
 	        
 	        if(column == 3) {// enrolled or not enrolled
 	        	String enr = (String)theView.getStudentTableElement(row, column);
 	        	JOptionPane.showMessageDialog(null,
 	        			firstName + " " + lastName  + " is now " + enr);
-	        	if(enr.equals("Enrolled"))
-	        	{
-	        		if(!doesEnrolledExist(studentID))
-	        		{
-	        			coms.write(new Enrolment(false,0,studentID,currentCourseID));
-	        		}
-	        	}
-	        	else
-	        	{
-	        		if(doesEnrolledExist(studentID))
-	        		{
-	        			coms.write(new Enrolment(false,-1,studentID,currentCourseID));
-	        		}
-	        	}
 	        }
 	    }
 	}
-    
-    private boolean doesEnrolledExist(int studentID)
-    {
-    	Vector<Enrolment> enrolled = getEnrolledStudents(currentCourseID);
-    	
-    	for(int i = 0; i < enrolled.size(); i++)
-    	{
-    		if(enrolled.get(i).getStudentID() == studentID)
-    		{
-    			return true;
-    		}
-    	}
-    	return false;
-    }
-    
-    
-    
 
 }

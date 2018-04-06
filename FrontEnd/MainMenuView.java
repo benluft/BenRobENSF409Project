@@ -310,7 +310,7 @@ public class MainMenuView extends JFrame {
 	            return column == 3;
 	        }
 		};
-		addFakeStudents();//for testing
+		//addFakeStudents();//for testing
 	}
 	public void addSearchSudentListener(ActionListener l) {
 		btnSearchStudent.addActionListener(l);

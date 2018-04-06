@@ -8,6 +8,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import sharedData.Course;
+import sharedData.Enrolment;
 import sharedData.User;
 import sharedData.Course;
 
@@ -35,6 +36,8 @@ private MainMenuView theView;
 private SocketCommunicator coms;
 
 private User professor;
+
+private int currentCourseID;
 
 
   /**
@@ -142,11 +145,10 @@ class CourseAddListener implements ActionListener
 	        		
 	        		JOptionPane.showMessageDialog(null,
 	            		    "Now viewing " + courseName);
+	        		
+	        		currentCourseID = courseID;
 	        	}
-	        	else {
-	        		JOptionPane.showMessageDialog(null,
-	            		    "Not viewing " + courseName);
-	        	}
+
 	        }
 	        else {
 	        	System.out.println("sooooo, there shouldnt be a table listener here...");
@@ -178,7 +180,14 @@ class CourseAddListener implements ActionListener
 		coms.write(new Course(true, 0, professor.getID(), null, false));
 		return (Vector<Course>)coms.read();
 	}
+	
+	private Vector<Enrolment> getEnrolledStudents()
+	{
+		coms.write(new Enrolment(true,0, 0, currentCourseID));
+		return (Vector<Enrolment>)coms.read();
+	}
 
+	
 
 	    //for students tab
  	class StudentClearListener implements ActionListener
@@ -240,19 +249,49 @@ class CourseAddListener implements ActionListener
     }
 
     class StudentTableListener implements TableModelListener {
-	
+    	
 	    public void tableChanged(TableModelEvent e) {
 	        int row = e.getFirstRow();
 	        int column = e.getColumn();
 	        String firstName = (String)theView.getStudentTableElement(row, 0);
 	        String lastName = (String)theView.getStudentTableElement(row, 1);
+	        int studentID = Integer.parseInt((String)theView.getStudentTableElement(row, 2));
 	        
 	        if(column == 3) {// enrolled or not enrolled
 	        	String enr = (String)theView.getStudentTableElement(row, column);
 	        	JOptionPane.showMessageDialog(null,
 	        			firstName + " " + lastName  + " is now " + enr);
+	        	if(enr.equals("Enrolled"))
+	        	{
+	        		if(!doesEnrolledExist(studentID))
+	        		{
+	        			coms.write(new Enrolment(false,0,studentID,currentCourseID));
+	        		}
+	        	}
+	        	else
+	        	{
+	        		if(doesEnrolledExist(studentID))
+	        		{
+	        			coms.write(new Enrolment(false,-1,studentID,currentCourseID));
+	        		}
+	        	}
 	        }
 	    }
 	}
+    
+    private boolean doesEnrolledExist(int studentID)
+    {
+    	Vector<Enrolment> enrolled = getEnrolledStudents();
+    	
+    	for(int i = 0; i < enrolled.size(); i++)
+    	{
+    		if(enrolled.get(i).getStudentID() == studentID)
+    		{
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
 
 }

@@ -79,6 +79,7 @@ public class MainMenuView extends JFrame {
 	private JTextField monthTxt;
 	private JTextField dayTxt;
 	private JTextField yearTxt;
+	private JTextField textField;
 
 	/**
 	 * Create the frame.
@@ -510,6 +511,32 @@ public class MainMenuView extends JFrame {
 		tabbedPane.addTab("Email", null, jpnEmail, null);
 		jpnEmail.setLayout(null);
 		
+		JLabel lblEmail = new JLabel("Email");
+		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 39));
+		lblEmail.setBounds(10, 37, 790, 66);
+		jpnEmail.add(lblEmail);
+		
+		JButton button = new JButton("Clear");
+		button.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		button.setBounds(416, 573, 122, 32);
+		jpnEmail.add(button);
+		
+		JButton button_1 = new JButton("Add Course");
+		button_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		button_1.setBounds(225, 573, 122, 32);
+		jpnEmail.add(button_1);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(10, 172, 790, 372);
+		jpnEmail.add(textField);
+		
+		JLabel lblSendAnEmail = new JLabel("Send an Email to the Professor");
+		lblSendAnEmail.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSendAnEmail.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		lblSendAnEmail.setBounds(10, 130, 790, 42);
+		jpnEmail.add(lblSendAnEmail);
+		
 	}
-
 }

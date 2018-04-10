@@ -52,24 +52,8 @@ class ProfWriteMessage implements MessageNameConstants, ServerFilePaths
 		
 		if(message.getMessageType().equals(submissionMessage))
 		{
-			Submission submission = (Submission) message;
 			
 			DBWriter writer = new DBWriter(submissionMessage, message);
-			
-			SocketMessage messageFile;
-			
-			if(submission.getID() == -1)
-			{
-				try 
-				{
-					messageFile = (SocketMessage) reader.readObject();
-					PDFWriter pdfWriter = new PDFWriter(messageFile );
-				} 
-				catch (ClassNotFoundException | IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 		}
 		
 	}

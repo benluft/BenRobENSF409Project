@@ -12,6 +12,7 @@ import sharedData.Course;
 import sharedData.Enrolment;
 import sharedData.MessageNameConstants;
 import sharedData.SocketMessage;
+import sharedData.Submission;
 
 class DBWriter extends WriterWorker implements MessageNameConstants, ServerFilePaths
 {
@@ -48,7 +49,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		super.resetSqlCommand();
 	}
 	
-	private PreparedStatement createSQLCommand(int sizeCommand, boolean avoidDuplicates)
+	private PreparedStatement createSQLCommand(int sizeCommand, boolean avoidDuplicates, String changeOnDuplicate)
 	{
 		for(int i = 1; i < sizeCommand; i++)
 		{
@@ -58,7 +59,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		
 		if(avoidDuplicates == true)
 		{
-			super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
+			super.appendSqlCommand(" ON DUPLICATE KEY UPDATE " + changeOnDuplicate + "=?");
 		}
 		
 		
@@ -74,16 +75,11 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		
 	}
 	
-	private void duplicateProtection()
-	{
-		super.appendSqlCommand(" ON DUPLICATE KEY UPDATE active=?");
-	}
-	
 	private void writeAssignment(SocketMessage message)
 	{
 		Assignment assign = (Assignment) message;
 		
-		PreparedStatement statement = createSQLCommand(6, true);
+		PreparedStatement statement = createSQLCommand(6, true, "active");
 		
 		try 
 		{
@@ -115,7 +111,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 	{
 		Course course = (Course) message;
 		
-		PreparedStatement statement = createSQLCommand(4,true);
+		PreparedStatement statement = createSQLCommand(4,true,"active");
 		
 		try 
 		{
@@ -141,7 +137,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		
 		if(enrol.getID() == 0)
 		{
-			PreparedStatement statement = createSQLCommand(3,false);
+			PreparedStatement statement = createSQLCommand(3,false,null);
 			
 			try {
 				statement.setInt(1, enrol.getID());
@@ -177,7 +173,30 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 	
 	private void writeSubmission(SocketMessage message)
 	{
+		Submission submission = (Submission) message;
 		
+		PreparedStatement statement = createSQLCommand(7,true,"grades");
+		
+		try 
+		{
+			String uniqueTitle = "StudentID" + submission.getStudentID() + "AssignID" + 
+					submission.getAssignID() + submission.getTitle();
+			
+			statement.setInt(1, 0);
+			statement.setInt(2, submission.getAssignID());
+			statement.setInt(3, submission.getStudentID());
+			statement.setString(4, uniqueTitle + submissionPath);
+			statement.setString(5, uniqueTitle);
+			statement.setInt(6, submission.getGrade());
+			statement.setString(7, submission.getComments());
+			
+			statement.execute();
+			super.resetSqlCommand();
+		} 
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

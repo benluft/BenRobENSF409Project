@@ -20,6 +20,8 @@ import java.awt.CardLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -37,6 +39,7 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextArea;
 
 
 public class MainMenuView extends JFrame {
@@ -79,7 +82,10 @@ public class MainMenuView extends JFrame {
 	private JTextField monthTxt;
 	private JTextField dayTxt;
 	private JTextField yearTxt;
-	private JTextField textField;
+	private JButton btnClearEmail;
+	private JButton btnSendEmail;
+	private JTextField txtSubject;
+	private JTextArea txtEmailBody;
 
 	/**
 	 * Create the frame.
@@ -390,6 +396,8 @@ public class MainMenuView extends JFrame {
 		jpnAsg.add(asgScrollPane);
 		TableColumn activityColumn = asgTable.getColumnModel().getColumn(2);
 		activityColumn.setCellEditor(new DefaultCellEditor(createActivityBox()));
+		TableColumn viewingColumn = asgTable.getColumnModel().getColumn(3);
+		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
 		
 		btnUploadAssignment = new JButton("Upload Assignment");
 		btnUploadAssignment.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -435,11 +443,13 @@ public class MainMenuView extends JFrame {
         model.addColumn("File Name");
         model.addColumn("Due Date");
         model.addColumn("Activity");
+        model.addColumn("Viewing");
+        model.addColumn("Grade");
         asgTable = new JTable(model) {
 	        @Override
 	        public boolean isCellEditable(int row, int column)
 	        {
-	            return column == 2;
+	            return column == 2 || column == 3 || column == 4;
 	        }
 		};
 		//addAsgTableRow("Flying 1", "Tomorrow");
@@ -475,12 +485,15 @@ public class MainMenuView extends JFrame {
 		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
 		if(activity == true)
 		{
-			model.addRow(new Object[]{name, date, "Active"});
+			model.addRow(new Object[]{name, date, "Active", "False", "Unmarked"});
 		}
 		else
 		{
-			model.addRow(new Object[]{name, date, "Not Active"});
+			model.addRow(new Object[]{name, date, "Not Active", "False,", "Unmarked"});
 		}
+	}
+	public void changeGrade(int grade) {
+		
 	}
 	
 	//BEN CHANGES
@@ -500,12 +513,16 @@ public class MainMenuView extends JFrame {
 		jpnDropBox.setLayout(null);
 		
 	}
+	
+	//grades
 	private void createGradesPan() {
 		jpnGrades = new JPanel();
 		tabbedPane.addTab("Grades", null, jpnGrades, null);
 		jpnGrades.setLayout(null);
 		
 	}
+	
+	//email
 	private void createEmailPan() {
 		jpnEmail = new JPanel();
 		tabbedPane.addTab("Email", null, jpnEmail, null);
@@ -514,29 +531,63 @@ public class MainMenuView extends JFrame {
 		JLabel lblEmail = new JLabel("Email");
 		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 39));
-		lblEmail.setBounds(10, 37, 790, 66);
+		lblEmail.setBounds(10, 27, 790, 66);
 		jpnEmail.add(lblEmail);
 		
-		JButton button = new JButton("Clear");
-		button.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		button.setBounds(416, 573, 122, 32);
-		jpnEmail.add(button);
+		btnClearEmail = new JButton("Clear");
+		btnClearEmail.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnClearEmail.setBounds(416, 615, 122, 32);
+		jpnEmail.add(btnClearEmail);
 		
-		JButton button_1 = new JButton("Add Course");
-		button_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		button_1.setBounds(225, 573, 122, 32);
-		jpnEmail.add(button_1);
+		btnSendEmail = new JButton("Send");
+		btnSendEmail.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnSendEmail.setBounds(225, 615, 122, 32);
+		jpnEmail.add(btnSendEmail);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(10, 172, 790, 372);
-		jpnEmail.add(textField);
-		
-		JLabel lblSendAnEmail = new JLabel("Send an Email to the Professor");
+		JLabel lblSendAnEmail = new JLabel("Send an Email");
 		lblSendAnEmail.setHorizontalAlignment(SwingConstants.LEFT);
 		lblSendAnEmail.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		lblSendAnEmail.setBounds(10, 130, 790, 42);
+		lblSendAnEmail.setBounds(10, 93, 790, 42);
 		jpnEmail.add(lblSendAnEmail);
 		
+		txtSubject = new JTextField(50);
+		txtSubject.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		txtSubject.setColumns(10);
+		txtSubject.setBounds(80, 161, 589, 42);
+		jpnEmail.add(txtSubject);
+		
+		JLabel lblSubject = new JLabel("Subject:");
+		lblSubject.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSubject.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblSubject.setBounds(10, 161, 65, 42);
+		jpnEmail.add(lblSubject);
+		
+		txtEmailBody = new JTextArea();
+		txtEmailBody.setFont(new Font("Monospaced", Font.PLAIN, 16));
+		txtEmailBody.setLineWrap(true);
+		JScrollPane eB = new JScrollPane(txtEmailBody);
+		eB.setBounds(10, 224, 790, 376);
+		jpnEmail.add(eB);
+		
 	}
+	public String getEmailBody() {
+		return txtEmailBody.getText();
+	}
+	public String getEmailSubject() {
+		return txtSubject.getText();
+	}
+	public void addSendEmailListener(ActionListener l) {
+		btnSendEmail.addActionListener(l);
+	}
+	public void addClearEmailListener(ActionListener l) {
+		btnClearEmail.addActionListener(l);
+	}
+	public void clearEmail() {
+		txtEmailBody.setText("");
+		txtSubject.setText("");
+	}
+	
+
+    
+    
 }

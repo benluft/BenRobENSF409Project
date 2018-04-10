@@ -252,7 +252,8 @@ class CourseAddListener implements ActionListener
 	        	    theView.addStudentTableListener(new StudentTableListener());
 	        	    theView.addUploadListener(new AsgUploadListener());
 	        	    theView.addAssignmentsTableListener(new AsgTableListener());
-	        		
+	        		theView.addSendEmailListener(new SendEmailListener());
+	        		theView.addClearEmailListener(new ClearEmailListener());
 	        	}
 	        }
 	        else {
@@ -479,5 +480,47 @@ class CourseAddListener implements ActionListener
     	return false;
     }
     
+    
+    // email controller
+    
+    class SendEmailListener implements ActionListener
+ 	{
+ 	  @Override
+ 	  public void actionPerformed (ActionEvent arg0)
+ 	  {
+ 	    try
+ 	    {
+ 	    	String emailBody = theView.getEmailBody();
+ 	    	String emailSubject = theView.getEmailSubject();
+ 	    	JOptionPane.showMessageDialog(null,
+        		    "Subject = " + emailSubject);
+        	theView.clearDueDateBoxes();
+        	JOptionPane.showMessageDialog(null,
+        		    "Email body = " + emailBody);
+        	theView.clearDueDateBoxes();
+ 	    	
+ 	    }catch(Exception e){
+ 	      System.out.println("issue with Search Type listener.");
+ 	      e.printStackTrace();
+ 	    }
+ 	  }
+ 	}
+    
+    class ClearEmailListener implements ActionListener
+ 	{
+ 	  @Override
+ 	  public void actionPerformed (ActionEvent arg0)
+ 	  {
+ 	    try
+ 	    {
+ 	    	theView.clearEmail();
+ 	    	
+ 	    }catch(Exception e){
+ 	      System.out.println("issue with Search Type listener.");
+ 	      e.printStackTrace();
+ 	    }
+ 	  }
+ 	}
+
 
 }

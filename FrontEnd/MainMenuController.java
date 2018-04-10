@@ -158,6 +158,11 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
 	        	{
 	        		coms.write(new Assignment(false,0,currentCourseID,asgName,false,dueDate));
 	        	}
+	        }else if(column == 3) { // viewing column
+	        	theView.changeAsgGrade(73);
+	        	
+	        }else if (column == 4) { // grades column
+	        	
 	        }
 	    }
 	}

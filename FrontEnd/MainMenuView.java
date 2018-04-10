@@ -418,7 +418,7 @@ public class MainMenuView extends JFrame {
 		monthTxt = new JTextField(2);
 		monthTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		monthTxt.setBounds(345, 508, 55, 44);
-		//monthTxt.setDocument(new TextFieldLimit(2));
+		monthTxt.setDocument(new TextFieldLimit(2));
 		jpnAsg.add(monthTxt);
 		monthTxt.setColumns(10);
 		
@@ -426,14 +426,14 @@ public class MainMenuView extends JFrame {
 		dayTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		dayTxt.setColumns(10);
 		dayTxt.setBounds(410, 508, 55, 44);
-		//dayTxt.setDocument(new TextFieldLimit(2));
+		dayTxt.setDocument(new TextFieldLimit(2));
 		jpnAsg.add(dayTxt);
 		
 		yearTxt = new JTextField(4);
 		yearTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		yearTxt.setColumns(10);
 		yearTxt.setBounds(475, 508, 91, 44);
-		//yearTxt.setDocument(new TextFieldLimit(4));
+		yearTxt.setDocument(new TextFieldLimit(4));
 		jpnAsg.add(yearTxt);
 		contentPane.setLayout(gl_contentPane);
 		
@@ -489,12 +489,21 @@ public class MainMenuView extends JFrame {
 		}
 		else
 		{
-			model.addRow(new Object[]{name, date, "Not Active", "False,", "Unmarked"});
+			model.addRow(new Object[]{name, date, "Not Active", "False", "Unmarked"});
 		}
 	}
-	public void changeGrade(int grade) {
-		
+	public void changeAsgGrade(int newGrade) {
+		Object grade = (Object)newGrade;
+		int rowNum = asgTable.getRowCount();
+		for(int r = 0; r < rowNum; r++) {
+			Object v = asgTable.getValueAt(r, 3);
+			String viewing = (String)v;
+			if(viewing.equals("True")) {
+				asgTable.setValueAt(Integer.toString(newGrade), r, 4);
+			}
+		}
 	}
+
 	
 	//BEN CHANGES
 	public File getAsgFile() {
@@ -586,6 +595,7 @@ public class MainMenuView extends JFrame {
 		txtEmailBody.setText("");
 		txtSubject.setText("");
 	}
+
 	
 
     

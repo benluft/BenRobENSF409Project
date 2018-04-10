@@ -161,6 +161,8 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 			String deleteSQL = "DELETE FROM " + enrolMessage + " WHERE course_id=" + enrol.getCourseID() +
 					" AND student_id=" + enrol.getStudentID();
 			
+			System.out.println("Should Delete");
+			
 			try {
 				PreparedStatement statement = (PreparedStatement) super.getJdbc_connection().prepareStatement(deleteSQL);
 				

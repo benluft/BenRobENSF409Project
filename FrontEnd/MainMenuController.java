@@ -440,7 +440,7 @@ class CourseAddListener implements ActionListener
 	    public void tableChanged(TableModelEvent e) {
 	        int row = e.getFirstRow();
 	        int column = e.getColumn();
-	        if(row < 0)
+	        if(row >= 0)
 	        {
 		        String firstName = (String)theView.getStudentTableElement(row, 0);
 		        String lastName = (String)theView.getStudentTableElement(row, 1);
@@ -448,12 +448,13 @@ class CourseAddListener implements ActionListener
 		        
 		        if(column == 3) {// enrolled or not enrolled
 		        	String enr = (String)theView.getStudentTableElement(row, column);
-	//	        	JOptionPane.showMessageDialog(null,
-	//	        			firstName + " " + lastName  + " is now " + enr);
+		        	JOptionPane.showMessageDialog(null,
+		        			firstName + " " + lastName  + " is now " + enr);
 		        	if(enr.equals("Enrolled"))
 		        	{
 		        		if(!doesEnrolledExist(studentID))
 		        		{
+		        			System.out.println("Controller sending add enrollment");
 		        			coms.write(new Enrolment(false,0,studentID,currentCourseID));
 		        		}
 		        	}
@@ -461,6 +462,7 @@ class CourseAddListener implements ActionListener
 		        	{
 		        		if(doesEnrolledExist(studentID))
 		        		{
+		        			System.out.println("Controller sending delete enrollment");
 		        			coms.write(new Enrolment(false,-1,studentID,currentCourseID));
 		        		}
 		        	}

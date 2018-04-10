@@ -9,6 +9,7 @@ import javax.swing.table.TableModel;
 
 import sharedData.Assignment;
 import sharedData.Course;
+import sharedData.Email;
 import sharedData.Enrolment;
 import sharedData.FileMessage;
 import sharedData.User;
@@ -498,6 +499,8 @@ class CourseAddListener implements ActionListener
         	JOptionPane.showMessageDialog(null,
         		    "Email body = " + emailBody);
         	theView.clearDueDateBoxes();
+        	
+        	coms.write(new Email(0,false,currentCourseID,emailBody,emailSubject));
  	    	
  	    }catch(Exception e){
  	      System.out.println("issue with Search Type listener.");

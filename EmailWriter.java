@@ -29,20 +29,27 @@ class EmailWriter
 		{
 						
 			DBReader readEnrolled = new DBReader(MessageNameConstants.enrolMessage, 
-					"courseID", email.getCourseID());
-			ResultSet rs = readEnrolled.getReadResults();
+					"course_id", email.getCourseID());
+			ResultSet rsEnroll = readEnrolled.getReadResults();
 			
-			try {
-				while(rs.next())
-				{
-					recipientEmails.add(rs.getString(3));
-				}
-			} 
-			catch (SQLException e) 
+			try
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				while(rsEnroll.next())
+				{
+					DBReader readUsers = new DBReader(MessageNameConstants.userMessage, 
+							"id", rsEnroll.getInt(2));
+					
+					ResultSet rsUsers = readUsers.getReadResults();
+					rsUsers.next();
+					recipientEmails.add(rsUsers.getString(3));
+				
+				}
 			}
+			catch(SQLException e)
+			{
+				
+			}
+			
 		}
 		
 		
@@ -75,6 +82,7 @@ class EmailWriter
 			message.setFrom(new InternetAddress(senderEmail));
 			if(recipients.size() > 0)
 			{
+				System.out.println("Adding " + recipients.get(0) + " to email");
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipients.get(0)));
 			}
 			else
@@ -84,6 +92,7 @@ class EmailWriter
 			
 			for(int i = 1; i < recipients.size(); i++)
 			{
+				System.out.println("Adding " + recipients.get(i) + " to email");
 				message.addRecipient(Message.RecipientType.CC, new InternetAddress(recipients.get(i)));
 			}
 			

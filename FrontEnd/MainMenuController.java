@@ -95,6 +95,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
 		        	JOptionPane.showMessageDialog(null,
 		        		    "Invalid Due Date");
 		        	theView.clearDueDateBoxes();
+		        	return;
 				}
 				else {// due date is valid
 					dueDate = month + "/" + day + "/" + year;
@@ -128,10 +129,12 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
 			
 			}catch(NumberFormatException nf) {
 	        	JOptionPane.showMessageDialog(null,
-	        		    "Invalid Due Date");
+	        		    "Number format issue");
 	        	theView.clearDueDateBoxes();
+	        	return;
 			}catch(Exception e){
 			  System.out.println("issue with Search Type listener.");
+			  return;
 			}
 			
 			addNewestAssignment();

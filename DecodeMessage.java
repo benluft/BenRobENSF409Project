@@ -28,8 +28,6 @@ class DecodeMessage implements Runnable, MessageNameConstants
 		
 		toSend = new Vector<SocketMessage>();
 		
-//		checkLogin();
-		
 		LoginChecker login = new LoginChecker(reader, writer);
 		
 		while(true)
@@ -38,17 +36,21 @@ class DecodeMessage implements Runnable, MessageNameConstants
 			toSend = new Vector<SocketMessage>();
 			try 
 			{
-				SocketMessage message = (SocketMessage) reader.readObject();
-				if(message.getIsQuerry())
+				
+				if(login.getUser().get(0).getType().equals("P"))
 				{
-					System.out.println("This message is a query");
-					pickReadWorker(message);
-					writer.writeObject(toSend);
-					
-				}
-				else
-				{
-					pickWriteWorker(message);
+					SocketMessage message = (SocketMessage) reader.readObject();
+					if(message.getIsQuerry())
+					{
+						System.out.println("This message is a query");
+						pickReadWorker(message);
+						writer.writeObject(toSend);
+						
+					}
+					else
+					{
+						pickWriteWorker(message);
+					}
 				}
 				
 			} 

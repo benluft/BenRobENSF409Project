@@ -1,11 +1,15 @@
 package backEnd;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import sharedData.Email;
+import sharedData.User;
+import sharedData.MessageNameConstants;
 
 class EmailWriter
 {
@@ -13,11 +17,36 @@ class EmailWriter
 	
 	private Session session;
 	
-	public EmailWriter()
+	public EmailWriter(User senderUser, Email email)
 	{
 		setProperties();
-		setSession("ensf409prof1@gmail.com", "ENSF409RobBen");
-		sendEmail();
+		
+		setSession(senderUser.getEmail(), "ENSF409RobBen");
+		
+		ArrayList<String> recipientEmails = new ArrayList<String>();
+		
+		if(senderUser.getType().equals("P"))
+		{
+						
+			DBReader readEnrolled = new DBReader(MessageNameConstants.enrolMessage, 
+					"courseID", email.getCourseID());
+			ResultSet rs = readEnrolled.getReadResults();
+			
+			try {
+				while(rs.next())
+				{
+					recipientEmails.add(rs.getString(3));
+				}
+			} 
+			catch (SQLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		sendEmail(recipientEmails, senderUser.getEmail(), email);
 	}
 	
 	private void setProperties()
@@ -39,14 +68,27 @@ class EmailWriter
 				});
 	}
 	
-	private void sendEmail()
+	private void sendEmail(ArrayList<String> recipients, String senderEmail, Email email)
 	{
 		try {
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("ensf409prof1@gmail.com"));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress("benluft8@gmail.com"));
+			message.setFrom(new InternetAddress(senderEmail));
+			if(recipients.size() > 0)
+			{
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipients.get(0)));
+			}
+			else
+			{
+				return;
+			}
+			
+			for(int i = 1; i < recipients.size(); i++)
+			{
+				message.addRecipient(Message.RecipientType.CC, new InternetAddress(recipients.get(i)));
+			}
+			
 			message.setSubject("Your Message Subject");
-			message.setText("Look it works");
+			message.setText(email.getMessageContents());
 			Transport.send(message); // Send the Email Message
 			} catch (MessagingException e) {
 			e.printStackTrace();
@@ -54,6 +96,6 @@ class EmailWriter
 	}
 	
 	public static void main(String[] args) {
-		EmailWriter email = new EmailWriter();
+		//EmailWriter email = new EmailWriter();
 	}
 }

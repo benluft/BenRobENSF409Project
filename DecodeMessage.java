@@ -16,6 +16,8 @@ class DecodeMessage implements Runnable, MessageNameConstants
 	ObjectOutputStream writer;
 	
 	Vector<SocketMessage> toSend;
+	
+	User currentUser;
 
 	public DecodeMessage(ObjectOutputStream writer, ObjectInputStream reader) 
 	{
@@ -29,6 +31,8 @@ class DecodeMessage implements Runnable, MessageNameConstants
 		toSend = new Vector<SocketMessage>();
 		
 		LoginChecker login = new LoginChecker(reader, writer);
+		
+		currentUser = login.getUser().get(0);
 		
 		while(true)
 		{
@@ -70,7 +74,7 @@ class DecodeMessage implements Runnable, MessageNameConstants
 		{
 			Email mail = (Email) message;
 			
-			writeEmail(mail);
+			EmailWriter emailwriter = new EmailWriter(currentUser, mail);
 		}
 		
 		if(message.getMessageType().equals(assignmentMessage))
@@ -227,11 +231,6 @@ class DecodeMessage implements Runnable, MessageNameConstants
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	private void writeEmail(Email email)
-	{
-		
 	}
 	
 	

@@ -87,7 +87,7 @@ class EmailWriter
 				message.addRecipient(Message.RecipientType.CC, new InternetAddress(recipients.get(i)));
 			}
 			
-			message.setSubject("Your Message Subject");
+			message.setSubject(email.getMessageSubject());
 			message.setText(email.getMessageContents());
 			Transport.send(message); // Send the Email Message
 			} catch (MessagingException e) {

@@ -43,7 +43,7 @@ private MainMenuView theView;
 
 private SocketCommunicator coms;
 
-private User professor;
+private User currentUser;
 
 private int currentCourseID;
 
@@ -54,14 +54,14 @@ private int currentCourseID;
  * @param v the GUI of the program
  * @param m the database of the program
  */
-public MainMenuController (MainMenuView v, SocketCommunicator coms, User professor)
+public MainMenuController (MainMenuView v, SocketCommunicator coms, User currentUser)
   {
 	
     theView = v;
     this.coms = coms;
-    this.professor = professor;
+    this.currentUser = currentUser;
     
-    fillCourseTable();
+	fillCourseTable();
     
     // add listeners...
     theView.addCourseClearListener( new CourseClearListener());
@@ -194,7 +194,7 @@ class CourseAddListener implements ActionListener
         		    "Blank names are invalid");
     	}
     	else {// add course number and prof name here
-    		coms.write(new Course(false, 0, professor.getID(), newCourseName, false));
+    		coms.write(new Course(false, 0, currentUser.getID(), newCourseName, false));
     		
     		addNewestCourse();
     	}
@@ -223,11 +223,11 @@ class CourseAddListener implements ActionListener
 //	        			courseName  + " is now " + activity);
 	        	if(activity.equals("Active"))
 	        	{
-	        		coms.write(new Course(false,courseID,professor.getID(),courseName,true));
+	        		coms.write(new Course(false,courseID,currentUser.getID(),courseName,true));
 	        	}
 	        	else
 	        	{
-	        		coms.write(new Course(false,courseID,professor.getID(),courseName,false));
+	        		coms.write(new Course(false,courseID,currentUser.getID(),courseName,false));
 	        	}
 	        	
 	        	
@@ -270,12 +270,13 @@ class CourseAddListener implements ActionListener
 	
 	private void fillCourseTable()
 	{
-		Vector<Course> coursesInDB = getAllCourses();
 		
-		for(int i = 0; i < coursesInDB.size(); i++)
+		Vector<Course> courses = getAllCourses();
+		
+		for(int i = 0; i < courses.size(); i++)
 		{
-			Course currentCourse = coursesInDB.get(i);
-			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ professor.getLastname(),
+			Course currentCourse = courses.get(i);
+			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ currentUser.getLastname(),
 					currentCourse.isActive());
 		}
 	}
@@ -330,7 +331,7 @@ class CourseAddListener implements ActionListener
 		Course newCourse = null;
 		
 		newCourse = coursesInDB.get(coursesInDB.size()-1);
-		theView.addCourseTableRow(newCourse.getID(), newCourse.getName(), "Dr. " +professor.getLastname(),
+		theView.addCourseTableRow(newCourse.getID(), newCourse.getName(), "Dr. " +currentUser.getLastname(),
 				newCourse.isActive());
 	}
 	
@@ -348,8 +349,16 @@ class CourseAddListener implements ActionListener
 	
 	
 	private Vector<Course> getAllCourses()
-	{
-		coms.write(new Course(true, 0, professor.getID(), null, false));
+	{	
+		if(currentUser.getType().equals("P"))
+		{
+			coms.write(new Course(true, 0, currentUser.getID(), null, false));
+		}
+		else
+		{
+			System.out.println("The controller user ID is " + currentUser.getID());
+			coms.write(new Enrolment(true, 0, currentUser.getID(), 0));
+		}
 		return (Vector<Course>)coms.read();
 	}
 	

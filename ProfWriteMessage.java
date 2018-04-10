@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 
 import sharedData.*;
 
-class ProfWriteMessage implements MessageNameConstants
+class ProfWriteMessage implements MessageNameConstants, ServerFilePaths
 {
 	
 	public ProfWriteMessage(SocketMessage message, User currentUser, ObjectInputStream reader)
@@ -48,6 +48,28 @@ class ProfWriteMessage implements MessageNameConstants
 		if(message.getMessageType().equals(enrolMessage))
 		{
 			DBWriter writer = new DBWriter(enrolMessage.toLowerCase(), message);
+		}
+		
+		if(message.getMessageType().equals(submissionMessage))
+		{
+			Submission submission = (Submission) message;
+			
+			DBWriter writer = new DBWriter(submissionMessage, message);
+			
+			SocketMessage messageFile;
+			
+			if(submission.getID() == -1)
+			{
+				try 
+				{
+					messageFile = (SocketMessage) reader.readObject();
+					PDFWriter pdfWriter = new PDFWriter(messageFile, );
+				} 
+				catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 	}

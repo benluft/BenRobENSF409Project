@@ -12,10 +12,20 @@ import java.sql.SQLException;
 import sharedData.FileMessage;
 import sharedData.MessageNameConstants;
 
+/**
+ * @author Ben
+ *
+ */
 class PDFWriter implements MessageNameConstants
 {
+	/**
+	 * 
+	 */
 	private String pdfPath;
 	
+	/**
+	 * @param message
+	 */
 	PDFWriter(SocketMessage message)
 	{
 		FileMessage fileBytes = (FileMessage) message;
@@ -41,6 +51,9 @@ class PDFWriter implements MessageNameConstants
 		downloadFile(content);
 	}
 	
+	/**
+	 * @param contents
+	 */
 	private void downloadFile(byte[] contents)
 	{
 		File newFile = new File(pdfPath);

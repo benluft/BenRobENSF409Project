@@ -58,6 +58,7 @@ private Vector<SocketMessage> toSend;
 	abstract protected void readEnrolTable(Enrolment enrol);
 	abstract protected void readUserTable(User user);
 	abstract protected void readCourseTable(Course course);
+	abstract protected void readCourseTable(Vector<Course> courses);
 
 	public Vector<SocketMessage> getToSend() {
 		return toSend;
@@ -66,4 +67,6 @@ private Vector<SocketMessage> toSend;
 	public void setToSend(Vector<SocketMessage> toSend) {
 		this.toSend = toSend;
 	}
+
+	
 }

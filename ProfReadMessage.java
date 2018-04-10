@@ -108,4 +108,10 @@ class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConst
 	{
 		return super.getToSend();
 	}
+
+	@Override
+	protected void readCourseTable(Vector<Course> courses) {
+		// TODO Auto-generated method stub
+		
+	}
 }

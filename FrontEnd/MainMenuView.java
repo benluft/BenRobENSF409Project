@@ -13,6 +13,9 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.text.NumberFormatter;
+
+import sharedData.User;
+
 import javax.swing.DefaultCellEditor;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -53,6 +56,8 @@ public class MainMenuView extends JFrame {
 	private JTabbedPane tabbedPane;
 	private JPanel jpnEmail;
 	
+	private User currentUser;
+	
 	//courses panel
 	private JPanel jpnCourses;
 	private JTable coursesTable;
@@ -90,8 +95,10 @@ public class MainMenuView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainMenuView() {
-		setTitle("Main Menu");
+	public MainMenuView(User currentUser) {
+		this.currentUser = currentUser;
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 870, 761);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -120,13 +127,27 @@ public class MainMenuView extends JFrame {
 		createCoursesPan();
 		createAssignmentsPan();
 		createDropBoxPan();
-		createGradesPan();
-		createStudentsPan();
+		//createGradesPan();
 		createEmailPan();
+		
 		//if prof only:
-		createProfCoursesPan();
-		//setProfEditability();
-
+		if(currentUser.getType().equals("P")) {
+			setTitle("Proffesor Main Menu");
+			createProfCoursesPan();
+			createStudentsPan();
+			//setProfEditability();
+			
+		}
+		else {// if student only:
+			setTitle("Student Main Menu");
+			System.out.println("User is a student");
+			createStudentCourseTable();
+			
+		}
+		
+		
+		
+		
 	}
 	
 	//courses
@@ -174,8 +195,14 @@ public class MainMenuView extends JFrame {
 	        }
 		};
 	}
-	private void createStudentCourseTable(Object[][] coursesTest, String[] courseColumns) {
-		coursesTable = new JTable(coursesTest, courseColumns) {
+	private void createStudentCourseTable() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Course Number");
+        model.addColumn("Course Name");
+        model.addColumn("Proffesor");
+        model.addColumn("Activity");
+        model.addColumn("Viewing (click to change)");
+		coursesTable = new JTable(model) {
 	        @Override
 	        public boolean isCellEditable(int row, int column)
 	        {
@@ -401,23 +428,23 @@ public class MainMenuView extends JFrame {
 		
 		btnUploadAssignment = new JButton("Upload Assignment");
 		btnUploadAssignment.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnUploadAssignment.setBounds(315, 596, 201, 50);
+		btnUploadAssignment.setBounds(532, 578, 201, 50);
 		jpnAsg.add(btnUploadAssignment);
 		
 		lblAddAssignment = new JLabel("Add Assignment");
 		lblAddAssignment.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAddAssignment.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		lblAddAssignment.setBounds(10, 425, 790, 44);
+		lblAddAssignment.setBounds(10, 518, 790, 44);
 		jpnAsg.add(lblAddAssignment);
 		
 		lblDueDate = new JLabel("Due Date (MM/DD/YYYY): ");
 		lblDueDate.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblDueDate.setBounds(153, 508, 201, 50);
+		lblDueDate.setBounds(70, 578, 201, 50);
 		jpnAsg.add(lblDueDate);
 
 		monthTxt = new JTextField(2);
 		monthTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		monthTxt.setBounds(345, 508, 55, 44);
+		monthTxt.setBounds(262, 578, 55, 44);
 		monthTxt.setDocument(new TextFieldLimit(2));
 		jpnAsg.add(monthTxt);
 		monthTxt.setColumns(10);
@@ -425,16 +452,21 @@ public class MainMenuView extends JFrame {
 		dayTxt = new JTextField(2);
 		dayTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		dayTxt.setColumns(10);
-		dayTxt.setBounds(410, 508, 55, 44);
+		dayTxt.setBounds(327, 578, 55, 44);
 		dayTxt.setDocument(new TextFieldLimit(2));
 		jpnAsg.add(dayTxt);
 		
 		yearTxt = new JTextField(4);
 		yearTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		yearTxt.setColumns(10);
-		yearTxt.setBounds(475, 508, 91, 44);
+		yearTxt.setBounds(392, 578, 91, 44);
 		yearTxt.setDocument(new TextFieldLimit(4));
 		jpnAsg.add(yearTxt);
+		
+		JButton btnDownload = new JButton("Download Assignment");
+		btnDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnDownload.setBounds(299, 431, 201, 50);
+		jpnAsg.add(btnDownload);
 		contentPane.setLayout(gl_contentPane);
 		
 	}
@@ -595,9 +627,4 @@ public class MainMenuView extends JFrame {
 		txtEmailBody.setText("");
 		txtSubject.setText("");
 	}
-
-	
-
-    
-    
 }

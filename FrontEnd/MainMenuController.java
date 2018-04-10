@@ -64,8 +64,10 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	fillCourseTable();
     
     // add listeners...
-    theView.addCourseClearListener( new CourseClearListener());
-    theView.addCourseAddListener( new CourseAddListener());
+	if(currentUser.getType().equals("P")) {
+	    theView.addCourseClearListener( new CourseClearListener());
+	    theView.addCourseAddListener( new CourseAddListener());
+	}
     theView.addClassTableListener(new CourseTableListener());
 
   }

@@ -62,7 +62,7 @@ public class LoginWindow {
 //	}
 	
 	private void runMainMenu(SocketCommunicator coms, User user) {
-		MainMenuView theView = new MainMenuView();
+		MainMenuView theView = new MainMenuView(user);
 		//while(true) {}
 		MainMenuController theController = new MainMenuController (theView, coms, user);
 	}

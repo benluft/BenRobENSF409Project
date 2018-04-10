@@ -17,23 +17,35 @@ public class LoginWindow {
 		loginCorrect = false;
 		Vector<User> user = null;
 		
-		while(!loginCorrect) {
+		while(!loginCorrect) 
+		{
 			coms.write(getUserInput());
 			user = (Vector<User>)coms.read();
+			
 			if(user.get(0).getIsQuerry() == true)
 			{
 				loginCorrect = true;
+				break;
 			}
+			
+			JOptionPane.showMessageDialog(null, "Incorrect user ID or password");
+			
 		}
 		runMainMenu(coms, user.get(0));
 	}
 	
 	private User getUserInput() {
-		userName = Integer.parseInt(JOptionPane.showInputDialog("Enter Username: "));
 		
-		password = JOptionPane.showInputDialog("Enter Password: ");
-		
-		return new User(true, userName, password, null, null, null, null);
+		try 
+		{
+			userName = Integer.parseInt(JOptionPane.showInputDialog("Enter Username: "));
+			password = JOptionPane.showInputDialog("Enter Password: ");
+			return new User(true, userName, password, null, null, null, null);
+		}
+		catch(NumberFormatException e)
+		{
+			return new User(true, 0, null,null,null,null,null);
+		}
 		
 	}
 //	private boolean testUserInput() {

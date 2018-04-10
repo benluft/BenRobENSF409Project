@@ -6,9 +6,9 @@ import java.io.ObjectOutputStream;
 
 class SocketCommunicator
 {
-	ObjectInputStream reader;
+	private ObjectInputStream reader;
 	
-	ObjectOutputStream writer;
+	private ObjectOutputStream writer;
 	
 	public SocketCommunicator(ObjectInputStream reader, ObjectOutputStream writer) 
 	{

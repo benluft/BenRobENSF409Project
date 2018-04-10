@@ -120,14 +120,8 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User profess
 					Assignment assign = new Assignment(false, -1, currentCourseID, selectedFile.getName(), 
 							false, dueDate);
 					
-					try{
-						coms.write(assign);
-						coms.writer.flush();
-						coms.write(fileMessage);
-						} 
-					catch(IOException e){
-						e.printStackTrace();
-					}
+					coms.write(assign);
+					coms.write(fileMessage);
 				}
 
 			

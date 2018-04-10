@@ -1,3 +1,5 @@
+package frontEnd;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.BadLocationException;

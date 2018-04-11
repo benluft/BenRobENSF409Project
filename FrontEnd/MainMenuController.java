@@ -72,7 +72,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	    theView.addSearchSudentListener(new StudentSearchListener());
 	    theView.addClearSearchSudentListener(new StudentClearListener());
 	    theView.addStudentTableListener(new StudentTableListener());
-	    theView.addUploadListener(new AsgUploadListener());
+	    theView.addUploadAsgListener(new AsgUploadListener());
 	}
 	else
 	{

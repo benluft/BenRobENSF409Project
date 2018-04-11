@@ -129,7 +129,7 @@ public class MainMenuView extends JFrame {
 		);
 		
 		createCoursesPan();
-
+		createAssignmentsPan();
 		createEmailPan();
 		
 		//if prof only:
@@ -150,7 +150,6 @@ public class MainMenuView extends JFrame {
 			createStudentAsgPan();
 		}
 		
-		createAssignmentsPan();
 
 	}
 	
@@ -430,15 +429,6 @@ public class MainMenuView extends JFrame {
 		lblAssignnents.setBounds(10, 38, 790, 66);
 		jpnAsg.add(lblAssignnents);
 		
-		//createAsgTable();
-		JScrollPane asgScrollPane = new JScrollPane(asgTable);
-		asgScrollPane.setBounds(10, 131, 790, 260);
-		jpnAsg.add(asgScrollPane);
-		TableColumn activityColumn = asgTable.getColumnModel().getColumn(2);
-		activityColumn.setCellEditor(new DefaultCellEditor(createActivityBox()));
-		TableColumn viewingColumn = asgTable.getColumnModel().getColumn(3);
-		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
-		
 		contentPane.setLayout(gl_contentPane);	
 		
 	}
@@ -575,6 +565,14 @@ public class MainMenuView extends JFrame {
 	            return column == 2 || column == 3 || column == 4;
 	        }
 		};
+		JScrollPane asgScrollPane = new JScrollPane(asgTable);
+		asgScrollPane.setBounds(10, 131, 790, 260);
+		jpnAsg.add(asgScrollPane);
+		TableColumn activityColumn = asgTable.getColumnModel().getColumn(2);
+		activityColumn.setCellEditor(new DefaultCellEditor(createActivityBox()));
+		TableColumn viewingColumn = asgTable.getColumnModel().getColumn(3);
+		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
+		
 	}
 	public void createStudentAsgTable() {
         DefaultTableModel model = new DefaultTableModel();
@@ -590,6 +588,14 @@ public class MainMenuView extends JFrame {
 	            return column == 3;
 	        }
 		};
+		JScrollPane asgScrollPane = new JScrollPane(asgTable);
+		asgScrollPane.setBounds(10, 131, 790, 260);
+		jpnAsg.add(asgScrollPane);
+		TableColumn activityColumn = asgTable.getColumnModel().getColumn(2);
+		activityColumn.setCellEditor(new DefaultCellEditor(createActivityBox()));
+		TableColumn viewingColumn = asgTable.getColumnModel().getColumn(3);
+		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
+		
 	}
 
 	public void changeAsgGrade(int newGrade) {

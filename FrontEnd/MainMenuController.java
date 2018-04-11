@@ -19,9 +19,11 @@ import java.awt.Dialog.ModalExclusionType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -154,6 +156,48 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		}
 	}
 	
+	class AsgDownloadListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed (ActionEvent arg0)
+		{
+			
+			
+			Assignment assign = new Assignment(true, 0, currentCourseID, null, false, null);
+			
+			coms.write(assign);
+			
+			Assignment fullAssign = (Assignment) coms.read();
+			
+			Assignment requestAssign = new Assignment(true, -1, fullAssign.getCourseID(), 
+					fullAssign.getTitle(), fullAssign.isActive(), fullAssign.getDueDate());
+			
+			coms.write(requestAssign);
+			
+			FileMessage filemessage = (FileMessage) coms.read();
+			
+			File newFile = new File("C:\\Users\\Ben\\workspace\\Lab9\\AssignmentsStudentDownload\\" +
+					fullAssign.getTitle());
+			
+			try{
+				if(!newFile.exists())
+				{
+					newFile.createNewFile();
+				}
+				
+				FileOutputStream writer = new FileOutputStream(newFile);
+				BufferedOutputStream bos = new BufferedOutputStream(writer);
+				
+				bos.write(filemessage.getFileData());
+				bos.close();
+			} 
+			catch(IOException e){
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
     class AsgTableListener implements TableModelListener {
     	
 	    public void tableChanged(TableModelEvent e) {
@@ -176,10 +220,12 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		        	{
 		        		coms.write(new Assignment(false,0,currentCourseID,asgName,false,dueDate));
 		        	}
-		        }else if(column == 3) { // viewing column
+		        }
+		        else if(column == 3) { // viewing column
 		        	theView.changeAsgGrade(73);
 		        	
-		        }else if (column == 4) { // grades column
+		        }
+		        else if (column == 4) { // grades column
 		        	
 		        }
 	        }

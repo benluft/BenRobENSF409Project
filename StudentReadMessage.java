@@ -43,6 +43,7 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 		{
 			try
 			{
+				dbreader = new DBReader(assignmentMessage, "title", assign.getTitle());
 				rs.next();
 				PDFReader pdfReader = new PDFReader(rs.getString(4));
 				getToSend().add(pdfReader.getFileToSend());

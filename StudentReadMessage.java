@@ -1,5 +1,7 @@
 package backEnd;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -11,24 +13,59 @@ import sharedData.Course;
 import sharedData.Enrolment;
 import sharedData.MessageNameConstants;
 import sharedData.SocketMessage;
+import sharedData.Submission;
 import sharedData.User;
 
 class StudentReadMessage extends StudentAndProfDBReader implements MessageNameConstants
 {
 	Vector<SocketMessage> messageToSend; 
+	ObjectOutputStream writer;
 	
-	public StudentReadMessage(SocketMessage message)
+	public StudentReadMessage(SocketMessage message, ObjectOutputStream writer)
 	{
 		super(message);
 		
+		this.writer = writer;
 		messageToSend = new Vector<SocketMessage>();
 
 	}
 
 	@Override
 	protected void readAssignmentTable(Assignment assign) {
-		// TODO Auto-generated method stub
+
+		DBReader dbreader;
 		
+		dbreader = new DBReader(assignmentMessage, "course_id", assign.getCourseID());
+		
+		ResultSet rs = dbreader.getReadResults();
+		
+		if(assign.getID() == -1)
+		{
+			try
+			{
+				rs.next();
+				PDFReader pdfReader = new PDFReader(rs.getString(4));
+				getToSend().add(pdfReader.getFileToSend());
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			try
+			{
+				while(rs.next())
+				{
+					getToSend().add(new Assignment(false,rs.getInt(1),rs.getInt(2), 
+							rs.getString(3), rs.getBoolean(4), rs.getString(5)));
+				}
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -71,7 +108,7 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 		System.out.println("Number of courses " + courses.size());
 		for(int i = 0; i < courses.size(); i++)
 		{
-			reader = new DBReader(courseMessage, "id", courses.get(i).getID(), "active", true);
+			reader = new DBReader(courseMessage, "id", courses.get(i).getID());
 			
 			ResultSet rs = reader.getReadResults();
 			
@@ -90,8 +127,16 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 	}
 
 	@Override
+	protected void readSubmissionTable(Submission submission) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	protected void readCourseTable(Course course) {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 }

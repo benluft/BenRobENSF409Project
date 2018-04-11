@@ -67,8 +67,15 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	if(currentUser.getType().equals("P")) {
 	    theView.addCourseClearListener( new CourseClearListener());
 	    theView.addCourseAddListener( new CourseAddListener());
+	    theView.addSearchSudentListener(new StudentSearchListener());
+	    theView.addClearSearchSudentListener(new StudentClearListener());
+	    theView.addStudentTableListener(new StudentTableListener());
 	}
     theView.addClassTableListener(new CourseTableListener());
+    theView.addUploadListener(new AsgUploadListener());
+    theView.addAssignmentsTableListener(new AsgTableListener());
+	theView.addSendEmailListener(new SendEmailListener());
+	theView.addClearEmailListener(new ClearEmailListener());
 
   }
 
@@ -263,14 +270,7 @@ class CourseAddListener implements ActionListener
 	        		fillStudentTable(Integer.parseInt((String)theView.getCourseTableElement(row, 0)));
 	        		
 	        		fillAssignTable();
-	        		
-	        	    theView.addSearchSudentListener(new StudentSearchListener());
-	        	    theView.addClearSearchSudentListener(new StudentClearListener());
-	        	    theView.addStudentTableListener(new StudentTableListener());
-	        	    theView.addUploadListener(new AsgUploadListener());
-	        	    theView.addAssignmentsTableListener(new AsgTableListener());
-	        		theView.addSendEmailListener(new SendEmailListener());
-	        		theView.addClearEmailListener(new ClearEmailListener());
+	   
 	        	}
 	        }
 	        else {

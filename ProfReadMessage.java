@@ -9,6 +9,7 @@ import sharedData.Course;
 import sharedData.Enrolment;
 import sharedData.MessageNameConstants;
 import sharedData.SocketMessage;
+import sharedData.Submission;
 import sharedData.User;
 
 class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConstants
@@ -112,6 +113,45 @@ class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConst
 	@Override
 	protected void readCourseTable(Vector<Course> courses) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void readSubmissionTable(Submission submission) {
+
+		DBReader dbreader;
+		
+		dbreader = new DBReader(assignmentMessage, "assign_id", submission.getAssignID());
+		
+		ResultSet rs = dbreader.getReadResults();
+		
+		if(submission.getID() == -1)
+		{
+			try
+			{
+				rs.next();
+				PDFReader pdfReader = new PDFReader(rs.getString(4));
+				getToSend().add(pdfReader.getFileToSend());
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			try
+			{
+				while(rs.next())
+				{
+					getToSend().add(new Assignment(false,rs.getInt(1),rs.getInt(2), 
+							rs.getString(3), rs.getBoolean(4), rs.getString(5)));
+				}
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
 		
 	}
 }

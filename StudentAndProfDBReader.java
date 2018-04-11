@@ -7,6 +7,7 @@ import sharedData.Course;
 import sharedData.Enrolment;
 import sharedData.MessageNameConstants;
 import sharedData.SocketMessage;
+import sharedData.Submission;
 import sharedData.User;
 
 abstract class StudentAndProfDBReader implements MessageNameConstants
@@ -58,6 +59,7 @@ private Vector<SocketMessage> toSend;
 	abstract protected void readEnrolTable(Enrolment enrol);
 	abstract protected void readUserTable(User user);
 	abstract protected void readCourseTable(Course course);
+	abstract protected void readSubmissionTable(Submission submission);
 	abstract protected void readCourseTable(Vector<Course> courses);
 
 	public Vector<SocketMessage> getToSend() {

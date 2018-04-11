@@ -86,7 +86,7 @@ class DecodeMessage implements Runnable, MessageNameConstants
 		}
 		else
 		{
-			StudentReadMessage studentRead = new StudentReadMessage(message);
+			StudentReadMessage studentRead = new StudentReadMessage(message, writer);
 			toSend = studentRead.getToSend();
 		}
 	}

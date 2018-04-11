@@ -540,6 +540,12 @@ public class MainMenuView extends JFrame {
 	public Object getAsgTableEl(int r, int c) {
 		return asgTable.getValueAt(r, c); 
 	}
+	public int getAsgTableNumRows() {
+		return asgTable.getRowCount();
+	}
+	public void setAsgTableElement(Object val, int r, int c) {
+		asgTable.setValueAt(val, r, c);
+	}
 	public void addAsgTableRow(String name, String date, boolean activity) {
 		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
 		if(activity == true)

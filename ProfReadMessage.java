@@ -121,7 +121,7 @@ class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConst
 
 		DBReader dbreader;
 		
-		dbreader = new DBReader(assignmentMessage, "assign_id", submission.getAssignID());
+		dbreader = new DBReader(submissionMessage, "assign_id", submission.getAssignID());
 		
 		ResultSet rs = dbreader.getReadResults();
 		
@@ -143,8 +143,8 @@ class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConst
 			{
 				while(rs.next())
 				{
-					getToSend().add(new Assignment(false,rs.getInt(1),rs.getInt(2), 
-							rs.getString(3), rs.getBoolean(4), rs.getString(5)));
+					System.out.println("One Submission sending");
+					getToSend().add(new Submission(false, rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(5), rs.getInt(6), null));
 				}
 			}
 			catch(SQLException e)

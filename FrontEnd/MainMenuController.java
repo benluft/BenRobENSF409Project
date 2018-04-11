@@ -191,7 +191,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	        	
 				FileMessage fileMessage = new FileMessage(false, 0, content);
 				
-				Submission submission = new Submission(false, -1, currentUser.getID(), assignID, selectedFile.getName(), 0, null);
+				Submission submission = new Submission(false, -1, assignID, currentUser.getID(), selectedFile.getName(), 0, null);
 				
 				coms.write(submission);
 				coms.write(fileMessage);
@@ -245,7 +245,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	        int row = e.getFirstRow();
 	        int column = e.getColumn();
 	        
-	        if(row > 0)
+	        if(row >= 0)
 	        {
 	        	String asgName = (String)theView.getAsgTableEl(row, 0);
 		        String dueDate = (String)theView.getAsgTableEl(row, 1);
@@ -263,8 +263,25 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		        	}
 		        }
 		        else if(column == 3) { // viewing column
-		        	theView.changeAsgGrade(73);
-		        	
+		        	int numRows = theView.getAsgTableNumRows();
+		        	String val = (String)theView.getAsgTableEl(row, column);
+		        	if(!val.equals("False")) {
+			        	for(int i = 0; i < numRows; i++) {
+			        		if(i != row && theView.getAsgTableEl(i, column) == "True") {// set other rows to false
+			        			theView.setAsgTableElement("False", i, column);
+			        			//return;
+			        		}
+			        	}
+		        		
+			        	System.out.println("Finished removing falses");
+			        	
+		        		if(currentUser.getType().equals("P"))
+		        		{
+		        			theView.clearSubmissionsTable();
+		        		}
+		        		
+		        		fillSubmissionsTable(asgName);
+		        	}
 		        }
 		        else if (column == 4) { // grades column
 		        	
@@ -384,6 +401,28 @@ class CourseAddListener implements ActionListener
 			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ currentUser.getLastname(),
 					currentCourse.isActive());
 		}
+	}
+	
+	private void fillSubmissionsTable(String assignName)
+	{
+		int assignID = findAsgID();
+		
+		System.out.println("AssignID is " + assignID);
+		
+		if(assignID == 0)
+		{
+			return;
+		}
+		
+		Vector<Submission> submissions = getAllSubmissions(assignID);
+		
+		for(int i = 0; i < submissions.size(); i++)
+		{
+			Submission submission = submissions.get(i);
+			System.out.println("Submission for student " + submission.getStudentID());
+			theView.addSubmissionsTableRow("", submission.getStudentID(), "", submission.getGrade());
+		}
+		
 	}
 	
 	private String findAssignName()
@@ -531,6 +570,13 @@ class CourseAddListener implements ActionListener
 	{
 		coms.write(new User(true,0,null,null,null,null,"S"));
 		return (Vector<User>)coms.read();
+	}
+	
+	private Vector<Submission> getAllSubmissions(int assignID)
+	{
+		System.out.println("Getting submissions");
+		coms.write(new Submission(true,0,assignID,0,null,0,null));
+		return (Vector<Submission>)coms.read();
 	}
 	
 

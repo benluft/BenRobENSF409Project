@@ -129,7 +129,7 @@ public class MainMenuView extends JFrame {
 		);
 		
 		createCoursesPan();
-		createAssignmentsPan();
+
 		createEmailPan();
 		
 		//if prof only:
@@ -150,9 +150,7 @@ public class MainMenuView extends JFrame {
 			createStudentAsgPan();
 		}
 		
-		// due to the difference in asg tables, 
-		// these must be called below the
-		//prof and student creations
+		createAssignmentsPan();
 
 	}
 	

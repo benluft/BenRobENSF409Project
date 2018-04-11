@@ -146,7 +146,6 @@ public class MainMenuView extends JFrame {
 			System.out.println("User is a student");
 			createStudentCoursesPan();
 			createStudentAsgPan();
-			
 		}
 	
 	}
@@ -273,8 +272,7 @@ public class MainMenuView extends JFrame {
 		else
 		{
 			model.addRow(new Object[]{Integer.toString(num), name, prof, "Not Active", "False"});
-		}
-			
+		}	
 	}
 	public void setCourseTableElement(Object val, int r, int c) {
 		coursesTable.setValueAt(val, r, c);
@@ -517,8 +515,11 @@ public class MainMenuView extends JFrame {
 	public String getYear() {
 		return yearTxt.getText();
 	}
-	public void addUploadListener(ActionListener l) {
+	public void addUploadAsgListener(ActionListener l) {
 		btnUploadAssignment.addActionListener(l);
+	}
+	public void addDownloadAsgListener(ActionListener l) {
+		btnAsgDownload.addActionListener(l);
 	}
 	public void addAssignmentsTableListener(TableModelListener l) {
 		asgTable.getModel().addTableModelListener(l);
@@ -586,7 +587,9 @@ public class MainMenuView extends JFrame {
 		JScrollPane submissionsPane = new JScrollPane(tblSubmissions);
 		submissionsPane.setBounds(10, 133, 790, 323);
 		jpnSubmissions.add(submissionsPane);
-		
+		TableColumn selectedColumn = asgTable.getColumnModel().getColumn(4);
+		selectedColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
+			
 		btnSubmissionDownload = new JButton("Download Submission");
 		btnSubmissionDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnSubmissionDownload.setBounds(306, 568, 201, 50);
@@ -614,6 +617,31 @@ public class MainMenuView extends JFrame {
 	        }
 		};
 	}
+	public void addSubmissionDownloadListener(ActionListener l) {
+		btnSubmissionDownload.addActionListener(l);
+	}
+	public void addSubmissionsTableListener(TableModelListener l) {
+		tblSubmissions.getModel().addTableModelListener(l);
+	}
+	public void clearSubmissionsTable() {
+		DefaultTableModel model = (DefaultTableModel) tblSubmissions.getModel();
+		model.setRowCount(0);
+	}
+	public Object getSubmissionsTableEl(int r, int c) {
+		return tblSubmissions.getValueAt(r, c); 
+	}
+	public void setSubmissionsTableEl(Object o, int r, int c) {
+		tblSubmissions.setValueAt(o, r, c); 
+	}
+	public int getSubmissionTableNumRows() {
+		return tblSubmissions.getRowCount();
+	}
+	public void addSubmissionsTableRow(String asgName, int stuID, String stuLastN, int grade) {
+		DefaultTableModel model = (DefaultTableModel) tblSubmissions.getModel();
+		model.addRow(new Object[]{asgName, Integer.toString(stuID), stuLastN, Integer.toString(grade), "False"});
+
+	}
+	
 	
 	//email
 	private void createEmailPan() {
@@ -679,4 +707,5 @@ public class MainMenuView extends JFrame {
 		txtEmailBody.setText("");
 		txtSubject.setText("");
 	}
+	
 }

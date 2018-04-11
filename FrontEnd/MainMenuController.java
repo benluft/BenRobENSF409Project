@@ -555,5 +555,81 @@ class CourseAddListener implements ActionListener
  	  }
  	}
 
+    
+    // submissions
 
+	public class SubmissionTableListener implements TableModelListener {
+	
+	    public void tableChanged(TableModelEvent e) {
+	        int row = e.getFirstRow();
+	        int column = e.getColumn();
+	        
+	        String asgName = (String)theView.getSubmissionsTableEl(row, 0);
+	        int studentID = Integer.parseInt((String)theView.getSubmissionsTableEl(row, 1));
+	        String studentLastName = (String)theView.getSubmissionsTableEl(row, 2);
+
+	        if(column == 3) {// grade changed
+	        	int newGrade = Integer.parseInt((String)theView.getSubmissionsTableEl(row, column));
+	        	JOptionPane.showMessageDialog(null,
+	        			studentLastName + "'s grade on "
+	        			+ asgName + " is: \n" + newGrade);
+	        	
+	        }
+	        else if(column == 4) {// true == asg selected
+	        	int numRows = theView.getSubmissionTableNumRows();
+	        	String val = (String)theView.getSubmissionsTableEl(row, column);
+	        	if(val.equals("True")) {
+		        	for(int i = 0; i < numRows; i++) {
+		        		if(i != row && theView.getSubmissionsTableEl(i, column) == "True") {// set other rows to false
+		        			theView.setSubmissionsTableEl("False", i, column);
+		        			//return;
+		        		}
+		        	}
+	        		
+	   
+	        	}
+	        }
+	        else {
+	        	System.out.println("sooooo, there shouldnt be a table listener here...");
+	        }
+	    }
+	}
+	
+    class DownloadSubmittedAssignmentListener implements ActionListener
+ 	{
+ 	  @Override
+ 	  public void actionPerformed (ActionEvent arg0)
+ 	  {
+ 		String asgToDownload = "";
+ 		String submitterLastName = "";
+ 		String selected = "";
+    	int numRows;
+    	boolean found = false;
+ 	    try
+ 	    {
+ 	    	numRows = theView.getSubmissionTableNumRows();
+ 	    	for(int i = 0; i < numRows; i++) {
+ 	    		selected = (String)theView.getSubmissionsTableEl(i, 4);
+ 	    		if(selected.equals("True")) {
+ 	    			asgToDownload = (String)theView.getSubmissionsTableEl(i, 0);
+ 	    			submitterLastName = (String)theView.getSubmissionsTableEl(i, 2);
+ 	    			JOptionPane.showMessageDialog(null,
+ 	        			"You clicked the download submission button. \n"
+ 	        			+ "Downloading: " + asgToDownload +"\n"
+ 	        			+ "Submitted by: " + submitterLastName);
+ 	    		}
+ 	    	}
+ 	    	if(!found) {
+ 	    		JOptionPane.showMessageDialog(null, 
+ 	    				"You must select a submission first");
+ 	    	}
+
+ 	    	
+ 	    }catch(Exception e){
+ 	      System.out.println("issue with Search Type listener.");
+ 	      e.printStackTrace();
+ 	    }
+ 	  }
+ 	}
+    
 }

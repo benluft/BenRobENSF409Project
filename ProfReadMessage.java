@@ -125,10 +125,13 @@ class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConst
 		
 		ResultSet rs = dbreader.getReadResults();
 		
+		System.out.println("In readSubmission table submission assign id is" + submission.getAssignID());
+		
 		if(submission.getID() == -1)
 		{
 			try
 			{
+				System.out.println("In PDF place table");
 				rs.next();
 				PDFReader pdfReader = new PDFReader(rs.getString(4));
 				getToSend().add(pdfReader.getFileToSend());

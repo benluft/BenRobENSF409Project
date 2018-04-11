@@ -53,6 +53,15 @@ private Vector<SocketMessage> toSend;
 			
 			readAssignmentTable(assign);
 		}
+		
+		if(message.getMessageType().equals(submissionMessage))
+		{
+			System.out.println("Message received is a submission");
+			
+			Submission submission = (Submission) message;
+			
+			readSubmissionTable(submission);
+		}
 	}
 	
 	abstract protected void readAssignmentTable(Assignment assign);

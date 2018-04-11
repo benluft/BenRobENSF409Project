@@ -242,10 +242,11 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
     class AsgTableListener implements TableModelListener {
     	
 	    public void tableChanged(TableModelEvent e) {
-	        int row = e.getFirstRow();
+	        int size = theView.getAsgTableNumRows();
+	    	int row = e.getFirstRow();
 	        int column = e.getColumn();
 	        
-	        if(row >= 0)
+	        if(size > 0)
 	        {
 	        	String asgName = (String)theView.getAsgTableEl(row, 0);
 		        String dueDate = (String)theView.getAsgTableEl(row, 1);

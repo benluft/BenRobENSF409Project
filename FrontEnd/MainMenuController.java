@@ -460,9 +460,32 @@ class CourseAddListener implements ActionListener
 		
 		for(int i = 0; i < assignmentsInDB.size(); i++)
 		{
+		
 			Assignment currentAssignment = assignmentsInDB.get(i);
 			theView.addAsgTableRow(currentAssignment.getTitle(), currentAssignment.getDueDate(),
 					currentAssignment.isActive());
+			
+			int maxGrade = 0;
+			
+			if(currentUser.getType().equals("S"))
+			{
+				System.out.println("Trying to get grade");
+				Vector<Submission> submissionsForGrades = getAllSubmissions(assignmentsInDB.get(i).getID());
+				for(int j = 0; j < submissionsForGrades.size(); j++)
+				{
+					System.out.println("Looping for grade");
+					if(submissionsForGrades.get(j).getStudentID() == currentUser.getID())
+					{
+						if(submissionsForGrades.get(j).getGrade() > maxGrade)
+						{
+							maxGrade = submissionsForGrades.get(j).getGrade();
+						}
+					}
+				}
+				
+				System.out.println("Grade is put in view");
+				theView.setAsgTableElement((Object)maxGrade, i, 4);
+			}
 		}
 	}
 	
@@ -806,6 +829,38 @@ class CourseAddListener implements ActionListener
  	        			"You clicked the download submission button. \n"
  	        			+ "Downloading: " + asgToDownload +"\n"
  	        			+ "Submitted by: " + submitterLastName);
+ 	    			
+ 	    			String assignName = findAssignName();
+ 	    			int assignID = findAsgID();
+ 	   			
+ 	   			if(assignName == null || assignID == 0)
+ 	   			{
+ 	   				return;
+ 	   			}
+ 	   			
+ 	   			Submission requestSub = new Submission(true, -1, assignID, 0, null, 0, null);
+ 	   			
+ 	   			coms.write(requestSub);
+ 	   			
+ 	   			FileMessage filemessage = ((Vector<FileMessage>) coms.read()).get(0);
+ 	   			
+ 	   			File newFile = new File(submissionPath + asgToDownload);
+ 	   			
+ 	   			try{
+ 	   				if(!newFile.exists())
+ 	   				{
+ 	   					newFile.createNewFile();
+ 	   				}
+ 	   				
+ 	   				FileOutputStream writer = new FileOutputStream(newFile);
+ 	   				BufferedOutputStream bos = new BufferedOutputStream(writer);
+ 	   				
+ 	   				bos.write(filemessage.getFileData());
+ 	   				bos.close();
+ 	   			} 
+ 	   			catch(IOException e){
+ 	   				e.printStackTrace();
+ 	   			}
  	    		}
  	    	}
  	    	if(!found) {

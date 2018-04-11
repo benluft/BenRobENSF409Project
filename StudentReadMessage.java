@@ -131,7 +131,23 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 
 	@Override
 	protected void readSubmissionTable(Submission submission) {
-		// TODO Auto-generated method stub
+		
+		DBReader reader = new DBReader(submissionMessage, "assign_id", submission.getAssignID());
+		
+		ResultSet rs = reader.getReadResults();
+		
+		try 
+		{
+			while(rs.next())
+			{
+				getToSend().add(new Submission(false, rs.getInt(1), rs.getInt(2), rs.getInt(3), 
+						rs.getString(5), rs.getInt(6), rs.getString(7)));
+			}
+		} 
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

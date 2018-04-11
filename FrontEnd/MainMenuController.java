@@ -76,7 +76,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	}
 	else
 	{
-		
+		theView.addDownloadAsgListener(new AsgDownloadListener());
 	}
     theView.addClassTableListener(new CourseTableListener());
     theView.addAssignmentsTableListener(new AsgTableListener());
@@ -163,21 +163,24 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		{
 			
 			
-			Assignment assign = new Assignment(true, 0, currentCourseID, null, false, null);
+//			Assignment assign = new Assignment(true, 0, currentCourseID, null, false, null);
+//			
+//			coms.write(assign);
+//			
+//			Assignment fullAssign = (Assignment) coms.read();
 			
-			coms.write(assign);
+//			Assignment requestAssign = new Assignment(true, -1, fullAssign.getCourseID(), 
+//					fullAssign.getTitle(), fullAssign.isActive(), fullAssign.getDueDate());
 			
-			Assignment fullAssign = (Assignment) coms.read();
-			
-			Assignment requestAssign = new Assignment(true, -1, fullAssign.getCourseID(), 
-					fullAssign.getTitle(), fullAssign.isActive(), fullAssign.getDueDate());
+			Assignment requestAssign = new Assignment(true, -1, 0, 
+					"Ben_Luft_Resume_Telus.pdf", true, null);
 			
 			coms.write(requestAssign);
 			
-			FileMessage filemessage = (FileMessage) coms.read();
+			FileMessage filemessage = ((Vector<FileMessage>) coms.read()).get(0);
 			
 			File newFile = new File("C:\\Users\\Ben\\workspace\\Lab9\\AssignmentsStudentDownload\\" +
-					fullAssign.getTitle());
+					"Ben_Luft_Resume_Telus.pdf");
 			
 			try{
 				if(!newFile.exists())

@@ -18,7 +18,7 @@ class Worker
 	 */
 	public String connectionInfo = "jdbc:mysql://localhost:3306/finalprojectdb",  
 				  login          = "root",
-				  password       = "bunnies";
+				  password       = "ENSF409BenRob";
 	
 	Worker()
 	{

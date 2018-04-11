@@ -67,8 +67,15 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	if(currentUser.getType().equals("P")) {
 	    theView.addCourseClearListener( new CourseClearListener());
 	    theView.addCourseAddListener( new CourseAddListener());
+	    theView.addSearchSudentListener(new StudentSearchListener());
+	    theView.addClearSearchSudentListener(new StudentClearListener());
+	    theView.addStudentTableListener(new StudentTableListener());
 	}
     theView.addClassTableListener(new CourseTableListener());
+    theView.addUploadListener(new AsgUploadListener());
+    theView.addAssignmentsTableListener(new AsgTableListener());
+	theView.addSendEmailListener(new SendEmailListener());
+	theView.addClearEmailListener(new ClearEmailListener());
 
   }
 
@@ -148,26 +155,29 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	    public void tableChanged(TableModelEvent e) {
 	        int row = e.getFirstRow();
 	        int column = e.getColumn();
-	        String asgName = (String)theView.getAsgTableEl(row, 0);
-	        String dueDate = (String)theView.getAsgTableEl(row, 1);
 	        
-	        if(column == 2) {// active or not active
-	        	String activity = (String)theView.getAsgTableEl(row, column);
-	        	JOptionPane.showMessageDialog(null,
-	        			asgName  + " is now " + activity);
-	        	if(activity.equals("Active"))
-	        	{
-	        		coms.write(new Assignment(false,0,currentCourseID,asgName,true,dueDate));
-	        	}
-	        	else
-	        	{
-	        		coms.write(new Assignment(false,0,currentCourseID,asgName,false,dueDate));
-	        	}
-	        }else if(column == 3) { // viewing column
-	        	theView.changeAsgGrade(73);
-	        	
-	        }else if (column == 4) { // grades column
-	        	
+	        if(row > 0)
+	        {
+	        	String asgName = (String)theView.getAsgTableEl(row, 0);
+		        String dueDate = (String)theView.getAsgTableEl(row, 1);
+		        if(column == 2) {// active or not active
+		        	String activity = (String)theView.getAsgTableEl(row, column);
+		        	JOptionPane.showMessageDialog(null,
+		        			asgName  + " is now " + activity);
+		        	if(activity.equals("Active"))
+		        	{
+		        		coms.write(new Assignment(false,0,currentCourseID,asgName,true,dueDate));
+		        	}
+		        	else
+		        	{
+		        		coms.write(new Assignment(false,0,currentCourseID,asgName,false,dueDate));
+		        	}
+		        }else if(column == 3) { // viewing column
+		        	theView.changeAsgGrade(73);
+		        	
+		        }else if (column == 4) { // grades column
+		        	
+		        }
 	        }
 	    }
 	}
@@ -242,8 +252,9 @@ class CourseAddListener implements ActionListener
 	        	String val = (String)theView.getCourseTableElement(row, column);
 	        	if(val.equals("True")) {
 		        	for(int i = 0; i < numRows; i++) {
-		        		if(i != row) {// set other rows to false
+		        		if(i != row && theView.getCourseTableElement(i, column) == "True") {// set other rows to false
 		        			theView.setCourseTableElement("False", i, column);
+		        			//return;
 		        		}
 		        	}
 	        		
@@ -254,17 +265,12 @@ class CourseAddListener implements ActionListener
 	        		
 	        		theView.clearStudentsTable();
 	        		
+	        		theView.clearAssignmentsTable();
+	        		
 	        		fillStudentTable(Integer.parseInt((String)theView.getCourseTableElement(row, 0)));
 	        		
 	        		fillAssignTable();
-	        		
-	        	    theView.addSearchSudentListener(new StudentSearchListener());
-	        	    theView.addClearSearchSudentListener(new StudentClearListener());
-	        	    theView.addStudentTableListener(new StudentTableListener());
-	        	    theView.addUploadListener(new AsgUploadListener());
-	        	    theView.addAssignmentsTableListener(new AsgTableListener());
-	        		theView.addSendEmailListener(new SendEmailListener());
-	        		theView.addClearEmailListener(new ClearEmailListener());
+	   
 	        	}
 	        }
 	        else {
@@ -455,7 +461,7 @@ class CourseAddListener implements ActionListener
 	    public void tableChanged(TableModelEvent e) {
 	        int row = e.getFirstRow();
 	        int column = e.getColumn();
-	        if(row >= 0)
+	        if(row > 0)
 	        {
 		        String firstName = (String)theView.getStudentTableElement(row, 0);
 		        String lastName = (String)theView.getStudentTableElement(row, 1);
@@ -463,8 +469,8 @@ class CourseAddListener implements ActionListener
 		        
 		        if(column == 3) {// enrolled or not enrolled
 		        	String enr = (String)theView.getStudentTableElement(row, column);
-		        	JOptionPane.showMessageDialog(null,
-		        			firstName + " " + lastName  + " is now " + enr);
+//		        	JOptionPane.showMessageDialog(null,
+//		        			firstName + " " + lastName  + " is now " + enr);
 		        	if(enr.equals("Enrolled"))
 		        	{
 		        		if(!doesEnrolledExist(studentID))

@@ -36,7 +36,8 @@ import java.util.Vector;
  * @author Ben Luft and Rob Dunn
  *
  */
-public class MainMenuController {
+public class MainMenuController implements ClientFilePath
+{
 
  /**
  * The GUI of the program
@@ -56,7 +57,7 @@ private int currentCourseID;
  * @param v the GUI of the program
  * @param m the database of the program
  */
-public MainMenuController (MainMenuView v, SocketCommunicator coms, User currentUser)
+public MainMenuController (MainMenuView v, SocketCommunicator coms, User currentUser) 
   {
 	
     theView = v;
@@ -163,7 +164,29 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		@Override
 		public void actionPerformed (ActionEvent arg0)
 		{
+			int row = 0;
+			String assignView;
+			String assignName;
 			
+			try
+			{
+				while(true)
+				{
+					assignView = (String)theView.getAsgTableEl(row, 3);
+					if(assignView == "True")
+					{
+						assignName = (String)theView.getAsgTableEl(row, 0);
+						break;
+					}
+					row++;
+					
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e)
+			{
+				JOptionPane.showMessageDialog(theView, "Please select an assignment to view");
+				return;
+			}
 			
 //			Assignment assign = new Assignment(true, 0, currentCourseID, null, false, null);
 //			
@@ -175,14 +198,13 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 //					fullAssign.getTitle(), fullAssign.isActive(), fullAssign.getDueDate());
 			
 			Assignment requestAssign = new Assignment(true, -1, 0, 
-					"Ben_Luft_Resume_Telus.pdf", true, null);
+					assignName, true, null);
 			
 			coms.write(requestAssign);
 			
 			FileMessage filemessage = ((Vector<FileMessage>) coms.read()).get(0);
 			
-			File newFile = new File("C:\\Users\\Ben\\workspace\\Lab9\\AssignmentsStudentDownload\\" +
-					"Ben_Luft_Resume_Telus.pdf");
+			File newFile = new File(assignmentPath + assignName);
 			
 			try{
 				if(!newFile.exists())

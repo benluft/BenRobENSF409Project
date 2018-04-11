@@ -32,7 +32,7 @@ class PDFReader
 			BufferedInputStream bos = new BufferedInputStream(fis);
 			bos.read(content, 0, (int)length);
 			
-			FileMessage pdfToSend = new FileMessage(false, 0, content);
+			fileToSend = new FileMessage(false, 0, content);
 		} 
 		catch (IOException e) 
 		{

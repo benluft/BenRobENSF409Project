@@ -73,6 +73,8 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	    theView.addClearSearchSudentListener(new StudentClearListener());
 	    theView.addStudentTableListener(new StudentTableListener());
 	    theView.addUploadAsgListener(new AsgUploadListener());
+	    theView.addSubmissionDownloadListener(new DownloadSubmittedAssignmentListener());
+	    theView.addSubmissionsTableListener(new SubmissionTableListener());
 	}
 	else
 	{
@@ -660,6 +662,7 @@ class CourseAddListener implements ActionListener
  	    	for(int i = 0; i < numRows; i++) {
  	    		selected = (String)theView.getSubmissionsTableEl(i, 4);
  	    		if(selected.equals("True")) {
+ 	    			found = true;
  	    			asgToDownload = (String)theView.getSubmissionsTableEl(i, 0);
  	    			submitterLastName = (String)theView.getSubmissionsTableEl(i, 2);
  	    			JOptionPane.showMessageDialog(null,

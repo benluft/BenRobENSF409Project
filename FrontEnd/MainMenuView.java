@@ -587,7 +587,7 @@ public class MainMenuView extends JFrame {
 		JScrollPane submissionsPane = new JScrollPane(tblSubmissions);
 		submissionsPane.setBounds(10, 133, 790, 323);
 		jpnSubmissions.add(submissionsPane);
-		TableColumn selectedColumn = asgTable.getColumnModel().getColumn(4);
+		TableColumn selectedColumn = tblSubmissions.getColumnModel().getColumn(4);
 		selectedColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
 		addSubmissionsTableRow("MyAsg", 69, "Maundy", 73);//testing
 		

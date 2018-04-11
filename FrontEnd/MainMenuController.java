@@ -70,9 +70,13 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	    theView.addSearchSudentListener(new StudentSearchListener());
 	    theView.addClearSearchSudentListener(new StudentClearListener());
 	    theView.addStudentTableListener(new StudentTableListener());
+	    theView.addUploadListener(new AsgUploadListener());
+	}
+	else
+	{
+		
 	}
     theView.addClassTableListener(new CourseTableListener());
-    theView.addUploadListener(new AsgUploadListener());
     theView.addAssignmentsTableListener(new AsgTableListener());
 	theView.addSendEmailListener(new SendEmailListener());
 	theView.addClearEmailListener(new ClearEmailListener());
@@ -263,7 +267,10 @@ class CourseAddListener implements ActionListener
 	        		
 	        		currentCourseID = courseID;
 	        		
-	        		theView.clearStudentsTable();
+	        		if(currentUser.getType().equals("P"))
+	        		{
+	        			theView.clearStudentsTable();
+	        		}
 	        		
 	        		theView.clearAssignmentsTable();
 	        		
@@ -520,10 +527,8 @@ class CourseAddListener implements ActionListener
  	    	String emailSubject = theView.getEmailSubject();
  	    	JOptionPane.showMessageDialog(null,
         		    "Subject = " + emailSubject);
-        	theView.clearDueDateBoxes();
         	JOptionPane.showMessageDialog(null,
         		    "Email body = " + emailBody);
-        	theView.clearDueDateBoxes();
         	
         	coms.write(new Email(0,false,currentCourseID,emailBody,emailSubject));
  	    	

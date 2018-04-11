@@ -11,7 +11,7 @@ import sharedData.Email;
 import sharedData.User;
 import sharedData.MessageNameConstants;
 
-class EmailWriter
+class EmailWriter implements MessageNameConstants
 {
 	private Properties properties;
 	
@@ -21,16 +21,15 @@ class EmailWriter
 	{
 		setProperties();
 		
-		setSession(senderUser.getEmail(), "ENSF409RobBen");
+		setSession(senderUser.getEmail(), "ENSFpassword1");
 		
 		ArrayList<String> recipientEmails = new ArrayList<String>();
 		
+		DBReader readEnrolled = new DBReader(enrolMessage, "course_id", email.getCourseID());
+		ResultSet rsEnroll = readEnrolled.getReadResults();
+		
 		if(senderUser.getType().equals("P"))
 		{
-						
-			DBReader readEnrolled = new DBReader(MessageNameConstants.enrolMessage, 
-					"course_id", email.getCourseID());
-			ResultSet rsEnroll = readEnrolled.getReadResults();
 			
 			try
 			{
@@ -48,6 +47,29 @@ class EmailWriter
 			catch(SQLException e)
 			{
 				
+			}
+			
+		}
+		else
+		{
+			try 
+			{
+				rsEnroll.next();
+				
+				DBReader findProfessorID = new DBReader(courseMessage, "prof_id", rsEnroll.getInt(3));
+				ResultSet rsCourseProfID = findProfessorID.getReadResults();
+				rsCourseProfID.next();
+				
+				DBReader findProfessorEmail = new DBReader(userMessage, "id", rsCourseProfID.getInt(2));
+				ResultSet rsCourseProfEmail = findProfessorEmail.getReadResults();
+				rsCourseProfEmail.next();
+				
+				recipientEmails.add(rsCourseProfEmail.getString(3));
+			} 
+			catch (SQLException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 		}

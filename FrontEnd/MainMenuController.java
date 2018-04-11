@@ -284,9 +284,10 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		        		fillSubmissionsTable(asgName);
 		        	}
 		        }
-		        else if (column == 4) { // grades column
+		        else if (column == 4) 
+		        { // grades column
 		        	
-		        }
+		        }	
 	        }
 	    }
 	}
@@ -421,7 +422,9 @@ class CourseAddListener implements ActionListener
 		{
 			Submission submission = submissions.get(i);
 			System.out.println("Submission for student " + submission.getStudentID());
-			theView.addSubmissionsTableRow("", submission.getStudentID(), "", submission.getGrade());
+		
+			
+			theView.addSubmissionsTableRow(submission.getTitle(), submission.getStudentID(), "", submission.getGrade());
 		}
 		
 	}
@@ -755,6 +758,9 @@ class CourseAddListener implements ActionListener
 	        	JOptionPane.showMessageDialog(null,
 	        			studentLastName + "'s grade on "
 	        			+ asgName + " is: \n" + newGrade);
+	        	System.out.println("Title is " + (String)theView.getSubmissionsTableEl(row, 0));
+	        	coms.write(new Submission(false, 0, 0, 0, 
+	        			(String)theView.getSubmissionsTableEl(row, 0), newGrade, null));
 	        	
 	        }
 	        else if(column == 4) {// true == asg selected

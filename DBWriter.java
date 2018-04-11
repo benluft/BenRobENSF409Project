@@ -17,28 +17,26 @@ import sharedData.Submission;
 class DBWriter extends WriterWorker implements MessageNameConstants, ServerFilePaths
 {
 	
-	private int tableColsPerMessage;
-	
 	DBWriter(String tableName, SocketMessage message) {
 		super(tableName);
 		
-		if(tableName.equals(assignmentMessage.toLowerCase()))
+		if(tableName.equals(assignmentMessage))
 		{
 			writeAssignment(message);
 		}
-		else if(tableName.equals(courseMessage.toLowerCase()))
+		else if(tableName.equals(courseMessage))
 		{
 			writeCourse(message);
 		}
-		else if(tableName.equals(enrolMessage.toLowerCase()))
+		else if(tableName.equals(enrolMessage))
 		{
 			writeEnrol(message);
 		}
-		else if(tableName.equals(submissionMessage.toLowerCase()))
+		else if(tableName.equals(submissionMessage))
 		{
 			writeSubmission(message);
 		}
-		else if(tableName.equals(gradesMessage.toLowerCase()))
+		else if(tableName.equals(gradesMessage))
 		{
 			writeGrades(message);
 		}
@@ -179,8 +177,17 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		
 		try 
 		{
-			String uniqueTitle = "StudentID" + submission.getStudentID() + "AssignID" + 
-					submission.getAssignID() + submission.getTitle();
+			String uniqueTitle;
+			
+			if(!submission.getTitle().startsWith("StudentID"))
+			{
+				uniqueTitle = "StudentID" + submission.getStudentID() + "AssignID" + 
+						submission.getAssignID() + submission.getTitle();
+			}
+			else
+			{
+				uniqueTitle = submission.getTitle();
+			}
 			
 			statement.setInt(1, 0);
 			statement.setInt(2, submission.getAssignID());

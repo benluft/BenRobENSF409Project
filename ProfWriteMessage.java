@@ -52,7 +52,7 @@ class ProfWriteMessage implements MessageNameConstants, ServerFilePaths
 		
 		if(message.getMessageType().equals(submissionMessage))
 		{
-			
+			System.out.println("message to write is a submission message");
 			DBWriter writer = new DBWriter(submissionMessage, message);
 		}
 		

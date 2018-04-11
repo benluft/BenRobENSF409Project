@@ -136,6 +136,7 @@ public class MainMenuView extends JFrame {
 		if(currentUser.getType().equals("P")) {
 			setTitle("Proffesor Main Menu");
 			createProfCoursesPan();
+			createProfAsgTable();
 			createStudentsPan();
 			createSubmissionsPan();		
 			createProfAsgPan();
@@ -143,11 +144,16 @@ public class MainMenuView extends JFrame {
 		}
 		else {// if student only:
 			setTitle("Student Main Menu");
+			createStudentAsgTable();
 			System.out.println("User is a student");
 			createStudentCoursesPan();
 			createStudentAsgPan();
 		}
-	
+		
+		// due to the difference in asg tables, 
+		// these must be called below the
+		//prof and student creations
+
 	}
 	
 	//courses
@@ -557,6 +563,37 @@ public class MainMenuView extends JFrame {
 			model.addRow(new Object[]{name, date, "Not Active", "False", "Unmarked"});
 		}
 	}
+	public void createProfAsgTable() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("File Name");
+        model.addColumn("Due Date");
+        model.addColumn("Activity");
+        model.addColumn("Selected");
+        model.addColumn("Grade");
+        asgTable = new JTable(model) {
+	        @Override
+	        public boolean isCellEditable(int row, int column)
+	        {
+	            return column == 2 || column == 3 || column == 4;
+	        }
+		};
+	}
+	public void createStudentAsgTable() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("File Name");
+        model.addColumn("Due Date");
+        model.addColumn("Activity");
+        model.addColumn("Selected");
+        model.addColumn("Grade");
+        asgTable = new JTable(model) {
+	        @Override
+	        public boolean isCellEditable(int row, int column)
+	        {
+	            return column == 3;
+	        }
+		};
+	}
+
 	public void changeAsgGrade(int newGrade) {
 		Object grade = (Object)newGrade;
 		int rowNum = asgTable.getRowCount();

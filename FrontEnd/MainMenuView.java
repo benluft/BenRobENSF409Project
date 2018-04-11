@@ -589,7 +589,8 @@ public class MainMenuView extends JFrame {
 		jpnSubmissions.add(submissionsPane);
 		TableColumn selectedColumn = asgTable.getColumnModel().getColumn(4);
 		selectedColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
-			
+		addSubmissionsTableRow("MyAsg", 69, "Maundy", 73);//testing
+		
 		btnSubmissionDownload = new JButton("Download Submission");
 		btnSubmissionDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnSubmissionDownload.setBounds(306, 568, 201, 50);

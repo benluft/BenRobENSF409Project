@@ -51,7 +51,7 @@ public class MainMenuView extends JFrame {
 	GroupLayout gl_contentPane = new GroupLayout(contentPane);
 	private JPanel jpnStudents;
 	private JPanel jpnGrades;
-	private JPanel jpnDropBox;
+	private JPanel jpnSubmissions;
 	private JPanel jpnAsg;
 	private JTabbedPane tabbedPane;
 	private JPanel jpnEmail;
@@ -91,6 +91,10 @@ public class MainMenuView extends JFrame {
 	private JButton btnSendEmail;
 	private JTextField txtSubject;
 	private JTextArea txtEmailBody;
+	private JTable tblSubmissions;
+	private JButton btnAsgDownload;
+	private JButton btnAsgSubmit;
+	private JButton btnSubmissionDownload;
 
 	/**
 	 * Create the frame.
@@ -126,8 +130,6 @@ public class MainMenuView extends JFrame {
 		
 		createCoursesPan();
 		createAssignmentsPan();
-		createDropBoxPan();
-		//createGradesPan();
 		createEmailPan();
 		
 		//if prof only:
@@ -135,19 +137,18 @@ public class MainMenuView extends JFrame {
 			setTitle("Proffesor Main Menu");
 			createProfCoursesPan();
 			createStudentsPan();
-			//setProfEditability();
+			createSubmissionsPan();		
+			createProfAsgPan();
 			
 		}
 		else {// if student only:
 			setTitle("Student Main Menu");
 			System.out.println("User is a student");
-			createStudentCourseTable();
+			createStudentCoursesPan();
+			createStudentAsgPan();
 			
 		}
-		
-		
-		
-		
+	
 	}
 	
 	//courses
@@ -157,17 +158,7 @@ public class MainMenuView extends JFrame {
 		jpnCourses.setLayout(null);
 
 		//TODO: call from prof view constructor in super style
-		createProfCourseTable();
 
-		
-		TableColumn activityColumn = coursesTable.getColumnModel().getColumn(3);
-		activityColumn.setCellEditor(new DefaultCellEditor(createActivityBox()));
-		TableColumn viewingColumn = coursesTable.getColumnModel().getColumn(4);
-		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
-
-		coursePane = new JScrollPane(coursesTable);
-		coursePane.setBounds(10, 127, 790, 294);
-		jpnCourses.add(coursePane);
 		
 		lblCourses = new JLabel("Courses");
 		lblCourses.setHorizontalAlignment(SwingConstants.CENTER);
@@ -211,6 +202,16 @@ public class MainMenuView extends JFrame {
 		};
 	}
 	public void createProfCoursesPan() {
+		
+		createProfCourseTable();
+		TableColumn activityColumn = coursesTable.getColumnModel().getColumn(3);
+		activityColumn.setCellEditor(new DefaultCellEditor(createActivityBox()));
+		TableColumn viewingColumn = coursesTable.getColumnModel().getColumn(4);
+		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
+		coursePane = new JScrollPane(coursesTable);
+		coursePane.setBounds(10, 127, 790, 294);
+		jpnCourses.add(coursePane);
+		
 		lblNewCourse = new JLabel("Create New Course");
 		lblNewCourse.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewCourse.setFont(new Font("Tahoma", Font.PLAIN, 21));
@@ -237,6 +238,16 @@ public class MainMenuView extends JFrame {
 		btnCourseClear.setBounds(416, 614, 122, 32);
 		jpnCourses.add(btnCourseClear);
 		
+	}
+	private void createStudentCoursesPan() {
+		createStudentCourseTable();
+		TableColumn activityColumn = coursesTable.getColumnModel().getColumn(3);
+		activityColumn.setCellEditor(new DefaultCellEditor(createActivityBox()));
+		TableColumn viewingColumn = coursesTable.getColumnModel().getColumn(4);
+		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
+		coursePane = new JScrollPane(coursesTable);
+		coursePane.setBounds(10, 127, 790, 294);
+		jpnCourses.add(coursePane);
 	}
 	public void addCourseAddListener(ActionListener l) {
 		btnAddCourse.addActionListener(l);
@@ -426,6 +437,11 @@ public class MainMenuView extends JFrame {
 		TableColumn viewingColumn = asgTable.getColumnModel().getColumn(3);
 		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
 		
+		contentPane.setLayout(gl_contentPane);	
+		
+	}
+	private void createProfAsgPan() {
+		
 		btnUploadAssignment = new JButton("Upload Assignment");
 		btnUploadAssignment.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnUploadAssignment.setBounds(532, 578, 201, 50);
@@ -462,12 +478,19 @@ public class MainMenuView extends JFrame {
 		yearTxt.setBounds(392, 578, 91, 44);
 		yearTxt.setDocument(new TextFieldLimit(4));
 		jpnAsg.add(yearTxt);
+	}
+	private void createStudentAsgPan() {
+		btnAsgDownload = new JButton("Download Assignment");
+		btnAsgDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnAsgDownload.setBounds(299, 431, 201, 50);
+		jpnAsg.add(btnAsgDownload);
 		
-		JButton btnDownload = new JButton("Download Assignment");
-		btnDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnDownload.setBounds(299, 431, 201, 50);
-		jpnAsg.add(btnDownload);
-		contentPane.setLayout(gl_contentPane);
+		btnAsgSubmit = new JButton("Submit Assignment");
+		btnAsgSubmit.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnAsgSubmit.setBounds(299, 578, 201, 44);
+		jpnAsg.add(btnAsgSubmit);
+		
+			
 		
 	}
 	public void createAsgTable() {
@@ -484,7 +507,6 @@ public class MainMenuView extends JFrame {
 	            return column == 2 || column == 3 || column == 4;
 	        }
 		};
-		//addAsgTableRow("Flying 1", "Tomorrow");
 	}
 	public String getMonth() {
 		return monthTxt.getText();
@@ -547,20 +569,50 @@ public class MainMenuView extends JFrame {
 		return selectedFile;
 	}
 	
-	//dropBox
-	private void createDropBoxPan() {
-		jpnDropBox = new JPanel();
-		tabbedPane.addTab("Drop Box", null, jpnDropBox, null);
-		jpnDropBox.setLayout(null);
+	//Submissions
+	private void createSubmissionsPan() {
+		jpnSubmissions = new JPanel();
+		tabbedPane.addTab("Submissions", null, jpnSubmissions, null);
+		jpnSubmissions.setLayout(null);
+		
+		JLabel lblSubmissions = new JLabel("Submissions");
+		lblSubmissions.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSubmissions.setFont(new Font("Tahoma", Font.PLAIN, 39));
+		lblSubmissions.setBounds(10, 33, 790, 66);
+		jpnSubmissions.add(lblSubmissions);
+		
+		createSubmissionTable();
+		tblSubmissions.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		JScrollPane submissionsPane = new JScrollPane(tblSubmissions);
+		submissionsPane.setBounds(10, 133, 790, 323);
+		jpnSubmissions.add(submissionsPane);
+		
+		btnSubmissionDownload = new JButton("Download Submission");
+		btnSubmissionDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnSubmissionDownload.setBounds(306, 568, 201, 50);
+		jpnSubmissions.add(btnSubmissionDownload);
+		
+		JLabel lblDownloadSelectedSubmission = new JLabel("Download Selected Submission");
+		lblDownloadSelectedSubmission.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDownloadSelectedSubmission.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		lblDownloadSelectedSubmission.setBounds(10, 513, 790, 44);
+		jpnSubmissions.add(lblDownloadSelectedSubmission);
 		
 	}
-	
-	//grades
-	private void createGradesPan() {
-		jpnGrades = new JPanel();
-		tabbedPane.addTab("Grades", null, jpnGrades, null);
-		jpnGrades.setLayout(null);
-		
+	public void createSubmissionTable() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Assignment");
+        model.addColumn("Student I.D.");
+        model.addColumn("Student Last");
+        model.addColumn("Grade");
+        model.addColumn("Selected");
+        tblSubmissions = new JTable(model) {
+	        @Override
+	        public boolean isCellEditable(int row, int column)
+	        {
+	            return column == 3 || column == 4;
+	        }
+		};
 	}
 	
 	//email

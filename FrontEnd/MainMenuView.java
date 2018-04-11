@@ -583,13 +583,13 @@ public class MainMenuView extends JFrame {
 		jpnSubmissions.add(lblSubmissions);
 		
 		createSubmissionTable();
-		tblSubmissions.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		tblSubmissions.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		JScrollPane submissionsPane = new JScrollPane(tblSubmissions);
 		submissionsPane.setBounds(10, 133, 790, 323);
 		jpnSubmissions.add(submissionsPane);
 		TableColumn selectedColumn = tblSubmissions.getColumnModel().getColumn(4);
 		selectedColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
-		addSubmissionsTableRow("MyAsg", 69, "Maundy", 73);//testing
+		//addSubmissionsTableRow("MyAsg", 69, "Maundy", 73);//testing
 		
 		btnSubmissionDownload = new JButton("Download Submission");
 		btnSubmissionDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));

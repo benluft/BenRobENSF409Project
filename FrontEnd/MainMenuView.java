@@ -96,7 +96,7 @@ public class MainMenuView extends JFrame {
 	private JLabel lblCourses;
 	//courses but only for prof
 	/**
-	 * 
+	 * label for 
 	 */
 	private JLabel lblNewCourse;
 	/**
@@ -841,11 +841,11 @@ public class MainMenuView extends JFrame {
 		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
 		if(activity == true)
 		{
-			model.addRow(new Object[]{name, date, "Active", "False", "Unmarked"});
+			model.addRow(new Object[]{name, date, "Active", "False"});
 		}
 		else
 		{
-			model.addRow(new Object[]{name, date, "Not Active", "False", "Unmarked"});
+			model.addRow(new Object[]{name, date, "Not Active", "False"});
 		}
 	}
 	/**
@@ -857,12 +857,11 @@ public class MainMenuView extends JFrame {
         model.addColumn("Due Date");
         model.addColumn("Activity");
         model.addColumn("Selected");
-        model.addColumn("Grade");
         asgTable = new JTable(model) {
 	        @Override
 	        public boolean isCellEditable(int row, int column)
 	        {
-	            return column == 2 || column == 3 || column == 4;
+	            return column == 2 || column == 3;
 	        }
 		};
 		JScrollPane asgScrollPane = new JScrollPane(asgTable);

@@ -166,25 +166,13 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		@Override
 		public void actionPerformed (ActionEvent arg0)
 		{
-	        	Vector<Assignment> assignments = getAllAssignments();
 	        	
-	        	String assignName = findAssignName();
-	        	
-	        	if(assignName == null)
-	        	{
-	        		return;
-	        	}
-	        	
-	        	int assignID = 0;
-	        	
-	        	for(int i = 0; i < assignments.size(); i++)
-	        	{
-	        		if(assignments.get(i).getTitle().equals(assignName))
-	        		{
-	        			assignID = assignments.get(i).getID();
-	        			break;
-	        		}
-	        	}
+				int assignID = findAsgID();
+				
+				if(assignID == 0)
+				{
+					return;
+				}
 			
 				File selectedFile = theView.getAsgFile();
 	        	
@@ -463,6 +451,29 @@ class CourseAddListener implements ActionListener
 				}
 			}
 		}
+	}
+	
+	private int findAsgID()
+	{
+		Vector<Assignment> assignments = getAllAssignments();
+    	
+    	String assignName = findAssignName();
+    	
+    	if(assignName == null)
+    	{
+    		return 0;
+    	}
+    	
+    	
+    	
+    	for(int i = 0; i < assignments.size(); i++)
+    	{
+    		if(assignments.get(i).getTitle().equals(assignName))
+    		{
+    			return assignments.get(i).getID();
+    		}
+    	}
+    	return 0;
 	}
 	
 	

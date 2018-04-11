@@ -47,57 +47,182 @@ import javax.swing.JTextArea;
 
 public class MainMenuView extends JFrame {
 
+	/**
+	 * The entire panel used for the gui
+	 */
 	private JPanel contentPane = new JPanel();;
+	/**
+	 * The layout of the main panel
+	 */
 	GroupLayout gl_contentPane = new GroupLayout(contentPane);
+	/**
+	 * the students panel
+	 */
 	private JPanel jpnStudents;
-	private JPanel jpnGrades;
+	/**
+	 * the submissions panel
+	 */
 	private JPanel jpnSubmissions;
+	/**
+	 * the assignments panel
+	 */
 	private JPanel jpnAsg;
+	/**
+	 * the tabbedPanel to which all other panels will be applied
+	 */
 	private JTabbedPane tabbedPane;
+	/**
+	 * the email panel
+	 */
 	private JPanel jpnEmail;
 	
+	/**
+	 * the information about the current user
+	 */
 	private User currentUser;
 	
 	//courses panel
+	/**
+	 * the courses panel
+	 */
 	private JPanel jpnCourses;
+	/**
+	 * the courses table
+	 */
 	private JTable coursesTable;
+	/**
+	 * label for the courses panel
+	 */
 	private JLabel lblCourses;
 	//courses but only for prof
+	/**
+	 * 
+	 */
 	private JLabel lblNewCourse;
+	/**
+	 * 
+	 */
 	private JTextField textCourseName;
+	/**
+	 * 
+	 */
 	private JLabel lblCourseName;
+	/**
+	 * 
+	 */
 	private JButton btnAddCourse;
+	/**
+	 * 
+	 */
 	private JButton btnCourseClear;
+	/**
+	 * 
+	 */
 	private JScrollPane coursePane;
 	//student
+	/**
+	 * 
+	 */
 	private JTable studentTable;
+	/**
+	 * 
+	 */
 	private JTextField searchStudenttextField;
+	/**
+	 * 
+	 */
 	private JLabel lblStudents;
+	/**
+	 * 
+	 */
 	private JLabel lblSearchStudents;
+	/**
+	 * 
+	 */
 	private JLabel lblSearchStudentUsing;
+	/**
+	 * 
+	 */
 	private JComboBox searchStudentComboBox;
+	/**
+	 * 
+	 */
 	private JButton btnSearchStudent;
+	/**
+	 * 
+	 */
 	private JButton btnStudentClear;
 	//assignments
+	/**
+	 * 
+	 */
 	private JLabel lblAssignnents;
+	/**
+	 * 
+	 */
 	private JTable asgTable;
+	/**
+	 * 
+	 */
 	private JButton btnUploadAssignment;
+	/**
+	 * 
+	 */
 	private JLabel lblAddAssignment;
+	/**
+	 * 
+	 */
 	private JLabel lblDueDate;
+	/**
+	 * 
+	 */
 	private JTextField monthTxt;
+	/**
+	 * 
+	 */
 	private JTextField dayTxt;
+	/**
+	 * 
+	 */
 	private JTextField yearTxt;
+	/**
+	 * 
+	 */
 	private JButton btnClearEmail;
+	/**
+	 * 
+	 */
 	private JButton btnSendEmail;
+	/**
+	 * 
+	 */
 	private JTextField txtSubject;
+	/**
+	 * 
+	 */
 	private JTextArea txtEmailBody;
+	/**
+	 * 
+	 */
 	private JTable tblSubmissions;
+	/**
+	 * 
+	 */
 	private JButton btnAsgDownload;
+	/**
+	 * 
+	 */
 	private JButton btnAsgSubmit;
+	/**
+	 * 
+	 */
 	private JButton btnSubmissionDownload;
 
 	/**
 	 * Create the frame.
+	 */
+	/**
+	 * @param currentUser
 	 */
 	public MainMenuView(User currentUser) {
 		this.currentUser = currentUser;
@@ -111,6 +236,9 @@ public class MainMenuView extends JFrame {
 		createMenuTabs();
 		setVisible(true);
 	}
+	/**
+	 * 
+	 */
 	private void createMenuTabs() {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
@@ -154,6 +282,9 @@ public class MainMenuView extends JFrame {
 	}
 	
 	//courses
+	/**
+	 * 
+	 */
 	private void createCoursesPan() {
 		jpnCourses = new JPanel();
 		tabbedPane.addTab("Courses", null, jpnCourses, null);
@@ -169,10 +300,16 @@ public class MainMenuView extends JFrame {
 		jpnCourses.add(lblCourses);
 		
 	}
+	/**
+	 * 
+	 */
 	public void clearCoursesTable() {
 		DefaultTableModel model = (DefaultTableModel) coursesTable.getModel();
 		model.setRowCount(0);
 	}
+	/**
+	 * 
+	 */
 	public void createProfCourseTable() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Course Number");
@@ -188,6 +325,9 @@ public class MainMenuView extends JFrame {
 	        }
 		};
 	}
+	/**
+	 * 
+	 */
 	private void createStudentCourseTable() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Course Number");
@@ -203,6 +343,9 @@ public class MainMenuView extends JFrame {
 	        }
 		};
 	}
+	/**
+	 * 
+	 */
 	public void createProfCoursesPan() {
 		
 		createProfCourseTable();
@@ -241,6 +384,9 @@ public class MainMenuView extends JFrame {
 		jpnCourses.add(btnCourseClear);
 		
 	}
+	/**
+	 * 
+	 */
 	private void createStudentCoursesPan() {
 		createStudentCourseTable();
 		TableColumn activityColumn = coursesTable.getColumnModel().getColumn(3);
@@ -251,21 +397,42 @@ public class MainMenuView extends JFrame {
 		coursePane.setBounds(10, 127, 790, 294);
 		jpnCourses.add(coursePane);
 	}
+	/**
+	 * @param l
+	 */
 	public void addCourseAddListener(ActionListener l) {
 		btnAddCourse.addActionListener(l);
 	}
+	/**
+	 * @param l
+	 */
 	public void addCourseClearListener(ActionListener l) {
 		btnCourseClear.addActionListener(l);
 	}
+	/**
+	 * @param l
+	 */
 	public void addClassTableListener(TableModelListener l) {
 		coursesTable.getModel().addTableModelListener(l);
 	}
+	/**
+	 * 
+	 */
 	public void clearNewCourseField() {
 		textCourseName.setText("");
 	}
+	/**
+	 * @return
+	 */
 	public String getNewCourseName() {
 		return textCourseName.getText();
 	}
+	/**
+	 * @param num
+	 * @param name
+	 * @param prof
+	 * @param active
+	 */
 	public void addCourseTableRow(int num, String name, String prof, boolean active) {
 		DefaultTableModel model = (DefaultTableModel) coursesTable.getModel();
 		if(active)
@@ -277,27 +444,49 @@ public class MainMenuView extends JFrame {
 			model.addRow(new Object[]{Integer.toString(num), name, prof, "Not Active", "False"});
 		}	
 	}
+	/**
+	 * @param val
+	 * @param r
+	 * @param c
+	 */
 	public void setCourseTableElement(Object val, int r, int c) {
 		coursesTable.setValueAt(val, r, c);
 	}
+	/**
+	 * @param r
+	 * @param c
+	 * @return
+	 */
 	public Object getCourseTableElement(int r, int c) {
 		return coursesTable.getValueAt(r, c); 
 	}
+	/**
+	 * @return
+	 */
 	private JComboBox createActivityBox() {
 		  String[] activeBoxStrings = {"Active", "Not Active"};
 		  JComboBox activeBox = new JComboBox(activeBoxStrings);
 		  return activeBox;
 	}
+	/**
+	 * @return
+	 */
 	private JComboBox createTrueFalseBox() {
 		  String[] boxStrings = {"False", "True"};
 		  JComboBox box = new JComboBox(boxStrings);
 		  return box;
 	}
+	/**
+	 * @return
+	 */
 	public int getCourseTableNumRows() {
 		return coursesTable.getRowCount();
 	}
 	
 	//students
+	/**
+	 * 
+	 */
 	private void createStudentsPan() {
 		jpnStudents = new JPanel();
 		tabbedPane.addTab("Students", null, jpnStudents, null);
@@ -351,10 +540,18 @@ public class MainMenuView extends JFrame {
 		jpnStudents.add(btnStudentClear);
 		
 	}
+	/**
+	 * @param first
+	 * @param last
+	 * @param id
+	 */
 	public void addStudentTableRow(String first, String last, int id) {
 		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
 		model.addRow(new Object[]{first, last, Integer.toString(id), "Not Enrolled"});
 	}
+	/**
+	 * 
+	 */
 	public void createStudentListTableForProf() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("First Name");
@@ -370,54 +567,100 @@ public class MainMenuView extends JFrame {
 		};
 		//addFakeStudents();//for testing
 	}
+	/**
+	 * @param l
+	 */
 	public void addSearchSudentListener(ActionListener l) {
 		btnSearchStudent.addActionListener(l);
 	}
+	/**
+	 * @param l
+	 */
 	public void addClearSearchSudentListener(ActionListener l) {
 		btnStudentClear.addActionListener(l);
 	}
+	/**
+	 * @param l
+	 */
 	public void addStudentTableListener(TableModelListener l) {
 		studentTable.getModel().addTableModelListener(l);
 	}
+	/**
+	 * 
+	 */
 	public void clearStudentsTable() {
 		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
 		model.setRowCount(0);
 	}
+	/**
+	 * @param row
+	 */
 	public void removeStudentTableRow(int row) {
 		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
 		model.removeRow(row);
 	}
+	/**
+	 * @return
+	 */
 	private JComboBox createEnrollmentBox() {
 		  String[] boxStrings = {"Enrolled", "Not Enrolled"};
 		  JComboBox box = new JComboBox(boxStrings);
 		  return box;
 	}
+	/**
+	 * 
+	 */
 	public void clearStudentSearchBox() {
 		searchStudenttextField.setText("");
 	}
+	/**
+	 * @return
+	 */
 	public String getStudentSearchBox() {
 		return searchStudenttextField.getText();
 	}
+	/**
+	 * @return
+	 */
 	public String getStudentSearchType() {
 		return (String)searchStudentComboBox.getSelectedItem();
 	}
+	/**
+	 * @param r
+	 * @param c
+	 * @return
+	 */
 	public Object getStudentTableElement(int r, int c) {
 		return studentTable.getValueAt(r, c); 
 	}
+	/**
+	 * @param val
+	 * @param r
+	 * @param c
+	 */
 	public void setStudentTableElement(Object val, int r, int c) {
 		studentTable.setValueAt(val, r, c);
 	}
+	/**
+	 * 
+	 */
 	public void addFakeStudents() {
 		addStudentTableRow("Ben", "Luft", 1);
 		addStudentTableRow("Rick", "Luft", 2);
 		addStudentTableRow("Randy", "Dunn", 123);
 		addStudentTableRow("Rob", "Dunn", 3);
 	}
+	/**
+	 * @return
+	 */
 	public int getStudentTableNumRows() {
 		return studentTable.getRowCount();
 	}
 
 	//assignment
+	/**
+	 * 
+	 */
 	private void createAssignmentsPan() {
 		jpnAsg = new JPanel();
 		tabbedPane.addTab("Assignments", null, jpnAsg, null);
@@ -432,6 +675,9 @@ public class MainMenuView extends JFrame {
 		contentPane.setLayout(gl_contentPane);	
 		
 	}
+	/**
+	 * 
+	 */
 	private void createProfAsgPan() {
 		
 		btnUploadAssignment = new JButton("Upload Assignment");
@@ -471,6 +717,9 @@ public class MainMenuView extends JFrame {
 		yearTxt.setDocument(new TextFieldLimit(4));
 		jpnAsg.add(yearTxt);
 	}
+	/**
+	 * 
+	 */
 	private void createStudentAsgPan() {
 		btnAsgDownload = new JButton("Download Assignment");
 		btnAsgDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -485,6 +734,9 @@ public class MainMenuView extends JFrame {
 			
 		
 	}
+	/**
+	 * 
+	 */
 	public void createAsgTable() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("File Name");
@@ -500,46 +752,91 @@ public class MainMenuView extends JFrame {
 	        }
 		};
 	}
+	/**
+	 * @return
+	 */
 	public String getMonth() {
 		return monthTxt.getText();
 	}
+	/**
+	 * @return
+	 */
 	public String getDay() {
 		return dayTxt.getText();
 	}
+	/**
+	 * @return
+	 */
 	public String getYear() {
 		return yearTxt.getText();
 	}
+	/**
+	 * @param l
+	 */
 	public void addUploadAsgListener(ActionListener l) {
 		btnUploadAssignment.addActionListener(l);
 	}
+	/**
+	 * @param l
+	 */
 	public void addDownloadAsgListener(ActionListener l) {
 		btnAsgDownload.addActionListener(l);
 	}
+	/**
+	 * @param l
+	 */
 	public void addAssignmentsTableListener(TableModelListener l) {
 		asgTable.getModel().addTableModelListener(l);
 	}
+	/**
+	 * @param l
+	 */
 	public void addSubmitAsgListener(ActionListener l)
 	{
 		btnAsgSubmit.addActionListener(l);
 	}
+	/**
+	 * 
+	 */
 	public void clearAssignmentsTable() {
 		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
 		model.setRowCount(0);
 	}
+	/**
+	 * 
+	 */
 	public void clearDueDateBoxes() {
 		yearTxt.setText("");
 		dayTxt.setText("");
 		monthTxt.setText("");
 	}
+	/**
+	 * @param r
+	 * @param c
+	 * @return
+	 */
 	public Object getAsgTableEl(int r, int c) {
 		return asgTable.getValueAt(r, c); 
 	}
+	/**
+	 * @return
+	 */
 	public int getAsgTableNumRows() {
 		return asgTable.getRowCount();
 	}
+	/**
+	 * @param val
+	 * @param r
+	 * @param c
+	 */
 	public void setAsgTableElement(Object val, int r, int c) {
 		asgTable.setValueAt(val, r, c);
 	}
+	/**
+	 * @param name
+	 * @param date
+	 * @param activity
+	 */
 	public void addAsgTableRow(String name, String date, boolean activity) {
 		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
 		if(activity == true)
@@ -551,6 +848,9 @@ public class MainMenuView extends JFrame {
 			model.addRow(new Object[]{name, date, "Not Active", "False", "Unmarked"});
 		}
 	}
+	/**
+	 * 
+	 */
 	public void createProfAsgTable() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("File Name");
@@ -574,6 +874,9 @@ public class MainMenuView extends JFrame {
 		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
 		
 	}
+	/**
+	 * 
+	 */
 	public void createStudentAsgTable() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("File Name");
@@ -598,6 +901,9 @@ public class MainMenuView extends JFrame {
 		
 	}
 
+	/**
+	 * @param newGrade
+	 */
 	public void changeAsgGrade(int newGrade) {
 		Object grade = (Object)newGrade;
 		int rowNum = asgTable.getRowCount();
@@ -612,6 +918,9 @@ public class MainMenuView extends JFrame {
 
 	
 	//BEN CHANGES
+	/**
+	 * @return
+	 */
 	public File getAsgFile() {
 		JFileChooser fileBrowser = new JFileChooser();
 		File selectedFile = null;
@@ -622,6 +931,9 @@ public class MainMenuView extends JFrame {
 	}
 	
 	//Submissions
+	/**
+	 * 
+	 */
 	private void createSubmissionsPan() {
 		jpnSubmissions = new JPanel();
 		tabbedPane.addTab("Submissions", null, jpnSubmissions, null);
@@ -654,9 +966,12 @@ public class MainMenuView extends JFrame {
 		jpnSubmissions.add(lblDownloadSelectedSubmission);
 		
 	}
+	/**
+	 * 
+	 */
 	public void createSubmissionTable() {
         DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Assignment");
+        model.addColumn("Submission");
         model.addColumn("Student I.D.");
         model.addColumn("Student Last");
         model.addColumn("Grade");
@@ -669,25 +984,53 @@ public class MainMenuView extends JFrame {
 	        }
 		};
 	}
+	/**
+	 * @param l
+	 */
 	public void addSubmissionDownloadListener(ActionListener l) {
 		btnSubmissionDownload.addActionListener(l);
 	}
+	/**
+	 * @param l
+	 */
 	public void addSubmissionsTableListener(TableModelListener l) {
 		tblSubmissions.getModel().addTableModelListener(l);
 	}
+	/**
+	 * 
+	 */
 	public void clearSubmissionsTable() {
 		DefaultTableModel model = (DefaultTableModel) tblSubmissions.getModel();
 		model.setRowCount(0);
 	}
+	/**
+	 * @param r
+	 * @param c
+	 * @return
+	 */
 	public Object getSubmissionsTableEl(int r, int c) {
 		return tblSubmissions.getValueAt(r, c); 
 	}
+	/**
+	 * @param o
+	 * @param r
+	 * @param c
+	 */
 	public void setSubmissionsTableEl(Object o, int r, int c) {
 		tblSubmissions.setValueAt(o, r, c); 
 	}
+	/**
+	 * @return
+	 */
 	public int getSubmissionTableNumRows() {
 		return tblSubmissions.getRowCount();
 	}
+	/**
+	 * @param asgName
+	 * @param stuID
+	 * @param stuLastN
+	 * @param grade
+	 */
 	public void addSubmissionsTableRow(String asgName, int stuID, String stuLastN, int grade) {
 		DefaultTableModel model = (DefaultTableModel) tblSubmissions.getModel();
 		model.addRow(new Object[]{asgName, Integer.toString(stuID), stuLastN, Integer.toString(grade), "False"});
@@ -696,6 +1039,9 @@ public class MainMenuView extends JFrame {
 	
 	
 	//email
+	/**
+	 * 
+	 */
 	private void createEmailPan() {
 		jpnEmail = new JPanel();
 		tabbedPane.addTab("Email", null, jpnEmail, null);
@@ -743,18 +1089,33 @@ public class MainMenuView extends JFrame {
 		jpnEmail.add(eB);
 		
 	}
+	/**
+	 * @return
+	 */
 	public String getEmailBody() {
 		return txtEmailBody.getText();
 	}
+	/**
+	 * @return
+	 */
 	public String getEmailSubject() {
 		return txtSubject.getText();
 	}
+	/**
+	 * @param l
+	 */
 	public void addSendEmailListener(ActionListener l) {
 		btnSendEmail.addActionListener(l);
 	}
+	/**
+	 * @param l
+	 */
 	public void addClearEmailListener(ActionListener l) {
 		btnClearEmail.addActionListener(l);
 	}
+	/**
+	 * 
+	 */
 	public void clearEmail() {
 		txtEmailBody.setText("");
 		txtSubject.setText("");

@@ -12,6 +12,7 @@ import sharedData.Course;
 import sharedData.Email;
 import sharedData.Enrolment;
 import sharedData.FileMessage;
+import sharedData.Submission;
 import sharedData.User;
 import sharedData.Course;
 
@@ -80,6 +81,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	else
 	{
 		theView.addDownloadAsgListener(new AsgDownloadListener());
+		theView.addSubmitAsgListener(new AsgSubmissionListener());
 	}
     theView.addClassTableListener(new CourseTableListener());
     theView.addAssignmentsTableListener(new AsgTableListener());
@@ -159,43 +161,67 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		}
 	}
 	
+	class AsgSubmissionListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed (ActionEvent arg0)
+		{
+	        	Vector<Assignment> assignments = getAllAssignments();
+	        	
+	        	String assignName = findAssignName();
+	        	
+	        	if(assignName == null)
+	        	{
+	        		return;
+	        	}
+	        	
+	        	int assignID = 0;
+	        	
+	        	for(int i = 0; i < assignments.size(); i++)
+	        	{
+	        		if(assignments.get(i).getTitle().equals(assignName))
+	        		{
+	        			assignID = assignments.get(i).getID();
+	        			break;
+	        		}
+	        	}
+			
+				File selectedFile = theView.getAsgFile();
+	        	
+	        	long length = selectedFile.length(); 
+	    		byte[] content = new byte[(int) length]; 
+	    		// Converting Long to Int 
+	    		try {  
+	    			FileInputStream fis = new FileInputStream(selectedFile);  
+	    			BufferedInputStream bos = new BufferedInputStream(fis);  
+	    			bos.read(content, 0, (int)length); 
+    			} catch (FileNotFoundException e) {
+    				e.printStackTrace(); 
+    			} catch(IOException e){  
+    				e.printStackTrace(); 
+    			}
+	        	
+				FileMessage fileMessage = new FileMessage(false, 0, content);
+				
+				Submission submission = new Submission(false, -1, currentUser.getID(), assignID, selectedFile.getName(), 0, null);
+				
+				coms.write(submission);
+				coms.write(fileMessage);
+				
+		}
+	}
+	
 	class AsgDownloadListener implements ActionListener
 	{
 		@Override
 		public void actionPerformed (ActionEvent arg0)
 		{
-			int row = 0;
-			String assignView;
-			String assignName;
+			String assignName = findAssignName();
 			
-			try
+			if(assignName == null)
 			{
-				while(true)
-				{
-					assignView = (String)theView.getAsgTableEl(row, 3);
-					if(assignView == "True")
-					{
-						assignName = (String)theView.getAsgTableEl(row, 0);
-						break;
-					}
-					row++;
-					
-				}
-			}
-			catch(ArrayIndexOutOfBoundsException e)
-			{
-				JOptionPane.showMessageDialog(theView, "Please select an assignment to view");
 				return;
 			}
-			
-//			Assignment assign = new Assignment(true, 0, currentCourseID, null, false, null);
-//			
-//			coms.write(assign);
-//			
-//			Assignment fullAssign = (Assignment) coms.read();
-			
-//			Assignment requestAssign = new Assignment(true, -1, fullAssign.getCourseID(), 
-//					fullAssign.getTitle(), fullAssign.isActive(), fullAssign.getDueDate());
 			
 			Assignment requestAssign = new Assignment(true, -1, 0, 
 					assignName, true, null);
@@ -369,6 +395,31 @@ class CourseAddListener implements ActionListener
 			Course currentCourse = courses.get(i);
 			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ currentUser.getLastname(),
 					currentCourse.isActive());
+		}
+	}
+	
+	private String findAssignName()
+	{
+		int row = 0;
+		String assignView;
+		
+		try
+		{
+			while(true)
+			{
+				assignView = (String)theView.getAsgTableEl(row, 3);
+				if(assignView == "True")
+				{
+					return (String)theView.getAsgTableEl(row, 0);
+				}
+				row++;
+				
+			}
+		}
+		catch(ArrayIndexOutOfBoundsException e)
+		{
+			JOptionPane.showMessageDialog(theView, "Please select an assignment to view");
+			return null;
 		}
 	}
 	

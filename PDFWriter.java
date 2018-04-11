@@ -30,7 +30,17 @@ class PDFWriter implements MessageNameConstants
 	{
 		FileMessage fileBytes = (FileMessage) message;
 		
-		DBReader reader = new DBReader(assignmentMessage.toLowerCase(), "path", fileBytes.getID());
+		DBReader reader;
+		
+		if(message.getMessageType().equals(assignmentMessage))
+		{
+			reader = new DBReader(assignmentMessage, "path", fileBytes.getID());
+		}
+		else
+		{
+			reader = new DBReader(submissionMessage, "path", fileBytes.getID());
+		}
+
 		
 		ResultSet rs = reader.getReadResults();
 		
@@ -47,7 +57,7 @@ class PDFWriter implements MessageNameConstants
 		}
 		
 		byte[] content = fileBytes.getFileData();
-		
+		System.out.println(pdfPath + " is the pdf path");
 		downloadFile(content);
 	}
 	

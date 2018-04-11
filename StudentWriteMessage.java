@@ -22,15 +22,15 @@ class StudentWriteMessage implements MessageNameConstants
 			EmailWriter emailwriter = new EmailWriter(currentUser, mail);
 		}
 		
-		if(message.getMessageType().equals(assignmentMessage))
+		if(message.getMessageType().equals(submissionMessage))
 		{
-			Assignment assign = (Assignment) message;
+			Submission submission = (Submission) message;
 			
-			DBWriter writer = new DBWriter(assignmentMessage.toLowerCase(), message);
+			DBWriter writer = new DBWriter(submissionMessage.toLowerCase(), message);
 			
 			SocketMessage messageFile;
 			
-			if(assign.getID() == -1)
+			if(submission.getID() == -1)
 			{
 				try 
 				{
@@ -67,7 +67,7 @@ class StudentWriteMessage implements MessageNameConstants
 				try 
 				{
 					messageFile = (SocketMessage) reader.readObject();
-					//PDFWriter pdfWriter = new PDFWriter(messageFile, );
+					PDFWriter pdfWriter = new PDFWriter(messageFile);
 				} 
 				catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block

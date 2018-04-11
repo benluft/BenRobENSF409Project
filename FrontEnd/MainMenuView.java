@@ -524,6 +524,10 @@ public class MainMenuView extends JFrame {
 	public void addAssignmentsTableListener(TableModelListener l) {
 		asgTable.getModel().addTableModelListener(l);
 	}
+	public void addSubmitAsgListener(ActionListener l)
+	{
+		btnAsgSubmit.addActionListener(l);
+	}
 	public void clearAssignmentsTable() {
 		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
 		model.setRowCount(0);

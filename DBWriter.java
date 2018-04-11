@@ -175,7 +175,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 	{
 		Submission submission = (Submission) message;
 		
-		PreparedStatement statement = createSQLCommand(7,true,"grades");
+		PreparedStatement statement = createSQLCommand(7,true,"grade");
 		
 		try 
 		{
@@ -185,10 +185,11 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 			statement.setInt(1, 0);
 			statement.setInt(2, submission.getAssignID());
 			statement.setInt(3, submission.getStudentID());
-			statement.setString(4, uniqueTitle + submissionPath);
+			statement.setString(4, submissionPath + uniqueTitle);
 			statement.setString(5, uniqueTitle);
 			statement.setInt(6, submission.getGrade());
 			statement.setString(7, submission.getComments());
+			statement.setInt(8, submission.getGrade());
 			
 			statement.execute();
 			super.resetSqlCommand();

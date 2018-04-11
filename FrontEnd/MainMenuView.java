@@ -432,7 +432,7 @@ public class MainMenuView extends JFrame {
 		lblAssignnents.setBounds(10, 38, 790, 66);
 		jpnAsg.add(lblAssignnents);
 		
-		createAsgTable();
+		//createAsgTable();
 		JScrollPane asgScrollPane = new JScrollPane(asgTable);
 		asgScrollPane.setBounds(10, 131, 790, 260);
 		jpnAsg.add(asgScrollPane);

@@ -22,6 +22,8 @@ class PDFReader
 	{
 		File selectedFile = new File(path);
 		
+		System.out.println(path);
+		
 		long length = selectedFile.length();
 		byte[] content = new byte[(int) length]; // Converting Long to Int
 		try 

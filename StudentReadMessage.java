@@ -44,8 +44,10 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 			try
 			{
 				dbreader = new DBReader(assignmentMessage, "title", assign.getTitle());
-				rs.next();
-				PDFReader pdfReader = new PDFReader(rs.getString(4));
+				ResultSet rsFile = dbreader.getReadResults();
+				
+				rsFile.next();
+				PDFReader pdfReader = new PDFReader("C:\\Users\\Ben\\workspace\\Lab9\\Assignments\\Ben_Luft_Resume_Telus.pdf");
 				getToSend().add(pdfReader.getFileToSend());
 			} 
 			catch (SQLException e) {

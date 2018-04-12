@@ -96,71 +96,76 @@ public class MainMenuView extends JFrame {
 	private JLabel lblCourses;
 	//courses but only for prof
 	/**
-	 * label for 
+	 * label for creating a new course area
 	 */
 	private JLabel lblNewCourse;
 	/**
-	 * 
+	 * text field to enter a new courses name
 	 */
 	private JTextField textCourseName;
 	/**
-	 * 
+	 * label to show which text field is for the new course
 	 */
 	private JLabel lblCourseName;
 	/**
-	 * 
+	 * button to add a new course
 	 */
 	private JButton btnAddCourse;
 	/**
-	 * 
+	 * button to clear the new course text fields
 	 */
 	private JButton btnCourseClear;
 	/**
-	 * 
+	 * the scroll pane to house the courses jtable
 	 */
 	private JScrollPane coursePane;
-	//student
+	
+	
+	// for the student tab (proffessor only)
 	/**
-	 * 
+	 * the jtable with all the student info
 	 */
 	private JTable studentTable;
 	/**
-	 * 
+	 * text field for searching students with
 	 */
 	private JTextField searchStudenttextField;
 	/**
-	 * 
+	 * label for the students tab
 	 */
 	private JLabel lblStudents;
 	/**
-	 * 
+	 * label for the search students text box
 	 */
 	private JLabel lblSearchStudents;
 	/**
-	 * 
+	 * label for the search type combo box
 	 */
 	private JLabel lblSearchStudentUsing;
 	/**
-	 * 
+	 * combo box to allow for different search types
 	 */
 	private JComboBox searchStudentComboBox;
 	/**
-	 * 
+	 * search students button
 	 */
 	private JButton btnSearchStudent;
 	/**
-	 * 
+	 * clear the search students box
 	 */
 	private JButton btnStudentClear;
-	//assignments
+	
+	
+	//---------------------------------------assignments tab
 	/**
-	 * 
+	 * overall assignments tab label
 	 */
 	private JLabel lblAssignnents;
 	/**
-	 * 
+	 * assignments table
 	 */
 	private JTable asgTable;
+	//------------------------------------asg-----for prof
 	/**
 	 * 
 	 */
@@ -185,26 +190,7 @@ public class MainMenuView extends JFrame {
 	 * 
 	 */
 	private JTextField yearTxt;
-	/**
-	 * 
-	 */
-	private JButton btnClearEmail;
-	/**
-	 * 
-	 */
-	private JButton btnSendEmail;
-	/**
-	 * 
-	 */
-	private JTextField txtSubject;
-	/**
-	 * 
-	 */
-	private JTextArea txtEmailBody;
-	/**
-	 * 
-	 */
-	private JTable tblSubmissions;
+	//--------------------------------------asg-for student---
 	/**
 	 * 
 	 */
@@ -213,16 +199,41 @@ public class MainMenuView extends JFrame {
 	 * 
 	 */
 	private JButton btnAsgSubmit;
+	
+	//----------------------------------------email-----
 	/**
-	 * 
+	 * button to clear the email fields
+	 */
+	private JButton btnClearEmail;
+	/**
+	 * button to send an email
+	 */
+	private JButton btnSendEmail;
+	/**
+	 * the text field for the subject of the email
+	 */
+	private JTextField txtSubject;
+	/**
+	 * the text field for the body of the email
+	 */
+	private JTextArea txtEmailBody;
+	//---------------------------------------------------
+	
+	//------------------------------------------submissions
+	/**
+	 * table for the submissions
+	 */
+	private JTable tblSubmissions;
+	/**
+	 * button to download selected submission
 	 */
 	private JButton btnSubmissionDownload;
+	//--------------------------------------------------
 
+	
 	/**
 	 * Create the frame.
-	 */
-	/**
-	 * @param currentUser
+	 * @param currentUser the user that opened the gui
 	 */
 	public MainMenuView(User currentUser) {
 		this.currentUser = currentUser;
@@ -234,10 +245,17 @@ public class MainMenuView extends JFrame {
 		setContentPane(contentPane);
 		
 		createMenuTabs();
+		if(currentUser.getType().equals("P")) {
+			createProfMenu();
+		}
+		else {// if student only:
+			createStudentMenu();
+		}
 		setVisible(true);
 	}
+	
 	/**
-	 * 
+	 * creates all the overall main menu (both student and prof)
 	 */
 	private void createMenuTabs() {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -259,31 +277,33 @@ public class MainMenuView extends JFrame {
 		createCoursesPan();
 		createAssignmentsPan();
 		createEmailPan();
-		
-		//if prof only:
-		if(currentUser.getType().equals("P")) {
-			setTitle("Proffesor Main Menu");
-			createProfCoursesPan();
-			createProfAsgTable();
-			createStudentsPan();
-			createSubmissionsPan();		
-			createProfAsgPan();
-			
-		}
-		else {// if student only:
-			setTitle("Student Main Menu");
-			createStudentAsgTable();
-			System.out.println("User is a student");
-			createStudentCoursesPan();
-			createStudentAsgPan();
-		}
-		
 
 	}
-	
-	//courses
 	/**
-	 * 
+	 * Creates the windows that the professor needs
+	 */
+	private void createProfMenu() {
+		setTitle("Proffesor Main Menu");
+		createProfCoursesPan();
+		createProfAsgTable();
+		createStudentsPan();
+		createSubmissionsPan();		
+		createProfAsgPan();
+	}
+	/**
+	 * Creates the windows that the student needs
+	 */
+	private void createStudentMenu() {
+		setTitle("Student Main Menu");
+		createStudentAsgTable();
+		System.out.println("User is a student");
+		createStudentCoursesPan();
+		createStudentAsgPan();
+	}
+	
+	//-----------------------------------------------courses
+	/**
+	 * creates the generic courses panel (prof and students)
 	 */
 	private void createCoursesPan() {
 		jpnCourses = new JPanel();
@@ -301,50 +321,15 @@ public class MainMenuView extends JFrame {
 		
 	}
 	/**
-	 * 
+	 * clears the entire courses table
 	 */
 	public void clearCoursesTable() {
 		DefaultTableModel model = (DefaultTableModel) coursesTable.getModel();
 		model.setRowCount(0);
 	}
+	//--------------------------------------------prof courses
 	/**
-	 * 
-	 */
-	public void createProfCourseTable() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Course Number");
-        model.addColumn("Course Name");
-        model.addColumn("Proffesor");
-        model.addColumn("Activity");
-        model.addColumn("Viewing (click to change)");
-		coursesTable = new JTable(model) {
-	        @Override
-	        public boolean isCellEditable(int row, int column)
-	        {
-	            return column == 3 || column == 4;
-	        }
-		};
-	}
-	/**
-	 * 
-	 */
-	private void createStudentCourseTable() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Course Number");
-        model.addColumn("Course Name");
-        model.addColumn("Proffesor");
-        model.addColumn("Activity");
-        model.addColumn("Viewing (click to change)");
-		coursesTable = new JTable(model) {
-	        @Override
-	        public boolean isCellEditable(int row, int column)
-	        {
-	            return column == 4;
-	        }
-		};
-	}
-	/**
-	 * 
+	 * creates the extra prof only courses panel pieces 
 	 */
 	public void createProfCoursesPan() {
 		
@@ -385,7 +370,46 @@ public class MainMenuView extends JFrame {
 		
 	}
 	/**
-	 * 
+	 * creates the prof version of the courses table
+	 */
+	public void createProfCourseTable() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Course Number");
+        model.addColumn("Course Name");
+        model.addColumn("Proffesor");
+        model.addColumn("Activity");
+        model.addColumn("Viewing (click to change)");
+		coursesTable = new JTable(model) {
+	        @Override
+	        public boolean isCellEditable(int row, int column)
+	        {
+	            return column == 3 || column == 4;
+	        }
+		};
+	}
+	
+	//-------------------------------------student courses---
+	/**
+	 * creates the student version of the courses table
+	 */
+	private void createStudentCourseTable() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Course Number");
+        model.addColumn("Course Name");
+        model.addColumn("Proffesor");
+        model.addColumn("Activity");
+        model.addColumn("Viewing (click to change)");
+		coursesTable = new JTable(model) {
+	        @Override
+	        public boolean isCellEditable(int row, int column)
+	        {
+	            return column == 4;
+	        }
+		};
+	}
+
+	/**
+	 * creates the extra student only courses panel pieces 
 	 */
 	private void createStudentCoursesPan() {
 		createStudentCourseTable();
@@ -398,40 +422,42 @@ public class MainMenuView extends JFrame {
 		jpnCourses.add(coursePane);
 	}
 	/**
-	 * @param l
+	 * adds listener to the add course button
+	 @param l is the listener is the listener
 	 */
 	public void addCourseAddListener(ActionListener l) {
 		btnAddCourse.addActionListener(l);
 	}
 	/**
-	 * @param l
+	 * adds listener to the course clear button
+	 @param l is the listener is the listener
 	 */
 	public void addCourseClearListener(ActionListener l) {
 		btnCourseClear.addActionListener(l);
 	}
 	/**
-	 * @param l
+	 * adds listener to the class table
+	 @param l is the listener is the listener
 	 */
 	public void addClassTableListener(TableModelListener l) {
 		coursesTable.getModel().addTableModelListener(l);
 	}
 	/**
-	 * 
+	 * clears the new course name text field
 	 */
 	public void clearNewCourseField() {
 		textCourseName.setText("");
 	}
-	/**
-	 * @return
-	 */
+
 	public String getNewCourseName() {
 		return textCourseName.getText();
 	}
 	/**
-	 * @param num
-	 * @param name
-	 * @param prof
-	 * @param active
+	 * adds row to the courses table
+	 * @param num is the course id
+	 * @param name is the course name
+	 * @param prof is the prof running the course
+	 * @param active is either true or false in a string
 	 */
 	public void addCourseTableRow(int num, String name, String prof, boolean active) {
 		DefaultTableModel model = (DefaultTableModel) coursesTable.getModel();
@@ -444,24 +470,17 @@ public class MainMenuView extends JFrame {
 			model.addRow(new Object[]{Integer.toString(num), name, prof, "Not Active", "False"});
 		}	
 	}
-	/**
-	 * @param val
-	 * @param r
-	 * @param c
-	 */
+
 	public void setCourseTableElement(Object val, int r, int c) {
 		coursesTable.setValueAt(val, r, c);
 	}
-	/**
-	 * @param r
-	 * @param c
-	 * @return
-	 */
+
 	public Object getCourseTableElement(int r, int c) {
 		return coursesTable.getValueAt(r, c); 
 	}
 	/**
-	 * @return
+	 * creates a active or not active combo box
+	 * @return the created combo box
 	 */
 	private JComboBox createActivityBox() {
 		  String[] activeBoxStrings = {"Active", "Not Active"};
@@ -469,23 +488,22 @@ public class MainMenuView extends JFrame {
 		  return activeBox;
 	}
 	/**
-	 * @return
+	 * creates a true or false combo box
+	 * @return a created jCombo box
 	 */
 	private JComboBox createTrueFalseBox() {
 		  String[] boxStrings = {"False", "True"};
 		  JComboBox box = new JComboBox(boxStrings);
 		  return box;
 	}
-	/**
-	 * @return
-	 */
+
 	public int getCourseTableNumRows() {
 		return coursesTable.getRowCount();
 	}
 	
-	//students
+	//--------------------------------------------students
 	/**
-	 * 
+	 * creates the entire search students window
 	 */
 	private void createStudentsPan() {
 		jpnStudents = new JPanel();
@@ -541,16 +559,17 @@ public class MainMenuView extends JFrame {
 		
 	}
 	/**
-	 * @param first
-	 * @param last
-	 * @param id
+	 * adds a row to the table of students
+	 * @param first is the first name of the student
+	 @param l is the listenerast is the last name of the student 
+	 * @param id is the students id
 	 */
 	public void addStudentTableRow(String first, String last, int id) {
 		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
 		model.addRow(new Object[]{first, last, Integer.toString(id), "Not Enrolled"});
 	}
 	/**
-	 * 
+	 * creates the student table
 	 */
 	public void createStudentListTableForProf() {
         DefaultTableModel model = new DefaultTableModel();
@@ -565,34 +584,37 @@ public class MainMenuView extends JFrame {
 	            return column == 3;
 	        }
 		};
-		//addFakeStudents();//for testing
 	}
 	/**
-	 * @param l
+	 * listens for student search button press
+	 @param l is the listener is the listener
 	 */
 	public void addSearchSudentListener(ActionListener l) {
 		btnSearchStudent.addActionListener(l);
 	}
 	/**
-	 * @param l
+	 * listens for student clear button press
+	 @param l is the listener
 	 */
 	public void addClearSearchSudentListener(ActionListener l) {
 		btnStudentClear.addActionListener(l);
 	}
 	/**
-	 * @param l
+	 * listens for student table changes
+	 @param l is the listener
 	 */
 	public void addStudentTableListener(TableModelListener l) {
 		studentTable.getModel().addTableModelListener(l);
 	}
 	/**
-	 * 
+	 * clears the student table
 	 */
 	public void clearStudentsTable() {
 		DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
 		model.setRowCount(0);
 	}
 	/**
+	 * removes a student table row
 	 * @param row
 	 */
 	public void removeStudentTableRow(int row) {
@@ -600,7 +622,8 @@ public class MainMenuView extends JFrame {
 		model.removeRow(row);
 	}
 	/**
-	 * @return
+	 * creates the enrollment jcombo box
+	 * @return either enrolled or not enrolled combo box
 	 */
 	private JComboBox createEnrollmentBox() {
 		  String[] boxStrings = {"Enrolled", "Not Enrolled"};
@@ -608,58 +631,51 @@ public class MainMenuView extends JFrame {
 		  return box;
 	}
 	/**
-	 * 
+	 * clears the student search box
 	 */
 	public void clearStudentSearchBox() {
 		searchStudenttextField.setText("");
 	}
 	/**
-	 * @return
+	 * searches for a student
+	 * @return the search student string
 	 */
 	public String getStudentSearchBox() {
 		return searchStudenttextField.getText();
 	}
 	/**
-	 * @return
+	 * gets the selected search type
+	 * @return the string of the selected search type
 	 */
 	public String getStudentSearchType() {
 		return (String)searchStudentComboBox.getSelectedItem();
 	}
 	/**
-	 * @param r
-	 * @param c
+	 * gets object in row and column of table
+	 * @param r is the row int
+	 * @param c is the column int
 	 * @return
 	 */
 	public Object getStudentTableElement(int r, int c) {
 		return studentTable.getValueAt(r, c); 
 	}
 	/**
-	 * @param val
-	 * @param r
-	 * @param c
+	 * sets a certain table element
+	 * @param val is the object to be set
+	 * @param r row
+	 * @param c column
 	 */
 	public void setStudentTableElement(Object val, int r, int c) {
 		studentTable.setValueAt(val, r, c);
 	}
-	/**
-	 * 
-	 */
-	public void addFakeStudents() {
-		addStudentTableRow("Ben", "Luft", 1);
-		addStudentTableRow("Rick", "Luft", 2);
-		addStudentTableRow("Randy", "Dunn", 123);
-		addStudentTableRow("Rob", "Dunn", 3);
-	}
-	/**
-	 * @return
-	 */
+
 	public int getStudentTableNumRows() {
 		return studentTable.getRowCount();
 	}
 
-	//assignment
+	//-------------------------------------------assignment
 	/**
-	 * 
+	 * creates the generic assignment panel
 	 */
 	private void createAssignmentsPan() {
 		jpnAsg = new JPanel();
@@ -676,7 +692,59 @@ public class MainMenuView extends JFrame {
 		
 	}
 	/**
-	 * 
+	 * adds listener to the asg table
+	 @param l is the listener
+	 */
+	public void addAssignmentsTableListener(TableModelListener l) {
+		asgTable.getModel().addTableModelListener(l);
+	}
+	/**
+	 * adds the submit asg listener
+	 @param l is the listener
+	 */
+	public void addSubmitAsgListener(ActionListener l)
+	{
+		btnAsgSubmit.addActionListener(l);
+	}
+	public void clearAssignmentsTable() {
+		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
+		model.setRowCount(0);
+	}
+	public void clearDueDateBoxes() {
+		yearTxt.setText("");
+		dayTxt.setText("");
+		monthTxt.setText("");
+	}
+	public Object getAsgTableEl(int r, int c) {
+		return asgTable.getValueAt(r, c); 
+	}
+	public int getAsgTableNumRows() {
+		return asgTable.getRowCount();
+	}
+	public void setAsgTableElement(Object val, int r, int c) {
+		asgTable.setValueAt(val, r, c);
+	}
+	/**
+	 * adds an assignment table row
+	 * @param name is the name of asg
+	 * @param date is the due date
+	 * @param activity either true or false
+	 */
+	public void addAsgTableRow(String name, String date, boolean activity) {
+		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
+		if(activity == true)
+		{
+			model.addRow(new Object[]{name, date, "Active", "False"});
+		}
+		else
+		{
+			model.addRow(new Object[]{name, date, "Not Active", "False"});
+		}
+	}
+
+	//--------------------------------prof assignments pan
+	/**
+	 * creates the prof specific assignment panel
 	 */
 	private void createProfAsgPan() {
 		
@@ -718,138 +786,36 @@ public class MainMenuView extends JFrame {
 		jpnAsg.add(yearTxt);
 	}
 	/**
-	 * 
-	 */
-	private void createStudentAsgPan() {
-		btnAsgDownload = new JButton("Download Assignment");
-		btnAsgDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnAsgDownload.setBounds(299, 431, 201, 50);
-		jpnAsg.add(btnAsgDownload);
-		
-		btnAsgSubmit = new JButton("Submit Assignment");
-		btnAsgSubmit.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnAsgSubmit.setBounds(299, 578, 201, 44);
-		jpnAsg.add(btnAsgSubmit);
-		
-			
-		
-	}
-	/**
-	 * 
-	 */
-	public void createAsgTable() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("File Name");
-        model.addColumn("Due Date");
-        model.addColumn("Activity");
-        model.addColumn("Viewing");
-        model.addColumn("Grade");
-        asgTable = new JTable(model) {
-	        @Override
-	        public boolean isCellEditable(int row, int column)
-	        {
-	            return column == 2 || column == 3 || column == 4;
-	        }
-		};
-	}
-	/**
-	 * @return
+	 * gets the month entered
+	 * @return month number in string
 	 */
 	public String getMonth() {
 		return monthTxt.getText();
 	}
 	/**
-	 * @return
+	 * gets the day entered
+	 * @return day number in string
 	 */
 	public String getDay() {
 		return dayTxt.getText();
 	}
 	/**
-	 * @return
+	 * gets the year entered
+	 * @return the year in string form
 	 */
 	public String getYear() {
 		return yearTxt.getText();
 	}
 	/**
-	 * @param l
+	 * listens for upload assignment button press
+	 @param l is the listener
 	 */
 	public void addUploadAsgListener(ActionListener l) {
 		btnUploadAssignment.addActionListener(l);
 	}
+
 	/**
-	 * @param l
-	 */
-	public void addDownloadAsgListener(ActionListener l) {
-		btnAsgDownload.addActionListener(l);
-	}
-	/**
-	 * @param l
-	 */
-	public void addAssignmentsTableListener(TableModelListener l) {
-		asgTable.getModel().addTableModelListener(l);
-	}
-	/**
-	 * @param l
-	 */
-	public void addSubmitAsgListener(ActionListener l)
-	{
-		btnAsgSubmit.addActionListener(l);
-	}
-	/**
-	 * 
-	 */
-	public void clearAssignmentsTable() {
-		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
-		model.setRowCount(0);
-	}
-	/**
-	 * 
-	 */
-	public void clearDueDateBoxes() {
-		yearTxt.setText("");
-		dayTxt.setText("");
-		monthTxt.setText("");
-	}
-	/**
-	 * @param r
-	 * @param c
-	 * @return
-	 */
-	public Object getAsgTableEl(int r, int c) {
-		return asgTable.getValueAt(r, c); 
-	}
-	/**
-	 * @return
-	 */
-	public int getAsgTableNumRows() {
-		return asgTable.getRowCount();
-	}
-	/**
-	 * @param val
-	 * @param r
-	 * @param c
-	 */
-	public void setAsgTableElement(Object val, int r, int c) {
-		asgTable.setValueAt(val, r, c);
-	}
-	/**
-	 * @param name
-	 * @param date
-	 * @param activity
-	 */
-	public void addAsgTableRow(String name, String date, boolean activity) {
-		DefaultTableModel model = (DefaultTableModel) asgTable.getModel();
-		if(activity == true)
-		{
-			model.addRow(new Object[]{name, date, "Active", "False"});
-		}
-		else
-		{
-			model.addRow(new Object[]{name, date, "Not Active", "False"});
-		}
-	}
-	/**
-	 * 
+	 * creates the prof version of the assignments table
 	 */
 	public void createProfAsgTable() {
         DefaultTableModel model = new DefaultTableModel();
@@ -874,7 +840,45 @@ public class MainMenuView extends JFrame {
 		
 	}
 	/**
-	 * 
+	 * gets the file from the jFilechooser
+	 * @return the file to be uploaded
+	 */
+	public File getAsgFile() {
+		JFileChooser fileBrowser = new JFileChooser();
+		File selectedFile = null;
+		if(fileBrowser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			selectedFile = fileBrowser.getSelectedFile();  
+		}
+		return selectedFile;
+	}
+	//--------------------------------student assignments pan
+	/**
+	 * creates the student specific assignment panel
+	 */
+	private void createStudentAsgPan() {
+		btnAsgDownload = new JButton("Download Assignment");
+		btnAsgDownload.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnAsgDownload.setBounds(299, 431, 201, 50);
+		jpnAsg.add(btnAsgDownload);
+		
+		btnAsgSubmit = new JButton("Submit Assignment");
+		btnAsgSubmit.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnAsgSubmit.setBounds(299, 578, 201, 44);
+		jpnAsg.add(btnAsgSubmit);
+		
+			
+		
+	}
+	/**
+	 * adds download asg button listener
+	 @param l is the listener
+	 */
+	public void addDownloadAsgListener(ActionListener l) {
+		btnAsgDownload.addActionListener(l);
+	}
+
+	/**
+	 * creates the student version of the asg table
 	 */
 	public void createStudentAsgTable() {
         DefaultTableModel model = new DefaultTableModel();
@@ -898,35 +902,6 @@ public class MainMenuView extends JFrame {
 		TableColumn viewingColumn = asgTable.getColumnModel().getColumn(3);
 		viewingColumn.setCellEditor(new DefaultCellEditor(createTrueFalseBox()));
 		
-	}
-
-	/**
-	 * @param newGrade
-	 */
-	public void changeAsgGrade(int newGrade) {
-		Object grade = (Object)newGrade;
-		int rowNum = asgTable.getRowCount();
-		for(int r = 0; r < rowNum; r++) {
-			Object v = asgTable.getValueAt(r, 3);
-			String viewing = (String)v;
-			if(viewing.equals("True")) {
-				asgTable.setValueAt(Integer.toString(newGrade), r, 4);
-			}
-		}
-	}
-
-	
-	//BEN CHANGES
-	/**
-	 * @return
-	 */
-	public File getAsgFile() {
-		JFileChooser fileBrowser = new JFileChooser();
-		File selectedFile = null;
-		if(fileBrowser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			selectedFile = fileBrowser.getSelectedFile();  
-		}
-		return selectedFile;
 	}
 	
 	//Submissions
@@ -984,13 +959,13 @@ public class MainMenuView extends JFrame {
 		};
 	}
 	/**
-	 * @param l
+	 @param l is the listener
 	 */
 	public void addSubmissionDownloadListener(ActionListener l) {
 		btnSubmissionDownload.addActionListener(l);
 	}
 	/**
-	 * @param l
+	 @param l is the listener
 	 */
 	public void addSubmissionsTableListener(TableModelListener l) {
 		tblSubmissions.getModel().addTableModelListener(l);
@@ -1101,13 +1076,12 @@ public class MainMenuView extends JFrame {
 		return txtSubject.getText();
 	}
 	/**
-	 * @param l
-	 */
+a	 */
 	public void addSendEmailListener(ActionListener l) {
 		btnSendEmail.addActionListener(l);
 	}
 	/**
-	 * @param l
+	 @param l is the listener
 	 */
 	public void addClearEmailListener(ActionListener l) {
 		btnClearEmail.addActionListener(l);

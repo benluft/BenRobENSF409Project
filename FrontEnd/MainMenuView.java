@@ -904,9 +904,9 @@ public class MainMenuView extends JFrame {
 		
 	}
 	
-	//Submissions
+	//------------------------------------Submissions (prof)
 	/**
-	 * 
+	 * creates the submissions panel
 	 */
 	private void createSubmissionsPan() {
 		jpnSubmissions = new JPanel();
@@ -941,7 +941,7 @@ public class MainMenuView extends JFrame {
 		
 	}
 	/**
-	 * 
+	 * creates the submissions table
 	 */
 	public void createSubmissionTable() {
         DefaultTableModel model = new DefaultTableModel();
@@ -959,25 +959,28 @@ public class MainMenuView extends JFrame {
 		};
 	}
 	/**
+	 * adds submission download button listener
 	 @param l is the listener
 	 */
 	public void addSubmissionDownloadListener(ActionListener l) {
 		btnSubmissionDownload.addActionListener(l);
 	}
 	/**
+	 * adds submission table listener
 	 @param l is the listener
 	 */
 	public void addSubmissionsTableListener(TableModelListener l) {
 		tblSubmissions.getModel().addTableModelListener(l);
 	}
 	/**
-	 * 
+	 * clears the submission table
 	 */
 	public void clearSubmissionsTable() {
 		DefaultTableModel model = (DefaultTableModel) tblSubmissions.getModel();
 		model.setRowCount(0);
 	}
 	/**
+	 * gets a table element at a given row and column
 	 * @param r
 	 * @param c
 	 * @return
@@ -986,6 +989,7 @@ public class MainMenuView extends JFrame {
 		return tblSubmissions.getValueAt(r, c); 
 	}
 	/**
+	 * sets a given object at a given row and column
 	 * @param o
 	 * @param r
 	 * @param c
@@ -993,13 +997,11 @@ public class MainMenuView extends JFrame {
 	public void setSubmissionsTableEl(Object o, int r, int c) {
 		tblSubmissions.setValueAt(o, r, c); 
 	}
-	/**
-	 * @return
-	 */
 	public int getSubmissionTableNumRows() {
 		return tblSubmissions.getRowCount();
 	}
 	/**
+	 * adds entire row to the submission table
 	 * @param asgName
 	 * @param stuID
 	 * @param stuLastN
@@ -1011,10 +1013,9 @@ public class MainMenuView extends JFrame {
 
 	}
 	
-	
-	//email
+	//email (same for prof and student)
 	/**
-	 * 
+	 * creates the email panel
 	 */
 	private void createEmailPan() {
 		jpnEmail = new JPanel();
@@ -1063,31 +1064,30 @@ public class MainMenuView extends JFrame {
 		jpnEmail.add(eB);
 		
 	}
-	/**
-	 * @return
-	 */
+
 	public String getEmailBody() {
 		return txtEmailBody.getText();
 	}
-	/**
-	 * @return
-	 */
+
 	public String getEmailSubject() {
 		return txtSubject.getText();
 	}
 	/**
-a	 */
+	 * adds listener to the send button
+	 *  @param l is the listener
+	 */
 	public void addSendEmailListener(ActionListener l) {
 		btnSendEmail.addActionListener(l);
 	}
 	/**
-	 @param l is the listener
+	 * adds listener to the clear button
+	 * @param l is the listener
 	 */
 	public void addClearEmailListener(ActionListener l) {
 		btnClearEmail.addActionListener(l);
 	}
 	/**
-	 * 
+	 * clears the email boxes
 	 */
 	public void clearEmail() {
 		txtEmailBody.setText("");

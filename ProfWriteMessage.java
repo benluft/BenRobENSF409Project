@@ -10,6 +10,8 @@ class ProfWriteMessage implements MessageNameConstants, ServerFilePaths
 	
 	public ProfWriteMessage(SocketMessage message, User currentUser, ObjectInputStream reader)
 	{
+		System.out.println("ProfWritemessage sees message type "+ message.getMessageType());
+		
 		if(message.getMessageType().equals(emailMessage))
 		{
 			Email mail = (Email) message;

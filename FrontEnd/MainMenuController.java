@@ -142,8 +142,11 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 					Assignment assign = new Assignment(false, -1, currentCourseID, selectedFile.getName(), 
 							false, dueDate);
 					
+					System.out.println("Before assign send");
 					coms.write(assign);
+					System.out.println("Before file send");
 					coms.write(fileMessage);
+					System.out.println("After file send");
 				}
 
 			
@@ -193,8 +196,12 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 				
 				Submission submission = new Submission(false, -1, assignID, currentUser.getID(), selectedFile.getName(), 0, null);
 				
+				System.out.println("Writing submission");
 				coms.write(submission);
+				System.out.println("Writing file");
 				coms.write(fileMessage);
+				System.out.println("Writing submission and file");
+				
 				
 		}
 	}
@@ -248,6 +255,7 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	        
 	        if(size > 0)
 	        {
+	        	System.out.println("TABLE LISTENER ACTIVATED!!!!");
 	        	String asgName = (String)theView.getAsgTableEl(row, 0);
 		        String dueDate = (String)theView.getAsgTableEl(row, 1);
 		        if(column == 2) {// active or not active
@@ -279,9 +287,10 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		        		if(currentUser.getType().equals("P"))
 		        		{
 		        			theView.clearSubmissionsTable();
+		        			fillSubmissionsTable(asgName);
 		        		}
 		        		
-		        		fillSubmissionsTable(asgName);
+		        		
 		        	}
 		        }
 		        else if (column == 4) 
@@ -376,11 +385,10 @@ class CourseAddListener implements ActionListener
 	        		if(currentUser.getType().equals("P"))
 	        		{
 	        			theView.clearStudentsTable();
+	        			fillStudentTable(Integer.parseInt((String)theView.getCourseTableElement(row, 0)));
 	        		}
 	        		
 	        		theView.clearAssignmentsTable();
-	        		
-	        		fillStudentTable(Integer.parseInt((String)theView.getCourseTableElement(row, 0)));
 	        		
 	        		fillAssignTable();
 	   
@@ -397,11 +405,29 @@ class CourseAddListener implements ActionListener
 		
 		Vector<Course> courses = getAllCourses();
 		
+		String profName;
+		
 		for(int i = 0; i < courses.size(); i++)
 		{
 			Course currentCourse = courses.get(i);
-			theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), "Dr. "+ currentUser.getLastname(),
-					currentCourse.isActive());
+			
+			if(currentUser.getType() == "P")
+			{
+				profName = "Dr. " + currentUser.getLastname();
+			}
+			else
+			{
+				profName = "";
+			}
+			if(currentUser.getType().equals("S") && !currentCourse.isActive())
+			{
+				System.out.println("NOT ACTIVE");
+			}
+			else
+			{
+				theView.addCourseTableRow(currentCourse.getID(), currentCourse.getName(), profName,
+						currentCourse.isActive());
+			}
 		}
 	}
 	
@@ -462,12 +488,16 @@ class CourseAddListener implements ActionListener
 		{
 		
 			Assignment currentAssignment = assignmentsInDB.get(i);
-			theView.addAsgTableRow(currentAssignment.getTitle(), currentAssignment.getDueDate(),
-					currentAssignment.isActive());
+			
+			if(currentUser.getType().equals("P") || currentAssignment.isActive())
+			{
+				theView.addAsgTableRow(currentAssignment.getTitle(), currentAssignment.getDueDate(),
+						currentAssignment.isActive());
+			}
 			
 			int maxGrade = 0;
 			
-			if(currentUser.getType().equals("S"))
+			if(currentUser.getType().equals("S") && currentAssignment.isActive())
 			{
 				System.out.println("Trying to get grade");
 				Vector<Submission> submissionsForGrades = getAllSubmissions(assignmentsInDB.get(i).getID());
@@ -674,9 +704,10 @@ class CourseAddListener implements ActionListener
     class StudentTableListener implements TableModelListener {
     	
 	    public void tableChanged(TableModelEvent e) {
-	        int row = e.getFirstRow();
+	        int size = theView.getStudentTableNumRows();
+	    	int row = e.getFirstRow();
 	        int column = e.getColumn();
-	        if(row > 0)
+	        if(size > 0)
 	        {
 		        String firstName = (String)theView.getStudentTableElement(row, 0);
 		        String lastName = (String)theView.getStudentTableElement(row, 1);
@@ -771,37 +802,41 @@ class CourseAddListener implements ActionListener
 	    public void tableChanged(TableModelEvent e) {
 	        int row = e.getFirstRow();
 	        int column = e.getColumn();
+	        int size = theView.getSubmissionTableNumRows();
 	        
-	        String asgName = (String)theView.getSubmissionsTableEl(row, 0);
-	        int studentID = Integer.parseInt((String)theView.getSubmissionsTableEl(row, 1));
-	        String studentLastName = (String)theView.getSubmissionsTableEl(row, 2);
-
-	        if(column == 3) {// grade changed
-	        	int newGrade = Integer.parseInt((String)theView.getSubmissionsTableEl(row, column));
-	        	JOptionPane.showMessageDialog(null,
-	        			studentLastName + "'s grade on "
-	        			+ asgName + " is: \n" + newGrade);
-	        	System.out.println("Title is " + (String)theView.getSubmissionsTableEl(row, 0));
-	        	coms.write(new Submission(false, 0, 0, 0, 
-	        			(String)theView.getSubmissionsTableEl(row, 0), newGrade, null));
-	        	
-	        }
-	        else if(column == 4) {// true == asg selected
-	        	int numRows = theView.getSubmissionTableNumRows();
-	        	String val = (String)theView.getSubmissionsTableEl(row, column);
-	        	if(val.equals("True")) {
-		        	for(int i = 0; i < numRows; i++) {
-		        		if(i != row && theView.getSubmissionsTableEl(i, column) == "True") {// set other rows to false
-		        			theView.setSubmissionsTableEl("False", i, column);
-		        			//return;
-		        		}
+	        if(size > 0)
+	        {
+		        String asgName = (String)theView.getSubmissionsTableEl(row, 0);
+		        int studentID = Integer.parseInt((String)theView.getSubmissionsTableEl(row, 1));
+		        String studentLastName = (String)theView.getSubmissionsTableEl(row, 2);
+	
+		        if(column == 3) {// grade changed
+		        	int newGrade = Integer.parseInt((String)theView.getSubmissionsTableEl(row, column));
+		        	JOptionPane.showMessageDialog(null,
+		        			studentLastName + "'s grade on "
+		        			+ asgName + " is: \n" + newGrade);
+		        	System.out.println("Title is " + (String)theView.getSubmissionsTableEl(row, 0));
+		        	coms.write(new Submission(false, 0, 0, 0, 
+		        			(String)theView.getSubmissionsTableEl(row, 0), newGrade, null));
+		        	
+		        }
+		        else if(column == 4) {// true == asg selected
+		        	int numRows = theView.getSubmissionTableNumRows();
+		        	String val = (String)theView.getSubmissionsTableEl(row, column);
+		        	if(val.equals("True")) {
+			        	for(int i = 0; i < numRows; i++) {
+			        		if(i != row && theView.getSubmissionsTableEl(i, column) == "True") {// set other rows to false
+			        			theView.setSubmissionsTableEl("False", i, column);
+			        			//return;
+			        		}
+			        	}
+		        		
+		   
 		        	}
-	        		
-	   
-	        	}
-	        }
-	        else {
-	        	System.out.println("sooooo, there shouldnt be a table listener here...");
+		        }
+		        else {
+		        	System.out.println("sooooo, there shouldnt be a table listener here...");
+		        }
 	        }
 	    }
 	}
@@ -812,7 +847,6 @@ class CourseAddListener implements ActionListener
  	  public void actionPerformed (ActionEvent arg0)
  	  {
  		String asgToDownload = "";
- 		String submitterLastName = "";
  		String selected = "";
     	int numRows;
     	boolean found = false;
@@ -824,11 +858,9 @@ class CourseAddListener implements ActionListener
  	    		if(selected.equals("True")) {
  	    			found = true;
  	    			asgToDownload = (String)theView.getSubmissionsTableEl(i, 0);
- 	    			submitterLastName = (String)theView.getSubmissionsTableEl(i, 2);
  	    			JOptionPane.showMessageDialog(null,
  	        			"You clicked the download submission button. \n"
- 	        			+ "Downloading: " + asgToDownload +"\n"
- 	        			+ "Submitted by: " + submitterLastName);
+ 	        			+ "Downloading: " + asgToDownload +"\n");
  	    			
  	    			String assignName = findAssignName();
  	    			int assignID = findAsgID();

@@ -22,7 +22,7 @@ class StudentWriteMessage implements MessageNameConstants
 			EmailWriter emailwriter = new EmailWriter(currentUser, mail);
 		}
 		
-		if(message.getMessageType().equals(submissionMessage))
+		else if(message.getMessageType().equals(submissionMessage))
 		{
 			Submission submission = (Submission) message;
 			
@@ -42,19 +42,21 @@ class StudentWriteMessage implements MessageNameConstants
 					e.printStackTrace();
 				}
 			}	
+			System.out.println("Left if statement in StudentWriteMessage");
 		}
 		
-		if(message.getMessageType().equals(courseMessage))
+		
+		else if(message.getMessageType().equals(courseMessage))
 		{
 			System.out.println("Message to write is a course Message");
 			DBWriter writer = new DBWriter(courseMessage.toLowerCase(), message);
 		}
 		
-		if(message.getMessageType().equals(enrolMessage))
+		else if(message.getMessageType().equals(enrolMessage))
 		{
 			DBWriter writer = new DBWriter(enrolMessage.toLowerCase(), message);
 		}
-		if(message.getMessageType().equals(submissionMessage))
+		else if(message.getMessageType().equals(submissionMessage))
 		{
 			Submission submission = (Submission) message;
 			
@@ -75,5 +77,6 @@ class StudentWriteMessage implements MessageNameConstants
 				}
 			}
 		}
+		System.out.println("Left StudentWriteMessage");
 	}
 }

@@ -61,7 +61,7 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 				while(rs.next())
 				{
 					getToSend().add(new Assignment(false,rs.getInt(1),rs.getInt(2), 
-							rs.getString(3), rs.getBoolean(4), rs.getString(5)));
+							rs.getString(3), rs.getBoolean(5), rs.getString(6)));
 				}
 			}
 			catch(SQLException e)

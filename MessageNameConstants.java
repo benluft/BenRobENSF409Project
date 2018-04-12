@@ -3,21 +3,21 @@ package sharedData;
 public interface MessageNameConstants 
 {
 
-	static final String emptyMessage = "Empty";
+	static final String emptyMessage = "empty";
 	
-	static final String courseMessage = "Course";
+	static final String courseMessage = "course";
 	
-	static final String pdfMessage = "PDF";
+	static final String pdfMessage = "pdf";
 	
-	static final String gradesMessage = "Grades";
+	static final String gradesMessage = "grades";
 	
-	static final String assignmentMessage = "Assignment";
+	static final String assignmentMessage = "assignment";
 	
-	static final String emailMessage = "Email";
+	static final String emailMessage = "email";
 	
-	static final String submissionMessage = "Submission";
+	static final String submissionMessage = "submission";
 	
-	static final String userMessage = "User";
+	static final String userMessage = "user";
 	
-	static final String enrolMessage = "Enrolment";
+	static final String enrolMessage = "enrolment";
 }

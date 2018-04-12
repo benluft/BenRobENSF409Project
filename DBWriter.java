@@ -23,6 +23,7 @@ class DBWriter extends WriterWorker implements MessageNameConstants, ServerFileP
 		if(tableName.equals(assignmentMessage))
 		{
 			writeAssignment(message);
+			System.out.println("Assign message written");
 		}
 		else if(tableName.equals(courseMessage))
 		{

@@ -59,6 +59,7 @@ class PDFWriter implements MessageNameConstants
 		byte[] content = fileBytes.getFileData();
 		System.out.println(pdfPath + " is the pdf path");
 		downloadFile(content);
+		System.out.println("Got to end of PDF printing");
 	}
 	
 	/**

@@ -6,11 +6,32 @@ import javax.swing.JOptionPane;
 
 import sharedData.User;
 
+/**
+ * Creates a JOptionPane that asks the user for their user ID and password.  If either
+ * are incorrect, the loginwindow restarts, otherwise the GUI is opened
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 public class LoginWindow {
+	/**
+	 * Username that the user has attempted
+	 */
 	private int userName;
+	/**
+	 * Password that the user has attempted
+	 */
 	private String password;
+	/**
+	 * True if the login was done correctly
+	 */
 	private boolean loginCorrect;
 	
+	/**
+	 * Attempts to log the user into the system
+	 * 
+	 * @param coms allows this system to communicate with the socket
+	 */
 	public LoginWindow(SocketCommunicator coms) {
 		userName = 0;
 		password = null;
@@ -34,6 +55,11 @@ public class LoginWindow {
 		runMainMenu(coms, user.get(0));
 	}
 	
+	/**
+	 * Gets the user input from the JOptionPane
+	 * 
+	 * @return the user that has been found, or null
+	 */
 	private User getUserInput() {
 		
 		try 
@@ -61,6 +87,12 @@ public class LoginWindow {
 //		return false;
 //	}
 	
+	/**
+	 * Starts the GUI
+	 * 
+	 * @param coms connection to the socket
+	 * @param user the first user
+	 */
 	private void runMainMenu(SocketCommunicator coms, User user) {
 		MainMenuView theView = new MainMenuView(user);
 		//while(true) {}

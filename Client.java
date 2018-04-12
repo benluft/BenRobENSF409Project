@@ -18,7 +18,12 @@ import sharedData.Course;
 import sharedData.Enrolment;
 import sharedData.FileMessage;
 import sharedData.User;
-
+/**
+ * Client class that interacts with the socket and GUI
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class Client
 {
 	/**

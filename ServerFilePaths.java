@@ -1,5 +1,12 @@
 package backEnd;
 
+/**
+ * Contains the paths to save assignments and submissions
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
+
 interface ServerFilePaths 
 {
 

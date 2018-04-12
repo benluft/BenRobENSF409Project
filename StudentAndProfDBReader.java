@@ -10,10 +10,24 @@ import sharedData.SocketMessage;
 import sharedData.Submission;
 import sharedData.User;
 
+/**
+ * Is the superclass for any reader of the database
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 abstract class StudentAndProfDBReader implements MessageNameConstants
 {
+/**
+ * Is what the server will send back to the client
+ */
 private Vector<SocketMessage> toSend;
 	
+	/**
+	 * Decides on how to read the message based off the message type
+	 * 
+	 * @param message the received message
+	 */
 	public StudentAndProfDBReader(SocketMessage message)
 	{
 		setToSend(new Vector<SocketMessage>());
@@ -64,16 +78,42 @@ private Vector<SocketMessage> toSend;
 		}
 	}
 	
+	/**
+	 * Reads the assign table
+	 * @param assign the message
+	 */
 	abstract protected void readAssignmentTable(Assignment assign);
+	/**
+	 * Reads the enrol table
+	 * @param enrol the message
+	 */
 	abstract protected void readEnrolTable(Enrolment enrol);
+	/**
+	 * Reads the user table
+	 * @param user the message
+	 */
 	abstract protected void readUserTable(User user);
+	/**
+	 * Reads the course table
+	 * @param course the message
+	 */
 	abstract protected void readCourseTable(Course course);
+	/**
+	 * Reads the submission table
+	 * @param submission the message
+	 */
 	abstract protected void readSubmissionTable(Submission submission);
+	/**
+	 * Reads the course table using a vector of couse messages
+	 * @param course the messages
+	 */
 	abstract protected void readCourseTable(Vector<Course> courses);
+
 
 	public Vector<SocketMessage> getToSend() {
 		return toSend;
 	}
+
 
 	public void setToSend(Vector<SocketMessage> toSend) {
 		this.toSend = toSend;

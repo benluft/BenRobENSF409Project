@@ -12,14 +12,28 @@ import sharedData.SocketMessage;
 import sharedData.Submission;
 import sharedData.User;
 
+/**
+ * Reads a message sent from a professor user
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConstants
 {
 	
+	/**
+	 * Determines which message the prof has receives, and which method below to use
+	 * 
+	 * @param message is the message to send
+	 */
 	public ProfReadMessage(SocketMessage message)
 	{
 		super(message);
 	}
 	
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readAssignmentTable(sharedData.Assignment)
+	 */
 	protected void readAssignmentTable(Assignment assign)
 	{
 		DBReader reader;
@@ -41,6 +55,9 @@ class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConst
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readEnrolTable(sharedData.Enrolment)
+	 */
 	protected void readEnrolTable(Enrolment enrol) {
 
 		DBReader dbReader;
@@ -63,6 +80,9 @@ class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConst
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readCourseTable(sharedData.Course)
+	 */
 	protected void readCourseTable(Course course)
 	{
 
@@ -84,6 +104,9 @@ class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConst
 
 	}
 	
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readUserTable(sharedData.User)
+	 */
 	protected void readUserTable(User user)
 	{
 		
@@ -105,17 +128,26 @@ class ProfReadMessage extends StudentAndProfDBReader implements MessageNameConst
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#getToSend()
+	 */
 	public Vector<SocketMessage> getToSend()
 	{
 		return super.getToSend();
 	}
 
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readCourseTable(java.util.Vector)
+	 */
 	@Override
 	protected void readCourseTable(Vector<Course> courses) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readSubmissionTable(sharedData.Submission)
+	 */
 	@Override
 	protected void readSubmissionTable(Submission submission) {
 

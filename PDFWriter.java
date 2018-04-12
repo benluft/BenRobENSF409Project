@@ -13,18 +13,22 @@ import sharedData.FileMessage;
 import sharedData.MessageNameConstants;
 
 /**
- * @author Ben
+ * Writes a PDF (Or other file) to a place on the server
+ * 
+ * @author Ben Luft and Rob Dunn
  *
  */
 class PDFWriter implements MessageNameConstants
 {
 	/**
-	 * 
+	 * Is the path to put the file at
 	 */
 	private String pdfPath;
 	
 	/**
-	 * @param message
+	 * Writes the PDF or other file to the server
+	 * 
+	 * @param message contains the data of the file
 	 */
 	PDFWriter(SocketMessage message, String messageType)
 	{
@@ -63,7 +67,9 @@ class PDFWriter implements MessageNameConstants
 	}
 	
 	/**
-	 * @param contents
+	 * Saves the file
+	 * 
+	 * @param contents is the data of the file
 	 */
 	private void downloadFile(byte[] contents)
 	{

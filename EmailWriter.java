@@ -11,12 +11,30 @@ import sharedData.Email;
 import sharedData.User;
 import sharedData.MessageNameConstants;
 
+/**
+ * Used to write an email
+ * 
+ * @author Ben Luft and Robert Dunn
+ *
+ */
 class EmailWriter implements MessageNameConstants
 {
+	/**
+	 * Properties for the email
+	 */
 	private Properties properties;
 	
+	/**
+	 * The email session
+	 */
 	private Session session;
 	
+	/**
+	 * Sends the email from the senderUsers email, with the contents in the email
+	 * 
+	 * @param senderUser is the sender of the message
+	 * @param email contains the subject and contents of the email
+	 */
 	public EmailWriter(User senderUser, Email email)
 	{
 		setProperties();
@@ -81,6 +99,9 @@ class EmailWriter implements MessageNameConstants
 		sendEmail(recipientEmails, senderUser.getEmail(), email);
 	}
 	
+	/**
+	 * Sets the properies for a gmail email
+	 */
 	private void setProperties()
 	{
 		properties = new Properties();
@@ -90,6 +111,12 @@ class EmailWriter implements MessageNameConstants
 		properties.put("mail.smtp.port", "587"); // TLS uses port 587
 	}
 	
+	/**
+	 * Sets the email session
+	 * 
+	 * @param emailAddress sender email
+	 * @param password sender email password
+	 */
 	private void setSession(String emailAddress, String password)
 	{
 		session = Session.getInstance(properties,
@@ -100,6 +127,14 @@ class EmailWriter implements MessageNameConstants
 				});
 	}
 	
+	/**
+	 * Sends the email.  Uses only the professor if the email is sent from a student
+	 * or all of the students in a class if from a prof
+	 * 
+	 * @param recipients are the receiving emails
+	 * @param senderEmail is the sender email
+	 * @param email has the email contents
+	 */
 	private void sendEmail(ArrayList<String> recipients, String senderEmail, Email email)
 	{
 		try {
@@ -129,7 +164,4 @@ class EmailWriter implements MessageNameConstants
 			}
 	}
 	
-	public static void main(String[] args) {
-		//EmailWriter email = new EmailWriter();
-	}
 }

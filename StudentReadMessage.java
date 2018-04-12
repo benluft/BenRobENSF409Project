@@ -16,11 +16,29 @@ import sharedData.SocketMessage;
 import sharedData.Submission;
 import sharedData.User;
 
+/**
+ * Reads messages sent from a logged in student client
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class StudentReadMessage extends StudentAndProfDBReader implements MessageNameConstants
 {
+	/**
+	 * The message that the student will send
+	 */
 	Vector<SocketMessage> messageToSend; 
+	/**
+	 * used to write to the socket
+	 */
 	ObjectOutputStream writer;
 	
+	/**
+	 * A simple constructor to decide which function to use
+	 * 
+	 * @param message
+	 * @param writer
+	 */
 	public StudentReadMessage(SocketMessage message, ObjectOutputStream writer)
 	{
 		super(message);
@@ -30,6 +48,9 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 
 	}
 
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readAssignmentTable(sharedData.Assignment)
+	 */
 	@Override
 	protected void readAssignmentTable(Assignment assign) {
 
@@ -71,6 +92,9 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readEnrolTable(sharedData.Enrolment)
+	 */
 	@Override
 	protected void readEnrolTable(Enrolment enrol) {
 		
@@ -97,12 +121,18 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readUserTable(sharedData.User)
+	 */
 	@Override
 	protected void readUserTable(User user) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readCourseTable(java.util.Vector)
+	 */
 	@Override
 	protected void readCourseTable(Vector<Course> courses) 
 	{
@@ -129,6 +159,9 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readSubmissionTable(sharedData.Submission)
+	 */
 	@Override
 	protected void readSubmissionTable(Submission submission) {
 		
@@ -151,6 +184,9 @@ class StudentReadMessage extends StudentAndProfDBReader implements MessageNameCo
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see backEnd.StudentAndProfDBReader#readCourseTable(sharedData.Course)
+	 */
 	@Override
 	protected void readCourseTable(Course course) {
 		// TODO Auto-generated method stub

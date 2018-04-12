@@ -9,14 +9,35 @@ import java.util.Vector;
 
 import sharedData.*;
 
+/**
+ * This class checks to see if the user has logged in with a valid password and userID
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class LoginChecker
 {
 	
+	/**
+	 * Reads the socket
+	 */
 	ObjectInputStream reader;
+	/**
+	 * Writes to the socket
+	 */
 	ObjectOutputStream writer;
 	
+	/**
+	 * Is the logged in user
+	 */
 	Vector<User> user = null;
 	
+	/**
+	 * Checks the login
+	 * 
+	 * @param reader 
+	 * @param writer
+	 */
 	public LoginChecker(ObjectInputStream reader, ObjectOutputStream writer)
 	{
 		this.reader = reader;
@@ -25,6 +46,9 @@ class LoginChecker
 		checkLogin();
 	}
 	
+	/**
+	 * If the user is logged in, set the member data to the users data
+	 */
 	private void checkLogin()
 	{
 		boolean loggedIn = false;
@@ -46,6 +70,12 @@ class LoginChecker
 		}
 	}
 	
+	/**
+	 * Tries to login the user, returns false if the user does not exist
+	 * 
+	 * @param userRead is the user that is to be checked
+	 * @return true if the user exits
+	 */
 	private boolean attemptLogin(User userRead)
 	{
 		DBReader dbReader = new DBReader(MessageNameConstants.userMessage.toLowerCase(), 

@@ -5,9 +5,22 @@ import java.io.ObjectInputStream;
 
 import sharedData.*;
 
+/**
+ * Writes a message to the database from a professor
+ * 
+ * @author Ben Luft
+ *
+ */
 class ProfWriteMessage implements MessageNameConstants, ServerFilePaths
 {
 	
+	/**
+	 * Writes to the database from the professor
+	 * 
+	 * @param message is the message to write to the file
+	 * @param currentUser is the current user of the program
+	 * @param reader is used to write to the socket
+	 */
 	public ProfWriteMessage(SocketMessage message, User currentUser, ObjectInputStream reader)
 	{
 		System.out.println("ProfWritemessage sees message type "+ message.getMessageType());

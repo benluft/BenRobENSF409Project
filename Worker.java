@@ -7,6 +7,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
+/**
+ * Begins a connection to the database 
+ *  
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class Worker
 {
 	/**
@@ -16,10 +22,14 @@ class Worker
 	/**
 	 * From left to right the address of the database, and the login and password for this database
 	 */
+
 	public String connectionInfo = "jdbc:mysql://localhost:3306/finalprojectdb",  
 				  login          = "root",
 				  password       = "ENSF409BenRob";
 	
+	/**
+	 * Sets up the connection to the database
+	 */
 	Worker()
 	{
 		// If this fails make sure your connectionInfo and login/password are correct
@@ -37,6 +47,7 @@ class Worker
 			e.printStackTrace();
 		}
 	}
+
 
 	public Connection getJdbc_connection() {
 		return jdbc_connection;

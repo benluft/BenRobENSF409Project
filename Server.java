@@ -8,6 +8,12 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * The server class that communicates with the database and the socket
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class Server
 {
 	/**

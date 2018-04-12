@@ -10,9 +10,22 @@ import sharedData.SocketMessage;
 import sharedData.Submission;
 import sharedData.User;
 
+/**
+ * Used when a student client wants to write to the database
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class StudentWriteMessage implements MessageNameConstants
 {
 	
+	/**
+	 * Decides what to write to which table 
+	 * 
+	 * @param message contains the data
+	 * @param currentUser is the logged in user
+	 * @param reader is the reader for the socket
+	 */
 	public StudentWriteMessage(SocketMessage message, User currentUser, ObjectInputStream reader)
 	{
 		if(message.getMessageType().equals(emailMessage))

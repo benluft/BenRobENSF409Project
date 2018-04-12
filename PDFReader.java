@@ -9,15 +9,34 @@ import java.io.IOException;
 import sharedData.FileMessage;
 import sharedData.SocketMessage;
 
+/**
+ * Used to read a pdf from the server, and send it to the client
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class PDFReader
 {
 	
+	/**
+	 * Contains the file data
+	 */
 	private FileMessage fileToSend;
 	
+	/**
+	 * Gets the file that should be sent to the client
+	 * 
+	 * @return File message to send
+	 */
 	public FileMessage getFileToSend() {
 		return fileToSend;
 	}
 
+	/**
+	 * Reads the PDF and sends it to the client
+	 * 
+	 * @param path that the file can be found at
+	 */
 	public PDFReader(String path)
 	{
 		File selectedFile = new File(path);

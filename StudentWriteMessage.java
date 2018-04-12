@@ -35,7 +35,7 @@ class StudentWriteMessage implements MessageNameConstants
 				try 
 				{
 					messageFile = (SocketMessage) reader.readObject();
-					PDFWriter pdfWriter = new PDFWriter(messageFile);
+					PDFWriter pdfWriter = new PDFWriter(messageFile, currentUser.getType());
 				} 
 				catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block
@@ -67,7 +67,7 @@ class StudentWriteMessage implements MessageNameConstants
 				try 
 				{
 					messageFile = (SocketMessage) reader.readObject();
-					PDFWriter pdfWriter = new PDFWriter(messageFile);
+					PDFWriter pdfWriter = new PDFWriter(messageFile, currentUser.getType());
 				} 
 				catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block

@@ -30,7 +30,7 @@ class ProfWriteMessage implements MessageNameConstants, ServerFilePaths
 				try 
 				{
 					messageFile = (SocketMessage) reader.readObject();
-					PDFWriter pdfWriter = new PDFWriter(messageFile);
+					PDFWriter pdfWriter = new PDFWriter(messageFile, currentUser.getType());
 				} 
 				catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block

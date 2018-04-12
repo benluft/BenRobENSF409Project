@@ -56,8 +56,11 @@ class EmailWriter implements MessageNameConstants
 			{
 				rsEnroll.next();
 				
-				DBReader findProfessorID = new DBReader(courseMessage, "prof_id", rsEnroll.getInt(3));
+				System.out.println("prof_id is " + rsEnroll.getInt(3));
+				
+				DBReader findProfessorID = new DBReader(courseMessage, "id", rsEnroll.getInt(3));
 				ResultSet rsCourseProfID = findProfessorID.getReadResults();
+				
 				rsCourseProfID.next();
 				
 				DBReader findProfessorEmail = new DBReader(userMessage, "id", rsCourseProfID.getInt(2));

@@ -26,13 +26,13 @@ class PDFWriter implements MessageNameConstants
 	/**
 	 * @param message
 	 */
-	PDFWriter(SocketMessage message)
+	PDFWriter(SocketMessage message, String messageType)
 	{
 		FileMessage fileBytes = (FileMessage) message;
 		
 		DBReader reader;
 		
-		if(message.getMessageType().equals(assignmentMessage))
+		if(messageType.equals("P"))
 		{
 			reader = new DBReader(assignmentMessage, "path", fileBytes.getID());
 		}

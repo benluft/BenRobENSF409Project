@@ -37,7 +37,7 @@ import java.util.Vector;
  * @author Ben Luft and Rob Dunn
  *
  */
-public class MainMenuController implements ClientFilePath
+class MainMenuController implements ClientFilePath
 {
 
  /**

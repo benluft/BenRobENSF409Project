@@ -13,7 +13,7 @@ import sharedData.User;
  * @author Ben Luft and Rob Dunn
  *
  */
-public class LoginWindow {
+class LoginWindow {
 	/**
 	 * Username that the user has attempted
 	 */

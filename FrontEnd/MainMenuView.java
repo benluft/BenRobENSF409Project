@@ -45,7 +45,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
 
 
-public class MainMenuView extends JFrame {
+class MainMenuView extends JFrame {
 
 	/**
 	 * The entire panel used for the gui

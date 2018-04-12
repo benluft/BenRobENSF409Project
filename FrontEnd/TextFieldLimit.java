@@ -4,7 +4,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.BadLocationException;
 
-public class TextFieldLimit extends PlainDocument {
+class TextFieldLimit extends PlainDocument {
   /**
    * the maximum number of characters to be endered into a given text field
    */

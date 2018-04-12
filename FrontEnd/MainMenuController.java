@@ -43,12 +43,24 @@ public class MainMenuController implements ClientFilePath
  /**
  * The GUI of the program
  */
+/**
+ * 
+ */
 private MainMenuView theView;
 
+/**
+ * 
+ */
 private SocketCommunicator coms;
 
+/**
+ * 
+ */
 private User currentUser;
 
+/**
+ * 
+ */
 private int currentCourseID;
 
 
@@ -57,7 +69,9 @@ private int currentCourseID;
    * 
  * @param v the GUI of the program
  * @param m the database of the program
+ * @param User is all of the data for the current user of the program
  */
+
 public MainMenuController (MainMenuView v, SocketCommunicator coms, User currentUser) 
   {
 	
@@ -164,6 +178,13 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		}
 	}
 	
+	/**
+	 * Listens for push of the submission buttons in the student GUI.
+	 * Allows the student to select a file which is submitted to the assignment
+	 * 
+	 * @author Ben Luft and Rob Dunn
+	 *
+	 */
 	class AsgSubmissionListener implements ActionListener
 	{
 		@Override
@@ -206,6 +227,13 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		}
 	}
 	
+	/**
+	 * Listens for the push of the download button by a student
+	 * This will get the assignment for the selected assignment
+	 * 
+	 * @author Ben Luft and Rob Dunn
+	 *
+	 */
 	class AsgDownloadListener implements ActionListener
 	{
 		@Override
@@ -246,6 +274,13 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 		}
 	}
 	
+    /**
+     * This listener listens for changes in the assignment table, and changes
+     * things such as Assignment activity and which assignment is selected
+     * 
+     * @author Ben Luft and Rob Dunn
+     *
+     */
     class AsgTableListener implements TableModelListener {
     	
 	    public void tableChanged(TableModelEvent e) {
@@ -301,6 +336,13 @@ public MainMenuController (MainMenuView v, SocketCommunicator coms, User current
 	    }
 	}
 
+/**
+ * Listens for the clear button on the assignments page of the Prof GUI.
+ * Clears the due date
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class CourseClearListener implements ActionListener
 {
   @Override
@@ -315,6 +357,13 @@ class CourseClearListener implements ActionListener
     }
   }
 }
+/**
+ * Listens for the add course button of the professor GUI.  Adds 
+ * a new assignment according to the file that the Professor selects
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 class CourseAddListener implements ActionListener
 {
   @Override
@@ -343,6 +392,13 @@ class CourseAddListener implements ActionListener
   }
 }
 
+	/**
+	 * Listens for any changes in the course table, such as selecting a course or
+	 * changing the activity of a course
+	 * 
+	 * @author Ben Luft and Rob Dunn
+	 *
+	 */
 	public class CourseTableListener implements TableModelListener {
 	
 	    public void tableChanged(TableModelEvent e) {
@@ -400,6 +456,9 @@ class CourseAddListener implements ActionListener
 	    }
 	}
 	
+	/**
+	 * Fills the course table with all courses that a user can see
+	 */
 	private void fillCourseTable()
 	{
 		
@@ -431,6 +490,12 @@ class CourseAddListener implements ActionListener
 		}
 	}
 	
+	/**
+	 * Fills the submission table with all submissions for an assignment
+	 * 
+	 * @param assignName is the name of the assignment for which the submissions
+	 * should be viewed
+	 */
 	private void fillSubmissionsTable(String assignName)
 	{
 		int assignID = findAsgID();
@@ -455,6 +520,11 @@ class CourseAddListener implements ActionListener
 		
 	}
 	
+	/**
+	 * Finds the name of the currently selected assignment
+	 * 
+	 * @return name of the assignment
+	 */
 	private String findAssignName()
 	{
 		int row = 0;
@@ -480,6 +550,9 @@ class CourseAddListener implements ActionListener
 		}
 	}
 	
+	/**
+	 * Fills the assignment table with all the assignments of the course selected
+	 */
 	private void fillAssignTable()
 	{
 		Vector<Assignment> assignmentsInDB = getAllAssignments();
@@ -519,6 +592,11 @@ class CourseAddListener implements ActionListener
 		}
 	}
 	
+	/**
+	 * Fills the student table with all the courses of the course ID
+	 * 
+	 * @param courseID the ID for the course 
+	 */
 	private void fillStudentTable(int courseID)
 	{
 		Vector<User> studentInDB = getAllStudents();
@@ -549,6 +627,11 @@ class CourseAddListener implements ActionListener
 		}
 	}
 	
+	/**
+	 * Find the ID of the currently selected assign
+	 * 
+	 * @return the assign ID
+	 */
 	private int findAsgID()
 	{
 		Vector<Assignment> assignments = getAllAssignments();
@@ -573,6 +656,9 @@ class CourseAddListener implements ActionListener
 	}
 	
 	
+	/**
+	 * Inserts newest course into the table
+	 */
 	private void addNewestCourse()
 	{
 		Vector<Course> coursesInDB = getAllCourses();
@@ -584,6 +670,9 @@ class CourseAddListener implements ActionListener
 				newCourse.isActive());
 	}
 	
+	/**
+	 * Insert newest assignment into the table
+	 */
 	private void addNewestAssignment()
 	{
 		Vector<Assignment> assignmentsInDB = getAllAssignments();
@@ -597,6 +686,11 @@ class CourseAddListener implements ActionListener
 	}
 	
 	
+	/**
+	 * Gets all of the courses for the user
+	 * 
+	 * @return a Vector of the courses
+	 */
 	private Vector<Course> getAllCourses()
 	{	
 		if(currentUser.getType().equals("P"))
@@ -611,24 +705,44 @@ class CourseAddListener implements ActionListener
 		return (Vector<Course>)coms.read();
 	}
 	
+	/**
+	 * Gets all of the assignments for the course
+	 * 
+	 * @return a Vector of the assignments
+	 */
 	private Vector<Assignment> getAllAssignments()
 	{
 		coms.write(new Assignment(true, 0,currentCourseID, null, false, null));
 		return (Vector<Assignment>)coms.read();
 	}
 	
+	/**
+	 * Gets all of the enrolled students for the course
+	 * 
+	 * @return a Vector of the enrolled students
+	 */
 	private Vector<Enrolment> getEnrolledStudents()
 	{
 		coms.write(new Enrolment(true,0, 0, currentCourseID));
 		return (Vector<Enrolment>)coms.read();
 	}
 
+	/**
+	 * Gets all of the students for the course
+	 * 
+	 * @return a Vector of the students
+	 */
 	private Vector<User> getAllStudents()
 	{
 		coms.write(new User(true,0,null,null,null,null,"S"));
 		return (Vector<User>)coms.read();
 	}
 	
+	/**
+	 * Gets all of the submissions for the assignment
+	 * 
+	 * @return a Vector of the submissions
+	 */
 	private Vector<Submission> getAllSubmissions(int assignID)
 	{
 		System.out.println("Getting submissions");
@@ -638,6 +752,12 @@ class CourseAddListener implements ActionListener
 	
 
 	    //for students tab
+ 	/**
+ 	 * Clears the student search bar
+ 	 * 
+ 	 * @author Ben Luft and Rob Dunn
+ 	 *
+ 	 */
  	class StudentClearListener implements ActionListener
 	{
 	  @Override
@@ -656,6 +776,12 @@ class CourseAddListener implements ActionListener
 	    }
 	  }
 	}
+    /**
+     * Searches for a student in the list of students
+     * 
+     * @author Ben Luft and Rob Dunn
+     *
+     */
     class StudentSearchListener implements ActionListener
 	{
 	  @Override
@@ -681,6 +807,11 @@ class CourseAddListener implements ActionListener
 	    }
 	  }
 	}
+    /**
+     * Searches for student Last name
+     * 
+     * @param key name to search for
+     */
     private void searchStudentsLastName(String key) {
     	String lastFromTable;
     	for(int i = theView.getStudentTableNumRows() - 1; i >= 0; i--) {
@@ -691,6 +822,11 @@ class CourseAddListener implements ActionListener
     		}
     	}
     }
+    /**
+     * Search for student by ID
+     * 
+     * @param key the Id to search for 
+     */
     private void searchStudentsID(String key) {
     	String idFromTable;
     	for(int i = 0; i < theView.getStudentTableNumRows(); i++) {
@@ -701,6 +837,12 @@ class CourseAddListener implements ActionListener
     	}
     }
 
+    /**
+     * Listens to the student table for enrolling students
+     * 
+     * @author Ben Luft and Rob Dunn
+     *
+     */
     class StudentTableListener implements TableModelListener {
     	
 	    public void tableChanged(TableModelEvent e) {
@@ -738,6 +880,12 @@ class CourseAddListener implements ActionListener
 	    }
 	}
     
+    /**
+     * Checks if the student is enrolled
+     * 
+     * @param studentID ID of the student to check
+     * @return true if the student is enrolled
+     */
     private boolean doesEnrolledExist(int studentID)
     {
     	Vector<Enrolment> enrolled = getEnrolledStudents();
@@ -755,6 +903,13 @@ class CourseAddListener implements ActionListener
     
     // email controller
     
+    /**
+     * Listens to the send email button.  If it is clicked send the
+     * email according to whether the user is a student or prof
+     * 
+     * @author Ben Luft adn Rob Dunn
+     *
+     */
     class SendEmailListener implements ActionListener
  	{
  	  @Override
@@ -778,6 +933,12 @@ class CourseAddListener implements ActionListener
  	  }
  	}
     
+    /**
+     * Clears the email body and title when button pushed
+     * 
+     * @author Ben Luft and Rob Dunn
+     *
+     */
     class ClearEmailListener implements ActionListener
  	{
  	  @Override
@@ -797,6 +958,13 @@ class CourseAddListener implements ActionListener
     
     // submissions
 
+	/**
+	 * Listens to the submission table to allow the prof to grade and
+	 * select a submission
+	 * 
+	 * @author Ben Luft and Rob Dunn
+	 *
+	 */
 	public class SubmissionTableListener implements TableModelListener {
 	
 	    public void tableChanged(TableModelEvent e) {
@@ -841,6 +1009,12 @@ class CourseAddListener implements ActionListener
 	    }
 	}
 	
+    /**
+     * Button that allows the prof to view a submission
+     * 
+     * @author Ben Luft and Rob Dunn
+     *
+     */
     class DownloadSubmittedAssignmentListener implements ActionListener
  	{
  	  @Override

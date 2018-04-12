@@ -71,7 +71,7 @@ abstract class ReaderWorker extends Worker
 	 * @param searchKey the key to search for
 	 * @return the result of the querry
 	 */
-	ResultSet queryDatabase(Object searchKey)
+	protected ResultSet queryDatabase(Object searchKey)
 	{
 		String sqlCommand = "SELECT * FROM " + tableName + " WHERE " + 	queryKey + "=?";
 		
@@ -98,7 +98,7 @@ abstract class ReaderWorker extends Worker
 	 * @param searchKey2 is the second key to search for 
 	 * @return the result of the query
 	 */
-	ResultSet queryDatabase(Object searchKey, Object searchKey2)
+	protected ResultSet queryDatabase(Object searchKey, Object searchKey2)
 	{
 		String sqlCommand = "SELECT * FROM " + tableName + " WHERE " + 	queryKey + "=?" + " AND " + queryKey2 +"=?" ;
 		

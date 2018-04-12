@@ -1,5 +1,11 @@
 package sharedData;
 
+/**
+ * The names of the tables that have the data
+ * 
+ * @author Ben Luft and Rob Dunn
+ *
+ */
 public interface MessageNameConstants 
 {
 
